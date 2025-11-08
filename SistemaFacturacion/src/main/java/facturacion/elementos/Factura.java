@@ -16,6 +16,11 @@ public class Factura {
     private double cambio;
     private String tipoPago;
 
+    public Factura() {
+        // Inicializa la fecha al momento de la creación
+        this.fechaEmision = new Date();
+    }
+
     public Factura(int idFactura, Pedido pedido, Cliente cliente, double total, double impuestoIVA, double pago, double cambio, String tipoPago) {
         this.idFactura = ++contadorFactura;
         this.pedidos = pedido;
