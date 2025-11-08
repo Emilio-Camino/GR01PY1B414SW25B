@@ -27,8 +27,8 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
 
     // --- 1. Atributos Internos ---
     // (Estos son Composición, se quedan)
-    private List<Factura> listaFacturas;
-    private List<ReporteVenta> listaReporte;
+    private ArrayList<Factura> listaFacturas;
+    private ArrayList<ReporteVenta> listaReporte;
 
     // --- 2. Dependencias ---
     // (Campos eliminados para cambiar de Agregación a Uso)
@@ -38,10 +38,11 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
     // private GestorPromocion gestorPromocion;
 
     // --- 3. Constructor ---
-    public GestorFactura() {
+    public GestorFactura(GestorCliente gestorCliente, GestorPedido gestorPedido) {
         // Constructor ahora solo inicializa sus propias listas
         this.listaFacturas = new ArrayList<>();
         this.listaReporte = new ArrayList<>();
+        quemarDatosFacturas(gestorCliente, gestorPedido);
     }
 
     // --- 4. Métodos de IGestorFacturaCajero ---
@@ -175,5 +176,68 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
             factura.setCambio(0.0);
             System.out.println("Factura " + idFactura + " anulada.");
         }
+    }
+
+    private void quemarDatosFacturas(GestorCliente gestorCliente, GestorPedido gestorPedido) {
+
+        // --- Factura 1 (Cliente Ana Gomez, Pedido 1) ---
+        Cliente c1 = gestorCliente.buscarCliente("1718013350");
+        Pedido p1 = gestorPedido.buscarPedido(1); // El primer pedido que creamos
+        p1.setEstado("FACTURADO"); // Actualizamos el estado del pedido
+
+        // Usamos el constructor completo
+        // (El ID '0' es ignorado y se autoincrementa)
+        Factura f1 = new Factura(
+                0, p1, c1,
+                5.00, // total
+                0.60, // iva
+                10.00, // pago
+                4.40, // cambio
+                "EFECTIVO"
+        );
+        f1.setFechaEmision(new Date()); // El constructor completo no asigna fecha
+        this.listaFacturas.add(f1);
+
+
+        // --- Factura 2 (Cliente Luis Parra, Pedido 2) ---
+        Cliente c2 = gestorCliente.buscarCliente("0925804008");
+        Pedido p2 = gestorPedido.buscarPedido(2);
+        p2.setEstado("FACTURADO");
+
+        Factura f2 = new Factura(
+                0, p2, c2,
+                1.50, // total
+                0.18, // iva
+                1.50, // pago
+                0.00, // cambio
+                "TARJETA"
+        );
+        f2.setFechaEmision(new Date());
+        this.listaFacturas.add(f2);
+
+
+        // --- Factura 3 (Consumidor Final, Pedido 3) ---
+        Cliente c3 = gestorCliente.buscarCliente("9999999999");
+        Pedido p3 = gestorPedido.buscarPedido(3);
+        p3.setEstado("FACTURADO");
+
+        Factura f3 = new Factura(
+                0, p3, c3,
+                2.00, // total (precio del helado de fresa con promo)
+                0.24, // iva
+                2.00, // pago
+                0.00, // cambio
+                "EFECTIVO"
+        );
+        f3.setFechaEmision(new Date());
+        this.listaFacturas.add(f3);
+    }
+
+    public ArrayList<Factura> getListaFacturas() {
+        return listaFacturas;
+    }
+
+    public ArrayList<ReporteVenta> getListaReporte() {
+        return listaReporte;
     }
 }

@@ -1,8 +1,9 @@
 package facturacion.gestores;
 import facturacion.elementos.Factura;
+import facturacion.gestores.interfaces.IGestorCaja;
 import java.util.ArrayList;
 
-public class GestorCaja {
+public class GestorCaja implements IGestorCaja {
     private double totalEfectivo;
 
     public GestorCaja() {
@@ -13,9 +14,10 @@ public class GestorCaja {
         return totalEfectivo;
     }
 
-    public void setTotalEfectivo(ArrayList<Factura> facturas) {
+    public void setTotalEfectivo(GestorFactura gestorFactura) {
+
         double total = 0;
-        for (Factura factura : facturas) {
+        for (Factura factura : gestorFactura.getListaFacturas()) {
             total += factura.getTotal();
         }
         this.totalEfectivo = total;

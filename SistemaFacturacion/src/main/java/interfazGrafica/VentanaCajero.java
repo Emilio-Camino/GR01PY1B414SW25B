@@ -4,8 +4,7 @@
  */
 package interfazGrafica;
 
-import facturacion.gestores.*;
-
+import facturacion.gestores.interfaces.*;
 import javax.swing.JFrame;
 
 /**
@@ -14,17 +13,17 @@ import javax.swing.JFrame;
  */
 public class VentanaCajero extends javax.swing.JFrame {
     private LoginVentana loginDeOrigen;
-    private GestorStock gestorStock;
-    private GestorPedido gestorPedido;
-    private GestorCaja gestorCaja;
-    private GestorPromocion gestorPromocion;
-    private GestorCliente gestorCliente;
+    private IGestorStockCajero gestorStock;
+    private IGestorPedido gestorPedido;
+    private IGestorCaja gestorCaja;
+    private IGestorPromocionCajero gestorPromocion;
+    private IGestorClienteCajero gestorCliente;
     
     /**
      * Creates new form VentanaCajero
      * @param login
      */
-    public VentanaCajero(GestorStock gStock, GestorPedido gPedido, GestorCaja gCaja, GestorPromocion gPromocion, GestorCliente gCliente, LoginVentana login) {
+    public VentanaCajero(IGestorStockCajero gStock, IGestorPedido gPedido, IGestorCaja gCaja, IGestorPromocionCajero gPromocion, IGestorClienteCajero gCliente, LoginVentana login) {
         this.loginDeOrigen = login;
         this.gestorStock = gStock;
         this.gestorPedido = gPedido;
@@ -59,20 +58,35 @@ public class VentanaCajero extends javax.swing.JFrame {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 588, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(253, 253, 253)
+                .addComponent(jButton1)
+                .addContainerGap(260, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 365, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(129, 129, 129)
+                .addComponent(jButton1)
+                .addContainerGap(213, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("tab1", jPanel1);
@@ -109,7 +123,7 @@ public class VentanaCajero extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -121,12 +135,17 @@ public class VentanaCajero extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        gestorCliente.buscarCliente("1718013350");
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

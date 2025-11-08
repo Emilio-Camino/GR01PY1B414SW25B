@@ -20,7 +20,7 @@ public class AppFacturacion {
         GestorPromocion gestorPromocion = new GestorPromocion();
         GestorCliente gestorCliente = new GestorCliente();
 
-        GestorFactura gestorFactura = new GestorFactura();
+        GestorFactura gestorFactura = new GestorFactura(gestorCliente, gestorPedido);
         
 
         java.awt.EventQueue.invokeLater(new Runnable() {
