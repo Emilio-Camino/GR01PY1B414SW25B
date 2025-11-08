@@ -58,6 +58,7 @@ public class GestorStock implements IGestorStockCajero, IGestorStockHeladero {
         return false;
     }
 
+
     /* Actualiza cantidad de recipientes de acuerdo a su tipo. Retorna un booleano que verifica si se pudo actualizar o no.*/
     @Override
     public boolean actualizarRecipiente(TipoRecipiente tipoRecipiente, int numRecipientes) {
