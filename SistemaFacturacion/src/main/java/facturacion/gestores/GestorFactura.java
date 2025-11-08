@@ -4,65 +4,63 @@ package facturacion.gestores;
 import facturacion.elementos.Factura;
 import facturacion.elementos.ReporteVenta;
 import facturacion.elementos.Pedido;
-import facturacion.elementos.Cliente;  
+import facturacion.elementos.Cliente;
 import facturacion.elementos.enumeraciones.SaborHelado;
 import facturacion.elementos.enumeraciones.TipoRecipiente;
 
 // Importaciones de Interfaces
+// Nota: Estas interfaces tendrían que ser refactorizadas también
+// para que coincidan con las nuevas firmas de los métodos.
 import facturacion.gestores.interfaces.IGestorFacturaHeladero;
 import facturacion.gestores.interfaces.IGestorFacturaCajero;
 
-// Importaciones de Gestores
-import facturacion.gestores.GestorClientes;
-import facturacion.gestores.GestorCaja;
-import facturacion.gestores.GestorPedido;
-import facturacion.gestores.GestorPromocion;
-
 // Importaciones de Java
 import java.util.ArrayList;
-import java.util.Date; // <-- Importado
+import java.util.Date;
 import java.util.List;
 
+/**
+ * Clase refactorizada para usar "Uso" (parámetros de método)
+ * en lugar de "Agregación" (campos).
+ */
 public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCajero {
 
     // --- 1. Atributos Internos ---
+    // (Estos son Composición, se quedan)
     private List<Factura> listaFacturas;
     private List<ReporteVenta> listaReporte;
 
     // --- 2. Dependencias ---
-    private GestorClientes gestorClientes;
-    private GestorCaja gestorCaja;
-    private GestorPedido gestorPedido;
-    private GestorPromocion gestorPromocion;
+    // (Campos eliminados para cambiar de Agregación a Uso)
+    // private GestorCliente gestorCliente;
+    // private GestorCaja gestorCaja;
+    // private GestorPedido gestorPedido;
+    // private GestorPromocion gestorPromocion;
 
     // --- 3. Constructor ---
-    public GestorFactura(GestorClientes gestorClientes, GestorCaja gestorCaja,
-                         GestorPedido gestorPedido, GestorPromocion gestorPromocion) {
-        
+    public GestorFactura() {
+        // Constructor ahora solo inicializa sus propias listas
         this.listaFacturas = new ArrayList<>();
         this.listaReporte = new ArrayList<>();
-
-        // Asigna dependencias (Punto 2)
-        this.gestorClientes = gestorClientes;
-        this.gestorCaja = gestorCaja;
-        this.gestorPedido = gestorPedido;
-        this.gestorPromocion = gestorPromocion;
     }
 
     // --- 4. Métodos de IGestorFacturaCajero ---
 
     /**
      * Lógica para generar una factura.
-     * USA las dependencias: "consulta" a GestorPedido y "busca" a GestorClientes.
+     * USA las dependencias: "consulta" a GestorPedido y "busca" a GestorClientes
+     * pasadas como parámetros.
      */
-    @Override
-    public Factura generarFactura(int pedidoID, String clienteCedula) {
-        
+    // @Override // <-- Comentado, la firma del método en la interfaz ya no coincide
+    public Factura generarFactura(int pedidoID, String clienteCedula,
+                                  GestorPedido gestorPedido, GestorCliente gestorCliente,
+                                  GestorPromocion gestorPromocion) {
+
         // 1. "consulta" (Dependencia de GestorPedido)
-        Pedido pedidoAFacturar = gestorPedido.buscarPedido(pedidoID);
-        
+        Pedido pedidoAFacturar = gestorPedido.buscarPedido(pedidoID); // Usa el parámetro
+
         // 2. "busca" (Dependencia de GestorClientes)
-        Cliente clienteFactura = gestorClientes.buscarCliente(clienteCedula);
+        Cliente clienteFactura = gestorCliente.buscarCliente(clienteCedula); // Usa el parámetro
 
         // 3. Verificación
         if (pedidoAFacturar == null) {
@@ -75,66 +73,50 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
         }
 
         // 4. Calcular el precio
-        double totalCalculado = this.calcularPrecio(pedidoAFacturar);
-        
+        // Pasa la dependencia 'gestorPromocion' al método que la necesita
+        double totalCalculado = this.calcularPrecio(pedidoAFacturar, gestorPromocion);
+
         // TODO: Aquí deberíamos calcular el IVA
         double iva = totalCalculado * 0.12; // Asumiendo 12%
 
-        // 5. Crear la Factura (Usando el constructor vacío que añadimos)
+        // 5. Crear la Factura
         Factura nuevaFactura = new Factura();
-        nuevaFactura.setFechaEmision(new Date()); // Tu constructor vacío lo hace, pero lo re-aseguramos
-        
-        // Usamos el contador estático de Factura.java
-        // (Aunque tu constructor original lo hacía, el vacío no)
-        // nuevaFactura.setIdFactura(...); // Tu clase Factura lo maneja con 'contadorFactura'
-        
+        nuevaFactura.setFechaEmision(new Date());
         nuevaFactura.setPedidos(pedidoAFacturar);
         nuevaFactura.setCliente(clienteFactura);
         nuevaFactura.setTotal(totalCalculado);
         nuevaFactura.setImpuestoIVA(iva);
-
-        // Dejamos los campos de pago pendientes
         nuevaFactura.setTipoPago("PENDIENTE");
         nuevaFactura.setPago(0.0);
         nuevaFactura.setCambio(0.0);
 
         // 6. Almacenar y devolver
         this.listaFacturas.add(nuevaFactura);
-        
-        // Actualizamos el estado del pedido
-        this.gestorPedido.actualizarPedido(pedidoID, "FACTURADO");
-        
+
+        // Actualizamos el estado del pedido usando el parámetro
+        gestorPedido.actualizarPedido(pedidoID, "FACTURADO");
+
         System.out.println("Factura generada para el pedido " + pedidoID);
         return nuevaFactura;
     }
 
     /**
      * Lógica para calcular el precio.
-     * USA las dependencias: "obtiene total" y "GestorPromocion".
+     * USA la dependencia: "GestorPromocion" pasada como parámetro.
      */
-    @Override
-    public double calcularPrecio(Pedido pedido) {
-        // 1. "obtiene total" (Asumimos que el "total" viene del Pedido)
-        // TODO: Necesitas un método 'getSubtotal()' en tu clase Pedido
-        // que sume los precios de this.helados.
-        // double subtotal = pedido.getSubtotal(); 
-        
-        // *** SOLUCIÓN TEMPORAL mientras añades getSubtotal() a Pedido ***
-        // Vamos a calcular el subtotal aquí (aunque debería hacerlo Pedido)
+    // @Override // <-- Comentado, la firma del método en la interfaz ya no coincide
+    public double calcularPrecio(Pedido pedido, GestorPromocion gestorPromocion) {
+
+        // ... (Lógica de cálculo de subtotal) ...
         double subtotal = 0.0;
-        // Asumimos que la clase Helado tiene un getPrecio()
-        // for (Helado helado : pedido.getHelados()) {
-        //     subtotal += helado.getPrecio();
-        // }
-        // Si no tenemos getPrecio(), usaremos un valor temporal:
         if (pedido.getHelados().size() > 0) {
-             subtotal = pedido.getHelados().size() * 3.50; // $3.50 por helado (temporal)
+            subtotal = pedido.getHelados().size() * 3.50; // $3.50 por helado (temporal)
         }
-        
-        // 2. "GestorPromocion" (Dependencia)
+
+        // 2. "GestorPromocion" (Dependencia usada como parámetro)
         // TODO: Lógica de GestorPromocion
-        // Promocion promo = gestorPromocion.buscarPromocionAplicable(pedido);
-        // double descuento = promo.calcularDescuento(subtotal);
+        // Promocion promo = gestorPromocion.buscarPromocionAplicable(pedido); // Usa el parámetro
+
         double descuento = 0.0; // Sin promoción por ahora
 
         return subtotal - descuento;
@@ -143,54 +125,37 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
 
     // --- 5. Métodos de IGestorFacturaHeladero ---
 
-    @Override
+    // @Override // <-- No requiere gestores externos, la firma no cambia
     public ReporteVenta generarReporteVenta() {
         // Lógica simple de reporte: Suma el total de todas las facturas
         double totalVentas = 0.0;
         int facturasProcesadas = 0;
-        
-        // TODO: Lógica para encontrar el sabor/recipiente más vendido
-        // Necesitaríamos Mapas (HashMap) para contar cada sabor y recipiente
-        // Map<SaborHelado, Integer> contadorSabores = new HashMap<>();
-        // Map<TipoRecipiente, Integer> contadorRecipientes = new HashMap<>();
+
+        // ... (Lógica interna del reporte) ...
 
         for (Factura f : this.listaFacturas) {
-            // No sumar facturas anuladas
             if (!f.getTipoPago().equals("ANULADA")) {
                 totalVentas += f.getTotal();
                 facturasProcesadas++;
-                
-                // TODO: Aquí iría la lógica de conteo
-                // Pedido p = f.getPedido();
-                // for (Helado h : p.getHelados()) {
-                //    ... (contar recipiente y bolas de sabor) ...
-                // }
             }
         }
-        
+
         System.out.println("Reporte generado: " + totalVentas + " en " + facturasProcesadas + " facturas.");
 
-        // --- INICIO DE LA CORRECCIÓN ---
-        
-        // TODO: Implementar la lógica de búsqueda del más vendido.
-        // Por ahora, pasamos 'null' como placeholder.
-        SaborHelado saborMasVendido = null; 
+        SaborHelado saborMasVendido = null;
         TipoRecipiente recipienteMasVendido = null;
 
-        // Usamos el constructor que SÍ existe en ReporteVenta.java
         ReporteVenta reporte = new ReporteVenta(
-            totalVentas, 
-            saborMasVendido, 
-            recipienteMasVendido
-        ); 
+                totalVentas,
+                saborMasVendido,
+                recipienteMasVendido
+        );
 
-        // --- FIN DE LA CORRECCIÓN ---
-        
         this.listaReporte.add(reporte);
         return reporte;
     }
 
-    @Override
+    // @Override // <-- No requiere gestores externos, la firma no cambia
     public Factura buscarFactura(int idFactura) {
         for (Factura f : this.listaFacturas) {
             if (f.getIdFactura() == idFactura) {
@@ -201,18 +166,13 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
         return null;
     }
 
-    @Override
+    // @Override // <-- Comentado, la firma del método en la interfaz ya no coincide
     public void anularFactura(int idFactura) {
         Factura factura = buscarFactura(idFactura);
         if (factura != null) {
-            // Usamos el 'tipoPago' para marcarla como anulada
-            // (Sería mejor tener un campo 'estado')
             factura.setTipoPago("ANULADA");
-            
-            // TODO: Devolver el pedido al estado "EN_PROCESO"
-            // Pedido p = factura.getPedido();
-            // gestorPedido.actualizarPedido(p.getPedidoID(), "EN_PROCESO");
-            
+            factura.setPago(0.0);
+            factura.setCambio(0.0);
             System.out.println("Factura " + idFactura + " anulada.");
         }
     }

@@ -4,6 +4,8 @@
  */
 package interfazGrafica;
 
+import facturacion.gestores.*;
+
 import javax.swing.JFrame;
 
 /**
@@ -12,12 +14,23 @@ import javax.swing.JFrame;
  */
 public class VentanaCajero extends javax.swing.JFrame {
     private LoginVentana loginDeOrigen;
+    private GestorStock gestorStock;
+    private GestorPedido gestorPedido;
+    private GestorCaja gestorCaja;
+    private GestorPromocion gestorPromocion;
+    private GestorCliente gestorCliente;
+    
     /**
      * Creates new form VentanaCajero
      * @param login
      */
-    public VentanaCajero(LoginVentana login) {
+    public VentanaCajero(GestorStock gStock, GestorPedido gPedido, GestorCaja gCaja, GestorPromocion gPromocion, GestorCliente gCliente, LoginVentana login) {
         this.loginDeOrigen = login;
+        this.gestorStock = gStock;
+        this.gestorPedido = gPedido;
+        this.gestorCaja = gCaja;
+        this.gestorPromocion = gPromocion;
+        this.gestorCliente = gCliente;
         initComponents();
         
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);

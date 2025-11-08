@@ -4,6 +4,7 @@
  */
 package interfazGrafica;
 
+import facturacion.gestores.*;
 import javax.swing.JFrame;
 
 /**
@@ -12,14 +13,24 @@ import javax.swing.JFrame;
  */
 public class VentanaHeladero extends javax.swing.JFrame {
     private LoginVentana loginDeOrigen;
+    private GestorStock gestorStock;
+    private GestorPedido gestorPedido;
+    private GestorCaja gestorCaja;
+    private GestorPromocion gestorPromocion;
+    private GestorCliente gestorCliente;
     /**
      * Creates new form VentanaHeladero
      */
-    public VentanaHeladero(LoginVentana login) {
+    public VentanaHeladero(GestorStock gStock, GestorPedido gPedido, GestorCaja gCaja, GestorPromocion gPromocion, GestorCliente gCliente, LoginVentana login) {
         initComponents();
         this.loginDeOrigen = login;
+        this.gestorStock = gStock;
+        this.gestorPedido = gPedido;
+        this.gestorCaja = gCaja;
+        this.gestorPromocion = gPromocion;
+        this.gestorCliente = gCliente;
         
-                this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
         //Listener que volvera al login cuando se cierre esta ventana
         this.addWindowListener(new java.awt.event.WindowAdapter() {
