@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package interfazGrafica;
+import facturacion.gestores.*;
 import java.awt.Color;
 
 /**
@@ -11,10 +12,21 @@ import java.awt.Color;
  */
 public class LoginVentana extends javax.swing.JFrame {
     Color materialBlue = new Color(66, 133, 244);
+
+    private GestorStock gestorStock;
+    private GestorPedido gestorPedido;
+    private GestorCaja gestorCaja;
+    private GestorPromocion gestorPromocion;
+    private GestorCliente gestorCliente;
     /**
      * Creates new form LoginVentana
      */
-    public LoginVentana() {
+    public LoginVentana(GestorStock gStock, GestorPedido gPedido, GestorCaja gCaja, GestorPromocion gPromocion, GestorCliente gCliente) {
+        this.gestorStock = gStock;
+        this.gestorPedido = gPedido;
+        this.gestorCaja = gCaja;
+        this.gestorPromocion = gPromocion;
+        this.gestorCliente = gCliente;
         initComponents();
         
     }
@@ -174,7 +186,7 @@ public class LoginVentana extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonLoginCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLoginCActionPerformed
-        new VentanaCajero(this).setVisible(true);
+        new VentanaCajero(gestorStock, gestorPedido, gestorCaja, gestorPromocion, gestorCliente, this).setVisible(true);
         botonLoginC.setFocusPainted(false);
         this.setVisible(false);
     }//GEN-LAST:event_botonLoginCActionPerformed
@@ -184,7 +196,7 @@ public class LoginVentana extends javax.swing.JFrame {
         String pass = new String(passHeladero.getPassword());
         
         if(usuario.equals("heladero") && pass.equals("1234")){
-           new VentanaHeladero(this).setVisible(true);
+           new VentanaHeladero(gestorStock, gestorPedido, gestorCaja, gestorPromocion, gestorCliente, this).setVisible(true);
            usuarioHeladero.setText("");
            passHeladero.setText("");
            this.setVisible(false);
