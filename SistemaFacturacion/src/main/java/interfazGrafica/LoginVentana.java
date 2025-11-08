@@ -3,20 +3,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package interfazGrafica;
+import java.awt.Color;
 
 /**
  *
  * @author emili
  */
 public class LoginVentana extends javax.swing.JFrame {
-
+    Color materialBlue = new Color(66, 133, 244);
     /**
      * Creates new form LoginVentana
      */
     public LoginVentana() {
         initComponents();
+        
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,33 +29,51 @@ public class LoginVentana extends javax.swing.JFrame {
     private void initComponents() {
 
         PanelLogin = new javax.swing.JPanel();
+        backPanel = new javax.swing.JPanel();
         botonLoginC = new javax.swing.JToggleButton();
-        jLabel1 = new javax.swing.JLabel();
-        usuarioHeladero = new javax.swing.JTextField();
-        passHeladero = new javax.swing.JPasswordField();
+        botonLoginC.setBackground(materialBlue);
+        botonLoginC.setForeground(Color.WHITE);
+        botonLoginC.setOpaque(true);
+        botonLoginC.setBorderPainted(false);
+        botonLoginC.setContentAreaFilled(true);
         jLabel2 = new javax.swing.JLabel();
+        usuarioHeladero = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        botonLoginH = new javax.swing.JButton();
+        passHeladero = new javax.swing.JPasswordField();
         errorLoginLabel = new javax.swing.JLabel();
         errorLoginLabel.setVisible(false);
+        botonLoginH = new javax.swing.JButton();
+        botonLoginH.setBackground(materialBlue);
+        botonLoginH.setForeground(Color.WHITE);
+        botonLoginH.setOpaque(true);
+        botonLoginH.setBorderPainted(false);
+        botonLoginH.setContentAreaFilled(true);
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
+        PanelLogin.setBackground(new java.awt.Color(255, 255, 255));
+
         botonLoginC.setText("Acceder como Cajero");
+        botonLoginC.setBorderPainted(false);
         botonLoginC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonLoginCActionPerformed(evt);
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Bienvenido");
-
         jLabel2.setText("Usuario");
 
+        usuarioHeladero.setBorder(null);
+
         jLabel3.setText("Contraseña");
+
+        passHeladero.setBorder(null);
+
+        errorLoginLabel.setForeground(new java.awt.Color(255, 51, 51));
+        errorLoginLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        errorLoginLabel.setText("Intente de nuevo");
 
         botonLoginH.setText("Ingresar como Heladero");
         botonLoginH.addActionListener(new java.awt.event.ActionListener() {
@@ -62,76 +82,101 @@ public class LoginVentana extends javax.swing.JFrame {
             }
         });
 
-        errorLoginLabel.setForeground(new java.awt.Color(255, 122, 131));
-        errorLoginLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        errorLoginLabel.setText("Intente de nuevo");
+        javax.swing.GroupLayout backPanelLayout = new javax.swing.GroupLayout(backPanel);
+        backPanel.setLayout(backPanelLayout);
+        backPanelLayout.setHorizontalGroup(
+            backPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(backPanelLayout.createSequentialGroup()
+                .addContainerGap(139, Short.MAX_VALUE)
+                .addGroup(backPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(errorLoginLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(botonLoginH, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backPanelLayout.createSequentialGroup()
+                        .addGroup(backPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2))
+                        .addGap(18, 18, 18)
+                        .addGroup(backPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(usuarioHeladero)
+                            .addComponent(passHeladero, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
+            .addGroup(backPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(botonLoginC)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        backPanelLayout.setVerticalGroup(
+            backPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backPanelLayout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(backPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(usuarioHeladero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addGap(34, 34, 34)
+                .addGroup(backPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(passHeladero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGap(18, 18, 18)
+                .addComponent(errorLoginLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(botonLoginH)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addComponent(botonLoginC)
+                .addContainerGap())
+        );
+
+        jLabel1.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Control de Acceso");
 
         javax.swing.GroupLayout PanelLoginLayout = new javax.swing.GroupLayout(PanelLogin);
         PanelLogin.setLayout(PanelLoginLayout);
         PanelLoginLayout.setHorizontalGroup(
             PanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelLoginLayout.createSequentialGroup()
+                .addGap(0, 13, Short.MAX_VALUE)
+                .addComponent(backPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19))
             .addGroup(PanelLoginLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(botonLoginC)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelLoginLayout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelLoginLayout.createSequentialGroup()
-                .addGap(0, 141, Short.MAX_VALUE)
-                .addGroup(PanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(errorLoginLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-                    .addGroup(PanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(botonLoginH, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-                        .addGroup(PanelLoginLayout.createSequentialGroup()
-                            .addGroup(PanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel3)
-                                .addComponent(jLabel2))
-                            .addGap(18, 18, 18)
-                            .addGroup(PanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(usuarioHeladero)
-                                .addComponent(passHeladero, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)))))
-                .addGap(43, 43, 43))
         );
         PanelLoginLayout.setVerticalGroup(
             PanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelLoginLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
+                .addGap(38, 38, 38)
                 .addComponent(jLabel1)
-                .addGap(103, 103, 103)
-                .addGroup(PanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(usuarioHeladero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGap(34, 34, 34)
-                .addGroup(PanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(passHeladero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addGap(18, 18, 18)
-                .addComponent(errorLoginLabel)
-                .addGap(18, 18, 18)
-                .addComponent(botonLoginH)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                .addComponent(botonLoginC)
-                .addGap(30, 30, 30))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addComponent(backPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(PanelLogin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(PanelLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(PanelLogin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(PanelLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonLoginCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLoginCActionPerformed
-        new VentanaCajero().setVisible(true);
-        this.dispose();
+        new VentanaCajero(this).setVisible(true);
+        botonLoginC.setFocusPainted(false);
+        this.setVisible(false);
     }//GEN-LAST:event_botonLoginCActionPerformed
 
     private void botonLoginHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLoginHActionPerformed
@@ -139,8 +184,10 @@ public class LoginVentana extends javax.swing.JFrame {
         String pass = new String(passHeladero.getPassword());
         
         if(usuario.equals("heladero") && pass.equals("1234")){
-           new VentanaHeladero().setVisible(true);
-           this.dispose();
+           new VentanaHeladero(this).setVisible(true);
+           usuarioHeladero.setText("");
+           passHeladero.setText("");
+           this.setVisible(false);
         }else{
             errorLoginLabel.setVisible(true);
             
@@ -152,6 +199,7 @@ public class LoginVentana extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelLogin;
+    private javax.swing.JPanel backPanel;
     private javax.swing.JToggleButton botonLoginC;
     private javax.swing.JButton botonLoginH;
     private javax.swing.JLabel errorLoginLabel;

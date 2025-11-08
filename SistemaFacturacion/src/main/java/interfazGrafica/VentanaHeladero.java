@@ -4,17 +4,33 @@
  */
 package interfazGrafica;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author emili
  */
 public class VentanaHeladero extends javax.swing.JFrame {
-
+    private LoginVentana loginDeOrigen;
     /**
      * Creates new form VentanaHeladero
      */
-    public VentanaHeladero() {
+    public VentanaHeladero(LoginVentana login) {
         initComponents();
+        this.loginDeOrigen = login;
+        
+                this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        //Listener que volvera al login cuando se cierre esta ventana
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                //Volver a mostrar Login
+                loginDeOrigen.setVisible(true);
+                //Cerrar Cajero
+                dispose();
+            }
+        });
     }
 
     /**
@@ -40,6 +56,7 @@ public class VentanaHeladero extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
