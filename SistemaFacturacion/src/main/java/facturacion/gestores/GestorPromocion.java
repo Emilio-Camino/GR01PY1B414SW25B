@@ -1,9 +1,9 @@
-package logica.facturacion.gestores;
+package facturacion.gestores;
 
-import logica.facturacion.elementos.Promocion;
-import logica.facturacion.elementos.enumeraciones.SaborHelado;
-import logica.facturacion.gestores.interfaces.IGestorPromocionCajero;
-import logica.facturacion.gestores.interfaces.IGestorPromocionHeladero;
+import facturacion.elementos.Promocion;
+import facturacion.elementos.enumeraciones.SaborHelado;
+import facturacion.gestores.interfaces.IGestorPromocionCajero;
+import facturacion.gestores.interfaces.IGestorPromocionHeladero;
 
 import java.util.List;
 import java.util.ArrayList;

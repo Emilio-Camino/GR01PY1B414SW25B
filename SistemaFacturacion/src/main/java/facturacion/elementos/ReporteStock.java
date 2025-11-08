@@ -1,30 +1,37 @@
-package logica.facturacion.elementos;
+package facturacion.elementos;
 
-import logica.facturacion.elementos.enumeraciones.SaborHelado;
-import logica.facturacion.elementos.enumeraciones.TipoRecipiente;
+import facturacion.elementos.enumeraciones.SaborHelado;
+import facturacion.elementos.enumeraciones.TipoRecipiente;
 
 import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+
 public class ReporteStock {
 
     private int idReporte;
+    private LocalDateTime fechaReporte;
     private Map<SaborHelado, Integer> stockSabores;
     private Map<TipoRecipiente, Integer> stockRecipiente;
-    private List<ReporteStock> listaReporte;
 
-    public ReporteStock() {
-        this.stockSabores = new HashMap<>();
-        this.stockRecipiente = new HashMap<>();
-        this.listaReporte = new ArrayList<>();
+    public ReporteStock(int id, Map<SaborHelado, Integer> stockSabores, Map<TipoRecipiente, Integer> stockRecipiente) {
+        setIdReporte(id);
+        setFechaReporte(LocalDateTime.now());
+        setStockRecipiente(stockRecipiente);
+        setStockSabores(stockSabores);
     }
 
     public String toStringReporteStock() {
         return "Reporte ID: " + idReporte +
                 ", Sabores: " + stockSabores.size() +
-                ", Recipientes: " + stockRecipiente.size();
+                ", Recipientes: " + stockRecipiente.size() +
+                ", Fecha del Reporte: " + fechaReporte.toString();
+
     }
 
     public int getIdReporte() {
@@ -51,11 +58,11 @@ public class ReporteStock {
         this.stockRecipiente = stockRecipiente;
     }
 
-    public List<ReporteStock> getListaReporte() {
-        return listaReporte;
+    public LocalDateTime getFechaReporte() {
+        return fechaReporte;
     }
 
-    public void setListaReporte(List<ReporteStock> listaReporte) {
-        this.listaReporte = listaReporte;
+    public void setFechaReporte(LocalDateTime fechaReporte) {
+        this.fechaReporte = fechaReporte;
     }
 }

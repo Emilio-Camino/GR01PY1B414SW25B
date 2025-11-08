@@ -1,6 +1,6 @@
-package logica.facturacion.elementos;
+package facturacion.elementos;
 
-import logica.facturacion.elementos.enumeraciones.SaborHelado;
+import facturacion.elementos.enumeraciones.SaborHelado;
 
 public class Promocion {
     private static int contadorPromocion = 0;

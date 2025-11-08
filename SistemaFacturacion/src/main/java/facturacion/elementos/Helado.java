@@ -1,7 +1,7 @@
-package logica.facturacion.elementos;
+package facturacion.elementos;
 
-import logica.facturacion.elementos.enumeraciones.SaborHelado;
-import logica.facturacion.elementos.enumeraciones.TipoRecipiente;
+import facturacion.elementos.enumeraciones.SaborHelado;
+import facturacion.elementos.enumeraciones.TipoRecipiente;
 
 import java.util.ArrayList;
 

@@ -1,7 +1,7 @@
-package logica.facturacion.gestores.interfaces;
+package facturacion.gestores.interfaces;
 
-import logica.facturacion.elementos.Promocion;
-import logica.facturacion.elementos.enumeraciones.SaborHelado;
+import facturacion.elementos.Promocion;
+import facturacion.elementos.enumeraciones.SaborHelado;
 
 public interface IGestorPromocionHeladero {
     public Promocion buscarPromocion(int idPromocion);

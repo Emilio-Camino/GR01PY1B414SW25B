@@ -1,4 +1,4 @@
-package logica.facturacion.elementos.enumeraciones;
+package facturacion.elementos.enumeraciones;
 
 public enum SaborHelado {
     CHOCOLATE,

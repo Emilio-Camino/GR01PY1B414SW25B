@@ -1,4 +1,4 @@
-package logica.facturacion.elementos;
+package facturacion.elementos;
 
 import java.util.Date;
 
