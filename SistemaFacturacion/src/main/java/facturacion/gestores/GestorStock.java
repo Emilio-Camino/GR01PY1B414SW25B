@@ -20,19 +20,17 @@ public class GestorStock implements IGestorStockCajero, IGestorStockHeladero {
 
     public GestorStock() {
         // Inicialización de sabores con stock inicial
-        getStockSabores().put(SaborHelado.CHOCOLATE, 20);
-        getStockSabores().put(SaborHelado.FRESA, 15);
-        getStockSabores().put(SaborHelado.VAINILLA, 25);
-        getStockSabores().put(SaborHelado.COOKIESNCREAM, 30);
-        getStockSabores().put(SaborHelado.RONPASAS, 15);
-        getStockSabores().put(SaborHelado.CHICLE, 12);
+        stockSabores.put(SaborHelado.CHOCOLATE, 20);
+        stockSabores.put(SaborHelado.FRESA, 15);
+        stockSabores.put(SaborHelado.VAINILLA, 25);
+        stockSabores.put(SaborHelado.COOKIESNCREAM, 30);
+        stockSabores.put(SaborHelado.RONPASAS, 15);
+        stockSabores.put(SaborHelado.CHICLE, 12);
 
         // Inicialización de tipos de recipiente con stock inicial
-        getStockRecipiente().put(TipoRecipiente.VASO, 50);
-        getStockRecipiente().put(TipoRecipiente.CONO, 40);
-        getStockRecipiente().put(TipoRecipiente.TULIPAN, 30);
-
-        getReportesStock().add(generarReporteStock());
+        stockRecipiente.put(TipoRecipiente.VASO, 50);
+        stockRecipiente.put(TipoRecipiente.CONO, 40);
+        stockRecipiente.put(TipoRecipiente.TULIPAN, 30);
     }
 
     /* Busca la cantidad de recipientes de acuerdo a su tipo. Si no existe la entrada en el Map, retorna 0.*/
@@ -45,7 +43,7 @@ public class GestorStock implements IGestorStockCajero, IGestorStockHeladero {
     /* Busca la cantidad de bolas de Helado de acuerdo a su tipo. Si no existe la entrada en el Map, retorna 0.*/
     @Override
     public int buscarBolasHelado(SaborHelado saborHelado) {
-        int cantidadHelado = getStockSabores().getOrDefault(saborHelado, 0);
+        int cantidadHelado = stockSabores().getOrDefault(saborHelado, 0);
         return cantidadHelado;
     }
 
@@ -53,7 +51,7 @@ public class GestorStock implements IGestorStockCajero, IGestorStockHeladero {
     @Override
     public boolean actualizarHelados(SaborHelado saborHelado, int numHelados) {
         if (numHelados >= 0) {
-            getStockSabores().put(saborHelado, numHelados);
+            stockSabores.put(saborHelado, numHelados);
             return true;
         }
         return false;
@@ -63,7 +61,7 @@ public class GestorStock implements IGestorStockCajero, IGestorStockHeladero {
     @Override
     public boolean actualizarRecipiente(TipoRecipiente tipoRecipiente, int numRecipientes) {
         if (numRecipientes >= 0) {
-            getStockRecipiente().put(tipoRecipiente, numRecipientes);
+            stockRecipiente.put(tipoRecipiente, numRecipientes);
             return true;
         }
         return false;
@@ -73,7 +71,7 @@ public class GestorStock implements IGestorStockCajero, IGestorStockHeladero {
     @Override
     public ReporteStock generarReporteStock() {
         int nuevoIdReporte = obtenerUltimoIdReporte() + 1;
-        return new ReporteStock(nuevoIdReporte, getStockSabores(), getStockRecipiente());
+        return new ReporteStock(nuevoIdReporte, stockSabores(), getStockRecipiente());
     }
 
     //Método que sirve para obtener cuál es la ID del ultimo registro en la lista de Reportes
@@ -89,7 +87,7 @@ public class GestorStock implements IGestorStockCajero, IGestorStockHeladero {
     // Getters y Setters
     // --------------------------------------------------------
 
-    public Map<SaborHelado, Integer> getStockSabores() {
+    public Map<SaborHelado, Integer> stockSabores() {
         return stockSabores;
     }
 
