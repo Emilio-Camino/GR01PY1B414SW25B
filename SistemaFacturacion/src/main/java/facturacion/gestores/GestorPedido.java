@@ -2,26 +2,62 @@ package facturacion.gestores;
 
 // Importaciones de Java
 import java.util.ArrayList;
-import java.util.List;
+import facturacion.elementos.enumeraciones.*;
 
 // Importaciones de elementos
 import facturacion.elementos.Pedido;
+import facturacion.gestores.interfaces.IGestorPedido;
 
 /**
  * GestorPedido: Se encarga de la creación, búsqueda,
  * actualización y eliminación de pedidos.
  */
-public class GestorPedido {
+public class GestorPedido implements IGestorPedido {
 
     // --- 1. Atributos ---
-    private List<Pedido> pedidos;
+    private ArrayList<Pedido> listaPedidos;
 
     // --- 2. Constructor ---
     public GestorPedido() {
         // Inicializamos la lista
-        this.pedidos = new ArrayList<>();
+        this.listaPedidos = new ArrayList<>();
+        quemarDatosPedidos();
     }
-    
+
+
+    private void quemarDatosPedidos() {
+
+        // --- Pedido 1 (para Factura 1) ---
+        // Nota: El constructor de Pedido autoincrementa el ID (será ID 1)
+        Pedido p1 = new Pedido(0, "EN_PROCESO");
+
+        // Helado 1.1: Cono con Chocolate y Vainilla
+        SaborHelado[] saboresH1 = {SaborHelado.CHOCOLATE, SaborHelado.VAINILLA};
+        p1.agregarHelado(TipoRecipiente.CONO, 2, saboresH1);
+
+        // Helado 1.2: Tulipán con Fresa, CookiesNCreate y RonPasas
+        SaborHelado[] saboresH2 = {SaborHelado.FRESA, SaborHelado.COOKIESNCREAM, SaborHelado.RONPASAS};
+        p1.agregarHelado(TipoRecipiente.TULIPAN, 3, saboresH2);
+
+        this.listaPedidos.add(p1);
+
+        // --- Pedido 2 (para Factura 2) ---
+        Pedido p2 = new Pedido(0, "EN_PROCESO"); // (Será ID 2)
+        // Helado 2.1: Vaso con Chicle
+        SaborHelado[] saboresH3 = {SaborHelado.CHICLE};
+        p2.agregarHelado(TipoRecipiente.VASO, 1, saboresH3);
+
+        this.listaPedidos.add(p2);
+
+        // --- Pedido 3 (para Factura 3) ---
+        Pedido p3 = new Pedido(0, "EN_PROCESO"); // (Será ID 3)
+        // Helado 3.1: Cono con Fresa (para probar la promoción)
+        SaborHelado[] saboresH4 = {SaborHelado.FRESA};
+        p3.agregarHelado(TipoRecipiente.CONO, 1, saboresH4);
+
+        this.listaPedidos.add(p3);
+    }
+
     // --- 3. Métodos del Diagrama (con lógica) ---
 
     /**
@@ -35,7 +71,7 @@ public class GestorPedido {
         Pedido nuevoPedido = new Pedido(0, "EN_PROCESO");
         
         // Añadimos el pedido a nuestra lista
-        this.pedidos.add(nuevoPedido);
+        this.listaPedidos.add(nuevoPedido);
         
         System.out.println("Nuevo pedido iniciado. ID: " + nuevoPedido.getPedidoID());
         return nuevoPedido;
@@ -48,7 +84,7 @@ public class GestorPedido {
      * @return El Pedido si se encuentra, o null si no.
      */
     public Pedido buscarPedido(int pedidoID) {
-        for (Pedido pedido : this.pedidos) {
+        for (Pedido pedido : this.listaPedidos) {
             // Usamos el getter de tu clase Pedido
             if (pedido.getPedidoID() == pedidoID) {
                 return pedido; // Encontrado
@@ -85,7 +121,7 @@ public class GestorPedido {
     public void eliminarPedido(int pedidoID) {
         
         // Usamos removeIf con la cédula
-        boolean eliminado = this.pedidos.removeIf(
+        boolean eliminado = this.listaPedidos.removeIf(
             pedido -> pedido.getPedidoID() == pedidoID
         );
 

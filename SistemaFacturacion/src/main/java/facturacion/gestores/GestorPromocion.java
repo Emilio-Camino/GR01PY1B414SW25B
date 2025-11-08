@@ -14,6 +14,7 @@ public class GestorPromocion implements IGestorPromocionCajero, IGestorPromocion
 
     public GestorPromocion() {
         this.listaPromociones = new ArrayList<>();
+        quemarDatosPromociones();
     }
 
     // --- Implementación de Métodos ---
@@ -40,6 +41,12 @@ public class GestorPromocion implements IGestorPromocionCajero, IGestorPromocion
                 listaPromociones.remove(promocion);
             }
         }
+    }
+
+    private void quemarDatosPromociones() {
+        // El 15% de descuento se representa como 0.15
+        Promocion promoFresa = new Promocion(0.15, SaborHelado.FRESA);
+        this.listaPromociones.add(promoFresa);
     }
 
     // --- Getters y Setters (Esqueleto) ---
