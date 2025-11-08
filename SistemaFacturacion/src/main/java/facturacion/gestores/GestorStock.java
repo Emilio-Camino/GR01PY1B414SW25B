@@ -40,6 +40,7 @@ public class GestorStock implements IGestorStockCajero, IGestorStockHeladero {
         return cantidadRecipiente;
     }
 
+
     /* Busca la cantidad de bolas de Helado de acuerdo a su tipo. Si no existe la entrada en el Map, retorna 0.*/
     @Override
     public int buscarBolasHelado(SaborHelado saborHelado) {
