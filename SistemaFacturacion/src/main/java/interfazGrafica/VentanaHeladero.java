@@ -59,7 +59,8 @@ public class VentanaHeladero extends JFrame {
         labelDireccionAct.setVisible(false);
         labelCorreoAct.setVisible(false);
         labelResultadoBusqueda.setVisible(false);
-
+        cargarOpcionesPromocion();
+        
         actCedulaField.setVisible(false);
         actNombreField.setVisible(false);
         actTelefonoField.setVisible(false);
@@ -112,6 +113,14 @@ public class VentanaHeladero extends JFrame {
         actCedulaField = new javax.swing.JTextField();
         labelActualizarInformacion = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        btnCrearPromocion = new javax.swing.JButton();
+        labelActualizarStock1 = new javax.swing.JLabel();
+        opcionesPromocion = new javax.swing.JComboBox<>();
+        newStockPromocion = new javax.swing.JTextField();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
 
         jCheckBox1.setText("jCheckBox1");
 
@@ -161,6 +170,11 @@ public class VentanaHeladero extends JFrame {
         labelActualizarStock.setText("ACTUALIZAR STOCK");
 
         opcionesStock.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        opcionesStock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                opcionesStockActionPerformed(evt);
+            }
+        });
 
         stock.setColumns(20);
         stock.setRows(5);
@@ -181,17 +195,10 @@ public class VentanaHeladero extends JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(newStock, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(16, 16, 16)
-                                .addComponent(labelActualizarStock))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(checkSaboresStock)
-                                .addGap(55, 55, 55)
-                                .addComponent(checkRecipienteStock))
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(239, 239, 239)
-                        .addComponent(btnActualizarStock)))
-                .addContainerGap(166, Short.MAX_VALUE))
+                                .addComponent(btnActualizarStock)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnGenerarReporte)))))
+                .addContainerGap(143, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -208,9 +215,11 @@ public class VentanaHeladero extends JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(opcionesStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(newStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                .addComponent(btnActualizarStock)
-                .addGap(15, 15, 15))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnActualizarStock)
+                    .addComponent(btnGenerarReporte))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         pantallaActualizarStock.addTab("ActualizarStock", jPanel1);
@@ -317,8 +326,32 @@ public class VentanaHeladero extends JFrame {
                                         .addGap(81, 81, 81)
                                         .addComponent(btnModificarCliente))))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(labelActualizarInformacion)))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelNombreAct, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelTelefonoAct, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelCedulaAct))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(actCedulaField, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(actNombreField, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(58, 58, 58)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(labelCorreoAct)
+                                    .addComponent(labelDireccionAct, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(actCorreoField, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(actDireccionField, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(actTelefonoField, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 152, Short.MAX_VALUE)
+                                .addComponent(btnAplicarCambios)))))
+                .addGap(64, 64, 64))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(labelActualizarInformacion)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -358,7 +391,7 @@ public class VentanaHeladero extends JFrame {
                             .addComponent(labelCorreoAct)
                             .addComponent(actCedulaField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(labelCedulaAct))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
                         .addComponent(btnAplicarCambios)
                         .addGap(26, 26, 26))))
         );
@@ -369,20 +402,99 @@ public class VentanaHeladero extends JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 613, Short.MAX_VALUE)
+            .addGap(0, 590, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 365, Short.MAX_VALUE)
+            .addGap(0, 377, Short.MAX_VALUE)
         );
 
         pantallaActualizarStock.addTab("tab3", jPanel3);
+
+        btnCrearPromocion.setText("Crear Promocion");
+        btnCrearPromocion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearPromocionActionPerformed(evt);
+            }
+        });
+
+        labelActualizarStock1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        labelActualizarStock1.setText("ACTUALIZAR PROMOCIONES");
+
+        opcionesPromocion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        opcionesPromocion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                opcionesPromocionActionPerformed(evt);
+            }
+        });
+
+        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane5.setViewportView(jList1);
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(140, 140, 140)
+                        .addComponent(labelActualizarStock1))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(221, 221, 221)
+                        .addComponent(btnCrearPromocion, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(177, 177, 177)
+                        .addComponent(opcionesPromocion, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
+                        .addComponent(newStockPromocion, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(200, 200, 200)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(236, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(labelActualizarStock1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(44, 44, 44)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(opcionesPromocion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(newStockPromocion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(btnCrearPromocion)
+                .addContainerGap(53, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 15, Short.MAX_VALUE))
+        );
+
+        pantallaActualizarStock.addTab("Actualizar Promociones", jPanel4);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pantallaActualizarStock)
+            .addComponent(pantallaActualizarStock, javax.swing.GroupLayout.PREFERRED_SIZE, 590, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -394,6 +506,86 @@ public class VentanaHeladero extends JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnGenerarReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarReporteActionPerformed
+            ReporteStock reporte = gestorStock.generarReporteStock();
+
+            // Crear el panel principal
+            JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+            panel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 20)); // márgenes alrededor
+
+            // ===== TÍTULO =====
+            JLabel titulo = new JLabel("Reporte de Stock");
+            titulo.setFont(new java.awt.Font("Segoe UI", Font.BOLD, 24));
+            titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+            panel.add(titulo);
+
+            panel.add(Box.createVerticalStrut(10));
+
+            // ===== INFORMACIÓN GENERAL =====
+            JLabel lblNumero = new JLabel("Reporte N°: " + reporte.getIdReporte());
+            lblNumero.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 16));
+            lblNumero.setAlignmentX(Component.LEFT_ALIGNMENT);
+            panel.add(lblNumero);
+
+            JLabel lblFecha = new JLabel("Fecha: " + reporte.getFechaReporte());
+            lblFecha.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 16));
+            lblFecha.setAlignmentX(Component.LEFT_ALIGNMENT);
+            panel.add(lblFecha);
+
+            panel.add(Box.createVerticalStrut(15));
+
+            // ===== STOCK DE SABORES =====
+            JLabel lblSabores = new JLabel("Stock de Sabores:");
+            lblSabores.setFont(new java.awt.Font("Segoe UI", Font.BOLD, 18));
+            lblSabores.setAlignmentX(Component.LEFT_ALIGNMENT);
+            panel.add(lblSabores);
+
+            for (Map.Entry<SaborHelado, Integer> entry : reporte.getStockSabores().entrySet()) {
+                JLabel lblItem = new JLabel(entry.getKey().toString() + ": " + entry.getValue());
+                lblItem.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 15));
+                lblItem.setAlignmentX(Component.LEFT_ALIGNMENT);
+                panel.add(lblItem);
+            }
+
+            panel.add(Box.createVerticalStrut(15));
+
+            // ===== STOCK DE RECIPIENTES =====
+            JLabel lblRecipientes = new JLabel("Stock de Recipientes:");
+            lblRecipientes.setFont(new java.awt.Font("Segoe UI", Font.BOLD, 18));
+            lblRecipientes.setAlignmentX(Component.LEFT_ALIGNMENT);
+            panel.add(lblRecipientes);
+
+            for (Map.Entry<TipoRecipiente, Integer> entry : reporte.getStockRecipiente().entrySet()) {
+                JLabel lblItem = new JLabel(entry.getKey().toString() + ": " + entry.getValue());
+                lblItem.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 15));
+                lblItem.setAlignmentX(Component.LEFT_ALIGNMENT);
+                panel.add(lblItem);
+            }
+
+            // ===== SCROLL Y DIÁLOGO =====
+            JScrollPane scroll = new JScrollPane(panel);
+            JOptionPane.showMessageDialog(
+                this,
+                scroll,
+                "Reporte de Stock N° " + reporte.getIdReporte() + " " + reporte.getFechaReporte(),
+                JOptionPane.INFORMATION_MESSAGE
+            );
+    }//GEN-LAST:event_btnGenerarReporteActionPerformed
+
+    private void btnCrearPromocionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearPromocionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCrearPromocionActionPerformed
+
+    private void opcionesPromocionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionesPromocionActionPerformed
+        
+    }//GEN-LAST:event_opcionesPromocionActionPerformed
+
+    private void opcionesStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionesStockActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_opcionesStockActionPerformed
+
 
     // ############################################################### 
     
@@ -612,6 +804,14 @@ public class VentanaHeladero extends JFrame {
         }
     }
 
+    private void cargarOpcionesPromocion() {
+        opcionesPromocion.removeAllItems(); // Limpiar los ítems previos
+
+        for (SaborHelado sabor : SaborHelado.values()) {
+            opcionesPromocion.addItem(sabor.name());
+        }
+    }
+    
     // Funciones para actualizar registro clientes
     private void cedulaFieldActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
@@ -666,6 +866,7 @@ public class VentanaHeladero extends JFrame {
     private javax.swing.JButton btnActualizarStock;
     private javax.swing.JToggleButton btnAplicarCambios;
     private javax.swing.JToggleButton btnBuscarCliente;
+    private javax.swing.JButton btnCrearPromocion;
     private javax.swing.JToggleButton btnEliminarCliente;
     private javax.swing.JToggleButton btnModificarCliente;
     private javax.swing.ButtonGroup buttonGroup1;
@@ -674,18 +875,23 @@ public class VentanaHeladero extends JFrame {
     private javax.swing.JRadioButton checkSaboresStock;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea3;
     private javax.swing.JLabel labelActualizarInformacion;
     private javax.swing.JLabel labelActualizarStock;
+    private javax.swing.JLabel labelActualizarStock1;
     private javax.swing.JLabel labelCedula;
     private javax.swing.JLabel labelCedulaAct;
     private javax.swing.JLabel labelCorreoAct;
@@ -694,6 +900,8 @@ public class VentanaHeladero extends JFrame {
     private javax.swing.JLabel labelResultadoBusqueda;
     private javax.swing.JLabel labelTelefonoAct;
     private javax.swing.JTextField newStock;
+    private javax.swing.JTextField newStockPromocion;
+    private javax.swing.JComboBox<String> opcionesPromocion;
     private javax.swing.JComboBox<String> opcionesStock;
     private javax.swing.JTabbedPane pantallaActualizarStock;
     private javax.swing.JTextArea stock;
