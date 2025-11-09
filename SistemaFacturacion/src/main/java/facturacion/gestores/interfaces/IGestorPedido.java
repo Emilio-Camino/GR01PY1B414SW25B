@@ -6,5 +6,5 @@ public interface IGestorPedido {
     public void actualizarPedido(int pedidoID, String nuevoEstado);
     public void eliminarPedido(int pedidoID);
     public Pedido buscarPedido(int pedidoID);
-    public Pedido iniciarNuevoPedido();
+    public void iniciarNuevoPedido(Pedido pedidoNuevo);
 }

@@ -4,6 +4,7 @@
  */
 package interfazGrafica;
 
+
 import facturacion.gestores.interfaces.*;
 import javax.swing.JFrame;
 
@@ -16,6 +17,7 @@ public class VentanaHeladero extends javax.swing.JFrame {
     private IGestorStockHeladero gestorStock;
     private IGestorPromocionHeladero gestorPromocion;
     private IGestorClienteHeladero gestorCliente;
+  
     /**
      * Creates new form VentanaHeladero
      */
@@ -25,6 +27,7 @@ public class VentanaHeladero extends javax.swing.JFrame {
         this.gestorStock = gStock;
         this.gestorPromocion = gPromocion;
         this.gestorCliente = gCliente;
+
         
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 

@@ -4,8 +4,15 @@
  */
 package interfazGrafica;
 
+import facturacion.elementos.Helado;
+import facturacion.elementos.Pedido;
+import facturacion.elementos.Recipiente;
+import facturacion.elementos.enumeraciones.SaborHelado;
+import facturacion.elementos.enumeraciones.TipoRecipiente;
 import facturacion.gestores.interfaces.*;
 import javax.swing.JFrame;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,6 +25,8 @@ public class VentanaCajero extends javax.swing.JFrame {
     private IGestorCaja gestorCaja;
     private IGestorPromocionCajero gestorPromocion;
     private IGestorClienteCajero gestorCliente;
+    private ArrayList<Helado> heladosDelPedidoActual;
+    private int numBolas = 0;
     
     /**
      * Creates new form VentanaCajero
@@ -30,10 +39,10 @@ public class VentanaCajero extends javax.swing.JFrame {
         this.gestorCaja = gCaja;
         this.gestorPromocion = gPromocion;
         this.gestorCliente = gCliente;
-        initComponents();
-        
-        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.heladosDelPedidoActual = new ArrayList<>();
 
+        initComponents();
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         //Listener que volvera al login cuando se cierre esta ventana
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -44,7 +53,7 @@ public class VentanaCajero extends javax.swing.JFrame {
                 dispose();
             }
         });
-        
+
     }
 
     /**
@@ -56,40 +65,196 @@ public class VentanaCajero extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        grupoNumBolas = new javax.swing.ButtonGroup();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        botonRegistrarPedido = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        botonAgregarHelado = new javax.swing.JButton();
+        opcionUna = new javax.swing.JRadioButton();
+        opcionDos = new javax.swing.JRadioButton();
+        opcionTres = new javax.swing.JRadioButton();
+        jLabel1 = new javax.swing.JLabel();
+        sabor1Op = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        sabor2Op = new javax.swing.JComboBox<>();
+        sabor3Op = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
+        comboRecipiente = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jTabbedPane1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        botonRegistrarPedido.setText("Registrar Pedido");
+        botonRegistrarPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                botonRegistrarPedidoActionPerformed(evt);
             }
         });
+
+        botonAgregarHelado.setText("Agregar Helado");
+        botonAgregarHelado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonAgregarHeladoActionPerformed(evt);
+            }
+        });
+
+        grupoNumBolas.add(opcionUna);
+        opcionUna.setText("1");
+        opcionUna.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                opcionNumBolasActionPerformed(evt);
+            }
+        });
+
+        grupoNumBolas.add(opcionDos);
+        opcionDos.setText("2");
+        opcionDos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                opcionNumBolasActionPerformed(evt);
+            }
+        });
+
+        grupoNumBolas.add(opcionTres);
+        opcionTres.setText("3");
+        opcionTres.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                opcionNumBolasActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Numero de Bolas de Helado");
+
+        sabor1Op.setModel(new javax.swing.DefaultComboBoxModel<>(SaborHelado.values()));
+        sabor1Op.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sabor1OpActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Sabor 1");
+
+        jLabel3.setText("Sabor 2");
+
+        jLabel4.setText("Sabor 3");
+
+        sabor2Op.setModel(new javax.swing.DefaultComboBoxModel<>(SaborHelado.values()));
+        sabor2Op.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sabor2OpActionPerformed(evt);
+            }
+        });
+
+        sabor3Op.setModel(new javax.swing.DefaultComboBoxModel<>(SaborHelado.values()));
+
+        jLabel5.setText("Recipiente");
+
+        comboRecipiente.setModel(new javax.swing.DefaultComboBoxModel<>(TipoRecipiente.values()));
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(botonAgregarHelado, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(15, Short.MAX_VALUE))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel5)
+                        .addGap(82, 82, 82))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(opcionUna)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(opcionDos)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(opcionTres))
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(sabor1Op, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(comboRecipiente, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(sabor3Op, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)
+                            .addComponent(sabor2Op, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(opcionUna)
+                    .addComponent(opcionDos)
+                    .addComponent(opcionTres))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sabor1Op, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboRecipiente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addGap(4, 4, 4)
+                .addComponent(sabor2Op, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sabor3Op, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 23, Short.MAX_VALUE)
+                .addComponent(botonAgregarHelado, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15))
+        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(253, 253, 253)
-                .addComponent(jButton1)
-                .addContainerGap(260, Short.MAX_VALUE))
+                .addGap(23, 23, 23)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addComponent(botonRegistrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(129, 129, 129)
-                .addComponent(jButton1)
-                .addContainerGap(213, Short.MAX_VALUE))
+                .addContainerGap(58, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(botonRegistrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(158, 158, 158))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30))))
         );
 
-        jTabbedPane1.addTab("tab1", jPanel1);
+        jTabbedPane1.addTab("Crear un Pedido", jPanel1);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -102,7 +267,7 @@ public class VentanaCajero extends javax.swing.JFrame {
             .addGap(0, 365, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("tab2", jPanel2);
+        jTabbedPane1.addTab("Actualizar Pedido", jPanel2);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -115,7 +280,20 @@ public class VentanaCajero extends javax.swing.JFrame {
             .addGap(0, 365, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("tab3", jPanel3);
+        jTabbedPane1.addTab("Generar Factura", jPanel3);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 588, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 365, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Cerrar Caja", jPanel4);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -135,20 +313,190 @@ public class VentanaCajero extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        gestorCliente.buscarCliente("1718013350");
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void botonAgregarHeladoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgregarHeladoActionPerformed
+    try {
+        
+        // VALIDACIÓN DE CAMPOS OBLIGATORIOS ---
+        if (grupoNumBolas.getSelection() == null) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, seleccione el número de bolas.");
+            return; // Detiene la ejecución del método aquí
+        }
+        // Validar Recipiente (Buena práctica)
+        if (comboRecipiente.getSelectedItem() == null) {
+             javax.swing.JOptionPane.showMessageDialog(this, "Por favor, seleccione un recipiente.");
+            return;
+        }
 
+        // Validar Sabor 1 (que siempre es obligatorio)
+         if (sabor1Op.getSelectedItem() == null) {
+             javax.swing.JOptionPane.showMessageDialog(this, "Por favor, seleccione al menos el Sabor 1.");
+            return;
+        }
+        
+        // --- 2. Obtener el Recipiente ---
+        TipoRecipiente recipiente = (TipoRecipiente) comboRecipiente.getSelectedItem();
+
+        // --- 3. Obtener los Sabores ---
+        // Creamos una lista para los sabores de ESTE helado
+        ArrayList<SaborHelado> saboresSeleccionados = new ArrayList<>();
+
+        // (Asumo que tus combos se llaman sabor1Op, sabor2Op, sabor3Op)
+        saboresSeleccionados.add((SaborHelado) sabor1Op.getSelectedItem());
+
+        if (numBolas >= 2) {
+            saboresSeleccionados.add((SaborHelado) sabor2Op.getSelectedItem());
+        }
+        if (numBolas == 3) {
+            saboresSeleccionados.add((SaborHelado) sabor3Op.getSelectedItem());
+        }
+
+       // --- 3. Contar Frecuencia de Sabores ---
+        // Esto es para manejar "2 bolas de Chocolate"
+        java.util.Map<SaborHelado, Integer> conteoRequerido = new java.util.HashMap<>();
+        for (SaborHelado sabor : saboresSeleccionados) {
+            conteoRequerido.put(sabor, conteoRequerido.getOrDefault(sabor, 0) + 1);
+        }
+
+        // --- 4. VERIFICAR STOCK (Este es el paso clave) ---
+        boolean stockSuficiente = true;
+        for (java.util.Map.Entry<SaborHelado, Integer> entry : conteoRequerido.entrySet()) {
+            SaborHelado sabor = entry.getKey();
+            int cantidadRequerida = entry.getValue();
+            
+            // Usamos tu método del gestor
+            int stockDisponible = gestorStock.buscarBolasHelado(sabor);
+
+            if (cantidadRequerida > stockDisponible) {
+                // Si no hay stock, mostramos error y paramos
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "¡Stock insuficiente para " + sabor + "!\n" +
+                    "Requerido: " + cantidadRequerida + "\n" +
+                    "Disponible: " + stockDisponible,
+                    "Error de Stock", 
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+                
+                stockSuficiente = false;
+                break; // Salir del bucle de verificación
+            }
+        }
+
+        // --- 5. Si hay stock, proceder a crear el helado ---
+        if (stockSuficiente) {
+            
+            // Asumo que el constructor de Helado ahora solo necesita el recipiente
+            Helado nuevoHelado = new Helado(recipiente); 
+
+            // Ahora usamos tu método 'agregarBola' y DECREMENTAMOS el stock
+            for (SaborHelado sabor : saboresSeleccionados) {
+                
+                // 1. Agrega la bola al objeto Helado
+                nuevoHelado.agregarBola(sabor);
+                
+                // 2. ¡MUY IMPORTANTE! Decrementa el stock en tu gestor
+                // (Necesitarás un método como este en tu 'gestorStock')
+                gestorStock.decrementarStockSabor(sabor, 1); 
+            }
+                gestorStock.decrementarStockRecipiente(recipiente, 1); 
+            //Permite ingresar un nuevo helado
+            limpiarCamposHelado();
+            
+            heladosDelPedidoActual.add(nuevoHelado);
+            
+            
+        }
+
+    } catch (NullPointerException e) {
+        // Esto pasa si el usuario no seleccionó algo (ej. no eligió num de bolas)
+        javax.swing.JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos del helado.");
+    } catch (Exception e) {
+        // Otro error
+        javax.swing.JOptionPane.showMessageDialog(this, "Error al agregar helado: " + e.getMessage());
+    }
+    
+        
+    }//GEN-LAST:event_botonAgregarHeladoActionPerformed
+
+    private void opcionNumBolasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionNumBolasActionPerformed
+         numBolas = Integer.parseInt(evt.getActionCommand());
+        switch  (numBolas){
+            case 1:
+                sabor2Op.setEnabled(false);
+                sabor3Op.setEnabled(false);
+                break;
+            case 2:
+                sabor2Op.setEnabled(true);
+                sabor3Op.setEnabled(false);
+                break;
+            case 3:
+                sabor2Op.setEnabled(true);
+                sabor3Op.setEnabled(true);
+        }
+        
+      
+    }//GEN-LAST:event_opcionNumBolasActionPerformed
+
+    private void sabor1OpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sabor1OpActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sabor1OpActionPerformed
+
+    private void sabor2OpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sabor2OpActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sabor2OpActionPerformed
+
+    private void botonRegistrarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistrarPedidoActionPerformed
+       // 1. Validar que el pedido no esté vacío
+    if (heladosDelPedidoActual.isEmpty()) {
+        javax.swing.JOptionPane.showMessageDialog(this, "No hay helados en el pedido.");
+        return;
+    }
+
+    // 2. Crear el objeto Pedido
+    Pedido nuevo = new Pedido(heladosDelPedidoActual); 
+    gestorPedido.iniciarNuevoPedido(nuevo);
+    JOptionPane.showMessageDialog(null, "Datos del Pedido \n" + nuevo.toString());
+    heladosDelPedidoActual.clear();
+    
+        
+    }//GEN-LAST:event_botonRegistrarPedidoActionPerformed
+    
+    private void limpiarCamposHelado() {
+    grupoNumBolas.clearSelection(); // Des-selecciona los radio buttons
+    comboRecipiente.setSelectedIndex(0);
+    sabor1Op.setSelectedIndex(0);
+    sabor2Op.setSelectedIndex(0);
+    sabor3Op.setSelectedIndex(0);
+    
+    // Vuelve a deshabilitar los combos 2 y 3
+    sabor2Op.setEnabled(false);
+    sabor3Op.setEnabled(false);
+}
+    
     /**
      * @param args the command line arguments
      */
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton botonAgregarHelado;
+    private javax.swing.JButton botonRegistrarPedido;
+    private javax.swing.JComboBox<TipoRecipiente> comboRecipiente;
+    private javax.swing.ButtonGroup grupoNumBolas;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JRadioButton opcionDos;
+    private javax.swing.JRadioButton opcionTres;
+    private javax.swing.JRadioButton opcionUna;
+    private javax.swing.JComboBox<SaborHelado> sabor1Op;
+    private javax.swing.JComboBox<SaborHelado> sabor2Op;
+    private javax.swing.JComboBox<SaborHelado> sabor3Op;
     // End of variables declaration//GEN-END:variables
 }
