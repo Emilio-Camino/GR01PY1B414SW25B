@@ -12,9 +12,14 @@ public class Pedido {
     private String estado;
     private ArrayList<Helado> helados;
 
-    public Pedido(int pedidoID, String estado) {
+    public Pedido(ArrayList<Helado> helados) {
         this.pedidoID = ++contadorPedido;
-        this.estado = estado;
+        this.estado = "RECIBIDO";
+        this.helados = new ArrayList<>(helados);
+    }
+    public Pedido() {
+        this.pedidoID = ++contadorPedido;
+        this.estado = "RECIBIDO";
         this.helados = new ArrayList<>();
     }
 
@@ -50,5 +55,35 @@ public class Pedido {
         this.helados.add(nuevoHelado);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        //Aniade la información principal del pedido
+        sb.append("Pedido #").append(this.pedidoID);
+        sb.append(" [Estado: ").append(this.estado).append("]\n");
+        sb.append("---------------------------------\n");
+
+        //Itera sobre la lista de helados y aniade sus detalles
+        if (this.helados.isEmpty()) {
+            sb.append("  (Este pedido no tiene helados)\n");
+        } else {
+            sb.append("  Contenido del Pedido (" + this.helados.size() + " helado(s)):\n");
+            
+            int contadorHelado = 1;
+            for (Helado helado : this.helados) {
+                sb.append("    ").append(contadorHelado).append(". ");
+                
+                sb.append(helado.toString()); 
+                
+                sb.append("\n");
+                contadorHelado++;
+            }
+        }
+        sb.append("---------------------------------\n");
+
+        //Devuelve el string completo
+        return sb.toString();
+    }
 }
 

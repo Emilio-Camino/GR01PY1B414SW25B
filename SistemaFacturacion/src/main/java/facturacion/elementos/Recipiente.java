@@ -32,4 +32,10 @@ public class Recipiente {
     public void setPrecio(double precio) {
         this.precio = precio;
     }
+    @Override
+    public String toString() {
+        // Asumiendo que la variable interna se llama 'tipo'
+        // y es un enum como TipoRecipiente.VASO
+        return this.tipo.toString(); 
+    }
 }

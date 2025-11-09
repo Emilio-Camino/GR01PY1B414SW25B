@@ -8,6 +8,8 @@ import facturacion.elementos.enumeraciones.*;
 import facturacion.elementos.Pedido;
 import facturacion.gestores.interfaces.IGestorPedido;
 
+import javax.swing.*;
+
 /**
  * GestorPedido: Se encarga de la creación, búsqueda,
  * actualización y eliminación de pedidos.
@@ -29,7 +31,7 @@ public class GestorPedido implements IGestorPedido {
 
         // --- Pedido 1 (para Factura 1) ---
         // Nota: El constructor de Pedido autoincrementa el ID (será ID 1)
-        Pedido p1 = new Pedido(0, "EN_PROCESO");
+        Pedido p1 = new Pedido();
 
         // Helado 1.1: Cono con Chocolate y Vainilla
         SaborHelado[] saboresH1 = {SaborHelado.CHOCOLATE, SaborHelado.VAINILLA};
@@ -42,7 +44,7 @@ public class GestorPedido implements IGestorPedido {
         this.listaPedidos.add(p1);
 
         // --- Pedido 2 (para Factura 2) ---
-        Pedido p2 = new Pedido(0, "EN_PROCESO"); // (Será ID 2)
+        Pedido p2 = new Pedido(); // (Será ID 2)
         // Helado 2.1: Vaso con Chicle
         SaborHelado[] saboresH3 = {SaborHelado.CHICLE};
         p2.agregarHelado(TipoRecipiente.VASO, 1, saboresH3);
@@ -50,7 +52,7 @@ public class GestorPedido implements IGestorPedido {
         this.listaPedidos.add(p2);
 
         // --- Pedido 3 (para Factura 3) ---
-        Pedido p3 = new Pedido(0, "EN_PROCESO"); // (Será ID 3)
+        Pedido p3 = new Pedido(); // (Será ID 3)
         // Helado 3.1: Cono con Fresa (para probar la promoción)
         SaborHelado[] saboresH4 = {SaborHelado.FRESA};
         p3.agregarHelado(TipoRecipiente.CONO, 1, saboresH4);
@@ -65,16 +67,10 @@ public class GestorPedido implements IGestorPedido {
      * Usa el constructor de Pedido.java.
      * @return El Pedido recién creado.
      */
-    public Pedido iniciarNuevoPedido() {
-        // Tu constructor de Pedido pide un ID (que ignora) y un estado inicial.
-        // Le pasamos '0' como ID dummy y "EN_PROCESO" como estado inicial.
-        Pedido nuevoPedido = new Pedido(0, "EN_PROCESO");
-        
+    public void iniciarNuevoPedido(Pedido pedidoNuevo) {
         // Añadimos el pedido a nuestra lista
-        this.listaPedidos.add(nuevoPedido);
-        
-        System.out.println("Nuevo pedido iniciado. ID: " + nuevoPedido.getPedidoID());
-        return nuevoPedido;
+        this.listaPedidos.add(pedidoNuevo);
+        JOptionPane.showMessageDialog(null, "Se añadió el pedido.");
     }
 
     /**

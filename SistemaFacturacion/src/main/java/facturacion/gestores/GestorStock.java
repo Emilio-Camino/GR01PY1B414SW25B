@@ -25,7 +25,7 @@ public class GestorStock implements IGestorStockCajero, IGestorStockHeladero {
         stockSabores.put(SaborHelado.VAINILLA, 25);
         stockSabores.put(SaborHelado.COOKIESNCREAM, 30);
         stockSabores.put(SaborHelado.RONPASAS, 15);
-        stockSabores.put(SaborHelado.CHICLE, 12);
+        stockSabores.put(SaborHelado.CHICLE, 2);
 
         // Inicialización de tipos de recipiente con stock inicial
         stockRecipiente.put(TipoRecipiente.VASO, 50);
@@ -83,6 +83,52 @@ public class GestorStock implements IGestorStockCajero, IGestorStockHeladero {
         }
         ReporteStock ultimo = getReportesStock().get(getReportesStock().size() - 1);
         return ultimo != null ? ultimo.getIdReporte() : 0;
+    }
+    
+    @Override
+    public boolean decrementarStockSabor(SaborHelado saborHelado, int cantidadADecrementar) {
+        
+        // 1. Obtener el stock actual usando tu método
+        int stockActual = this.buscarBolasHelado(saborHelado);
+
+        // 2. Validar que se puede decrementar
+        // (La cantidad debe ser positiva y debe haber suficiente stock)
+        if (cantidadADecrementar > 0 && stockActual >= cantidadADecrementar) {
+            
+            // 3. Calcular el nuevo stock
+            int nuevoStock = stockActual - cantidadADecrementar;
+            
+            // 4. Usar tu método existente para actualizar el stock en el mapa
+            // Tu método 'actualizarHelados' ya maneja el .put()
+            return this.actualizarHelados(saborHelado, nuevoStock);
+            
+        } else {
+            // No hay suficiente stock o la cantidad a restar es inválida (ej. 0 o negativa)
+            return false;
+        }
+    }
+    
+    @Override
+    public boolean decrementarStockRecipiente(TipoRecipiente tipoRecipiente, int cantidadADecrementar) {
+        
+        // 1. Obtener el stock actual usando tu método
+        int stockActual = this.buscarRecipiente(tipoRecipiente);
+
+        // 2. Validar que se puede decrementar
+        // (La cantidad debe ser positiva y debe haber suficiente stock)
+        if (cantidadADecrementar > 0 && stockActual >= cantidadADecrementar) {
+            
+            // 3. Calcular el nuevo stock
+            int nuevoStock = stockActual - cantidadADecrementar;
+            
+            // 4. Usar tu método existente para actualizar el stock en el mapa
+            // Tu método 'actualizarRecipiente' ya maneja el .put()
+            return this.actualizarRecipiente(tipoRecipiente, nuevoStock);
+            
+        } else {
+            // No hay suficiente stock o la cantidad a restar es inválida (ej. 0 o negativa)
+            return false;
+        }
     }
 
     // --------------------------------------------------------

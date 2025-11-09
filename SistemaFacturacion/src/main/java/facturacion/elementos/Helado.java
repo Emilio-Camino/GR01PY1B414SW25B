@@ -40,4 +40,25 @@ public class Helado {
     public void setBolasHelado(ArrayList<BolaHelado> bolasHelado) {
         this.bolasHelado = bolasHelado;
     }
+    
+    @Override
+    public String toString() {
+        // 1. Obtiene el nombre del recipiente (confiando en Recipiente.toString())
+        String nombreRecipiente = this.recipiente.toString();
+        
+        // 2. Obtiene el número de bolas
+        int numBolas = this.bolasHelado.size();
+        
+        // 3. Obtiene la lista de sabores (confiando en BolaHelado.toString() 
+        //    y en ArrayList.toString())
+        // El .toString() de un ArrayList genera: [item1, item2, item3]
+        String listaSabores = this.bolasHelado.toString();
+
+        // 4. Combina todo en un string descriptivo
+        return String.format("%s con %d bola(s): %s", 
+                             nombreRecipiente, 
+                             numBolas, 
+                             listaSabores);
+    }
+    
 }
