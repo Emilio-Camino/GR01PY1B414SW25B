@@ -10,16 +10,22 @@ import facturacion.elementos.enumeraciones.SaborHelado;
 import facturacion.elementos.enumeraciones.TipoRecipiente;
 import facturacion.gestores.GestorFactura;
 import facturacion.gestores.interfaces.*;
+import java.awt.Color;
+import java.awt.Insets;
 import javax.swing.JFrame;
 import java.util.ArrayList;
 import java.util.Locale;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 /**
  *
  * @author emili
  */
 public class VentanaCajero extends javax.swing.JFrame {
+    Color materialBlue = new Color(66, 133, 244);
+    Color softPink = new Color(208, 60, 62);
+    Color softGreen = new Color(73, 159, 44);
     private LoginVentana loginDeOrigen;
     private IGestorStockCajero gestorStock;
     private IGestorPedido gestorPedido;
@@ -43,7 +49,25 @@ public class VentanaCajero extends javax.swing.JFrame {
         this.gestorCliente = gCliente;
         this.gestorFactura = gFactura;
         this.heladosDelPedidoActual = new ArrayList<>();
+        
+        
+       // Obtenemos el color de fondo gris estándar de las pestañas
+        Color tabBgColor = UIManager.getColor("TabbedPane.background");
 
+        // 1. Hacemos que la PESTAÑA SELECCIONADA sea plana
+        // Pone el fondo de la pestaña seleccionada del mismo color que las otras
+        UIManager.put("TabbedPane.selected", tabBgColor);
+        // Pone el "brillo" 3D del mismo color (lo oculta)
+        UIManager.put("TabbedPane.selectHighlight", tabBgColor); 
+        // Pone la "sombra" 3D del mismo color (lo oculta)
+        UIManager.put("TabbedPane.light", tabBgColor);
+
+        // 2. Quitamos el BORDE DEL CONTENIDO (de la respuesta anterior)
+        UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
+        
+        // 3. Quitamos la LÍNEA DE FOCO punteada
+        UIManager.put("TabbedPane.drawFocusIndicator", false);
+        
         initComponents();
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         //Listener que volvera al login cuando se cierre esta ventana
@@ -72,26 +96,76 @@ public class VentanaCajero extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         botonRegistrarPedido = new javax.swing.JButton();
+        botonRegistrarPedido.setBackground(softGreen);
+        botonRegistrarPedido.setForeground(Color.WHITE);
+        botonRegistrarPedido.setOpaque(true);
+        botonRegistrarPedido.setBorderPainted(false);
+        botonRegistrarPedido.setContentAreaFilled(true);
         jPanel5 = new javax.swing.JPanel();
         botonAgregarHelado = new javax.swing.JButton();
+        botonAgregarHelado.setBackground(materialBlue);
+        botonAgregarHelado.setForeground(Color.WHITE);
+        botonAgregarHelado.setOpaque(true);
+        botonAgregarHelado.setBorderPainted(false);
+        botonAgregarHelado.setContentAreaFilled(true);
         opcionUna = new javax.swing.JRadioButton();
+        opcionUna.setBackground(Color.WHITE);
+        opcionUna.setForeground(Color.BLACK);
+        opcionUna.setOpaque(true);
+        opcionUna.setContentAreaFilled(false);
+        opcionUna.setBorderPainted(false);
         opcionDos = new javax.swing.JRadioButton();
+        opcionDos.setBackground(Color.WHITE);
+        opcionDos.setForeground(Color.BLACK);
+        opcionDos.setOpaque(true);
+        opcionDos.setContentAreaFilled(false);
+        opcionDos.setBorderPainted(false);
         opcionTres = new javax.swing.JRadioButton();
+        opcionTres.setBackground(Color.WHITE);
+        opcionTres.setForeground(Color.BLACK);
+        opcionTres.setOpaque(true);
+        opcionTres.setContentAreaFilled(false);
+        opcionTres.setBorderPainted(false);
         jLabel1 = new javax.swing.JLabel();
         sabor1Op = new javax.swing.JComboBox<>();
+        sabor1Op.setBackground(Color.WHITE);
+        sabor1Op.setForeground(Color.BLACK);
+        sabor1Op.setOpaque(true);
+        sabor1Op.setBorder(null);
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         sabor2Op = new javax.swing.JComboBox<>();
+        sabor2Op.setBackground(Color.WHITE);
+        sabor2Op.setForeground(Color.BLACK);
+        sabor2Op.setOpaque(true);
+        sabor2Op.setBorder(null);
         sabor3Op = new javax.swing.JComboBox<>();
+        sabor3Op.setBackground(Color.WHITE);
+        sabor3Op.setForeground(Color.BLACK);
+        sabor3Op.setOpaque(true);
+        sabor3Op.setBorder(null);
         jLabel5 = new javax.swing.JLabel();
         comboRecipiente = new javax.swing.JComboBox<>();
+        comboRecipiente.setBackground(Color.WHITE);
+        comboRecipiente.setForeground(Color.BLACK);
+        comboRecipiente.setOpaque(true);
+        comboRecipiente.setBorder(null);
         jLabel6 = new javax.swing.JLabel();
         labelNumPedido = new javax.swing.JLabel();
         labelNumPedido.setText(String.format("# %d", Pedido.getSiguienteNumPedido()));
         jLabel9 = new javax.swing.JLabel();
         comboHelados = new javax.swing.JComboBox<>();
+        comboHelados.setBackground(Color.WHITE);
+        comboHelados.setForeground(Color.BLACK);
+        comboHelados.setOpaque(true);
+        comboHelados.setBorder(null);
         botonEliminarHelado = new javax.swing.JButton();
+        botonEliminarHelado.setBackground(softPink);
+        botonEliminarHelado.setForeground(Color.WHITE);
+        botonEliminarHelado.setOpaque(true);
+        botonEliminarHelado.setBorderPainted(false);
+        botonEliminarHelado.setContentAreaFilled(true);
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
@@ -100,6 +174,11 @@ public class VentanaCajero extends javax.swing.JFrame {
         campoTotalEfectivo = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         botonCerrarCaja = new javax.swing.JButton();
+        botonCerrarCaja.setBackground(softGreen);
+        botonCerrarCaja.setForeground(Color.WHITE);
+        botonCerrarCaja.setOpaque(true);
+        botonCerrarCaja.setBorderPainted(false);
+        botonCerrarCaja.setContentAreaFilled(true);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -107,6 +186,7 @@ public class VentanaCajero extends javax.swing.JFrame {
         jTabbedPane1.setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setPreferredSize(new java.awt.Dimension(5580, 365));
 
         botonRegistrarPedido.setText("Registrar Pedido");
         botonRegistrarPedido.addActionListener(new java.awt.event.ActionListener() {
@@ -149,6 +229,7 @@ public class VentanaCajero extends javax.swing.JFrame {
         jLabel1.setText("Numero de Bolas de Helado");
 
         sabor1Op.setModel(new javax.swing.DefaultComboBoxModel<>(SaborHelado.values()));
+        sabor1Op.setBorder(null);
         sabor1Op.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sabor1OpActionPerformed(evt);
@@ -162,6 +243,7 @@ public class VentanaCajero extends javax.swing.JFrame {
         jLabel4.setText("Sabor 3");
 
         sabor2Op.setModel(new javax.swing.DefaultComboBoxModel<>(SaborHelado.values()));
+        sabor2Op.setBorder(null);
         sabor2Op.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sabor2OpActionPerformed(evt);
@@ -169,10 +251,12 @@ public class VentanaCajero extends javax.swing.JFrame {
         });
 
         sabor3Op.setModel(new javax.swing.DefaultComboBoxModel<>(SaborHelado.values()));
+        sabor3Op.setBorder(null);
 
         jLabel5.setText("Recipiente");
 
         comboRecipiente.setModel(new javax.swing.DefaultComboBoxModel<>(TipoRecipiente.values()));
+        comboRecipiente.setBorder(null);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -252,6 +336,7 @@ public class VentanaCajero extends javax.swing.JFrame {
         jLabel9.setText("¿Eliminar Helados?");
 
         comboHelados.setModel(new javax.swing.DefaultComboBoxModel<>());
+        comboHelados.setBorder(null);
         comboHelados.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboHeladosActionPerformed(evt);
@@ -288,15 +373,15 @@ public class VentanaCajero extends javax.swing.JFrame {
                                 .addGap(41, 41, 41))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(47, 47, 47)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(botonEliminarHelado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(comboHelados, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(comboHelados, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(botonEliminarHelado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(41, 41, 41))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(58, Short.MAX_VALUE)
+                .addContainerGap(64, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel6)
@@ -341,6 +426,7 @@ public class VentanaCajero extends javax.swing.JFrame {
         campoTotalEfectivo.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         campoTotalEfectivo.setText("0.00");
         campoTotalEfectivo.setToolTipText("");
+        campoTotalEfectivo.setBorder(null);
         campoTotalEfectivo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 campoTotalEfectivoActionPerformed(evt);
@@ -406,7 +492,7 @@ public class VentanaCajero extends javax.swing.JFrame {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(48, Short.MAX_VALUE)
+                .addContainerGap(54, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addComponent(botonCerrarCaja, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -423,7 +509,7 @@ public class VentanaCajero extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
