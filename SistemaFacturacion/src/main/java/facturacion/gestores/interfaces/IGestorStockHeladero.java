@@ -9,5 +9,7 @@ public interface IGestorStockHeladero {
     public int buscarBolasHelado(SaborHelado saborHelado);
     public boolean actualizarHelados(SaborHelado saborHelado, int numHelados);
     public boolean actualizarRecipiente(TipoRecipiente tipoRecipiente, int numRecipientes);
+    public String obtenerStockRecipiente ();
+    public String obtenerStockSaboresHelado();
     public ReporteStock generarReporteStock();
 }
