@@ -205,4 +205,28 @@ public class GestorStock implements IGestorStockCajero, IGestorStockHeladero {
     public void setReportesStock(List<ReporteStock> reportesStock) {
         this.reportesStock = reportesStock;
     }
+    @Override
+    public String obtenerStockSaboresHelado () {
+        StringBuilder stockH = new StringBuilder("\tStock Sabores de Helado\n");
+        
+        for (Map.Entry<SaborHelado,Integer> stockSabor : stockSabores.entrySet()) {
+            SaborHelado sabor = stockSabor.getKey();
+            Integer stock = stockSabor.getValue();
+            stockH.append(String.format("-> %s : %d\n",sabor.toString(),stock));
+        }
+        System.out.println(stockH);
+        return stockH.toString();
+    }
+   @Override
+    public String obtenerStockRecipiente () {
+        StringBuilder stockR = new StringBuilder("\tStock Sabores de Helado\n");
+        
+        for (Map.Entry<TipoRecipiente,Integer> stockRecipiente : stockRecipiente.entrySet()) {
+            TipoRecipiente sabor = stockRecipiente.getKey();
+            Integer stock = stockRecipiente.getValue();
+            stockR.append(String.format("-> %s : %d\n",sabor.toString(),stock));
+        }
+        System.out.println(stockR);
+        return stockR.toString();
+    }
 }
