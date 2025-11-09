@@ -4,7 +4,6 @@ interfazGrafica\VentanaCajero$1.class
 interfazGrafica\VentanaHeladero$4.class
 interfazGrafica\VentanaCajero$8.class
 facturacion\gestores\interfaces\IGestorCaja.class
-interfazGrafica\VentanaHeladero$19.class
 interfazGrafica\VentanaHeladero$11.class
 interfazGrafica\LoginVentana$2.class
 facturacion\gestores\interfaces\IGestorPedido.class
@@ -18,11 +17,9 @@ interfazGrafica\VentanaCajero$9.class
 interfazGrafica\VentanaHeladero$15.class
 interfazGrafica\VentanaCajero$2.class
 interfazGrafica\VentanaHeladero$7.class
-interfazGrafica\VentanaHeladero$18.class
 interfazGrafica\VentanaHeladero.class
 interfazGrafica\LoginVentana.class
 facturacion\gestores\GestorCliente.class
-interfazGrafica\VentanaHeladero$17.class
 interfazGrafica\VentanaCajero$6.class
 interfazGrafica\VentanaHeladero$10.class
 interfazGrafica\VentanaHeladero$9.class
@@ -33,7 +30,6 @@ interfazGrafica\VentanaHeladero$6.class
 interfazGrafica\VentanaCajero$3.class
 interfazGrafica\VentanaHeladero$8.class
 facturacion\elementos\Recipiente$1.class
-interfazGrafica\VentanaHeladero$16.class
 interfazGrafica\VentanaHeladero$5.class
 interfazGrafica\VentanaCajero$7.class
 interfazGrafica\VentanaCajero.class
