@@ -5,6 +5,7 @@
 package interfazGrafica;
 
 import facturacion.elementos.Cliente;
+import facturacion.elementos.Promocion;
 import facturacion.elementos.ReporteStock;
 import facturacion.elementos.enumeraciones.SaborHelado;
 import facturacion.elementos.enumeraciones.TipoRecipiente;
@@ -30,6 +31,7 @@ public class VentanaHeladero extends javax.swing.JFrame {
     private IGestorStockHeladero gestorStock;
     private IGestorPromocionHeladero gestorPromocion;
     private IGestorClienteHeladero gestorCliente;
+    private java.util.List<Promocion> promocionesActuales;
 
 
     // Constructor
@@ -74,12 +76,26 @@ public class VentanaHeladero extends javax.swing.JFrame {
         labelCorreoAct.setVisible(false);
         labelResultadoBusqueda.setVisible(false);
         cargarOpcionesPromocion();
+        cargarPromociones();
+        jListPromociones.addListSelectionListener(event -> {
+        if (!event.getValueIsAdjusting()) {
+            int index = jListPromociones.getSelectedIndex();
+
+            // Si hay una selección válida y no es el mensaje de "sin promociones"
+            if (index >= 0 && !jListPromociones.getSelectedValue().contains("No hay promociones")) {
+                btnEliminarPromocion.setVisible(true);
+            } else {
+                btnEliminarPromocion.setVisible(false);
+            }
+        }
+    });
         
         actCedulaField.setVisible(false);
         actNombreField.setVisible(false);
         actTelefonoField.setVisible(false);
         actCorreoField.setVisible(false);
         actDireccionField.setVisible(false);
+        btnEliminarPromocion.setVisible(false);
         
 
     }
@@ -136,7 +152,9 @@ public class VentanaHeladero extends javax.swing.JFrame {
         opcionesPromocion = new javax.swing.JComboBox<>();
         newStockPromocion = new javax.swing.JTextField();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        jListPromociones = new javax.swing.JList<>();
+        btnEliminarPromocion = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         jCheckBox1.setText("jCheckBox1");
 
@@ -446,7 +464,7 @@ public class VentanaHeladero extends javax.swing.JFrame {
 
         pantallaActualizarStock.addTab("tab3", jPanel3);
 
-        btnCrearPromocion.setText("Crear Promocion");
+        btnCrearPromocion.setText("Crear Promoción");
         btnCrearPromocion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCrearPromocionActionPerformed(evt);
@@ -463,49 +481,61 @@ public class VentanaHeladero extends javax.swing.JFrame {
             }
         });
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+        jListPromociones.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane5.setViewportView(jList1);
+        jScrollPane5.setViewportView(jListPromociones);
+
+        btnEliminarPromocion.setText("Eliminar Promoción");
+        btnEliminarPromocion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarPromocionActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Porcentaje Promoción");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(76, 76, 76)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelActualizarStock1)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(140, 140, 140)
-                        .addComponent(labelActualizarStock1))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(221, 221, 221)
-                        .addComponent(btnCrearPromocion, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(177, 177, 177)
-                        .addComponent(opcionesPromocion, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
-                        .addComponent(newStockPromocion, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(200, 200, 200)
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(236, Short.MAX_VALUE))
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(opcionesPromocion, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(newStockPromocion, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCrearPromocion, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnEliminarPromocion, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(126, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap(12, Short.MAX_VALUE)
                 .addComponent(labelActualizarStock1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(opcionesPromocion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(newStockPromocion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(btnCrearPromocion)
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(opcionesPromocion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(newStockPromocion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnCrearPromocion)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnEliminarPromocion))
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(119, 119, 119))
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -513,14 +543,16 @@ public class VentanaHeladero extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(9, Short.MAX_VALUE)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 15, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pantallaActualizarStock.addTab("Actualizar Promociones", jPanel4);
@@ -610,7 +642,7 @@ public class VentanaHeladero extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGenerarReporteActionPerformed
 
     private void btnCrearPromocionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearPromocionActionPerformed
-        // TODO add your handling code here:
+        ingresarPorcentaje();
     }//GEN-LAST:event_btnCrearPromocionActionPerformed
 
     private void opcionesPromocionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionesPromocionActionPerformed
@@ -620,6 +652,50 @@ public class VentanaHeladero extends javax.swing.JFrame {
     private void opcionesStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionesStockActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_opcionesStockActionPerformed
+
+    private void btnEliminarPromocionActionPerformed(java.awt.event.ActionEvent evt) {
+        int index = jListPromociones.getSelectedIndex();
+
+        if (index < 0 || promocionesActuales == null || promocionesActuales.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Debe seleccionar una promoción válida.",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        // Obtener la promoción real correspondiente
+        Promocion promoSeleccionada = promocionesActuales.get(index);
+
+        // Confirmar la eliminación
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "¿Está seguro que desea eliminar la promoción de " + promoSeleccionada.getSaborPromocion() + "?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            boolean eliminado = false;
+            // Aquí llamas al método del gestor que elimina la promoción
+            eliminado = gestorPromocion.eliminarPromocion(promoSeleccionada.getIdPromocion());
+
+            if (eliminado) {
+                JOptionPane.showMessageDialog(this, "Promoción " + promoSeleccionada.getSaborPromocion().toString() + " - " + promoSeleccionada.getPorcentajeDescuento() + " eliminada correctamente.");
+                cargarPromociones(); // refrescar lista
+                btnEliminarPromocion.setVisible(false);
+            } else {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "No se pudo eliminar la promoción. Verifique la lógica del gestor.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }
+    }
 
 
     // ############################################################### 
@@ -824,7 +900,102 @@ public class VentanaHeladero extends javax.swing.JFrame {
             opcionesPromocion.addItem(sabor.name());
         }
     }
-    
+
+    private void ingresarPorcentaje() {
+        double nuevoPorcentaje;
+        try {
+            nuevoPorcentaje = Double.parseDouble(newStockPromocion.getText().trim());
+        } catch (NumberFormatException e) {
+
+            JOptionPane.showMessageDialog(
+                    this, // La ventana actual
+                    "El valor ingresado no es válido. Debe puede ser un numero entero con decimales.",
+                    "Error de Formato",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        if (nuevoPorcentaje < 0 || nuevoPorcentaje > 100) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "El stock no puede ser un número negativo ni superar al 100%.",
+                    "Error de Valor",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        // Determinar el ítem a actualizar
+        String itemSeleccionadoStr = (String) opcionesPromocion.getSelectedItem();
+
+        if (itemSeleccionadoStr == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Debe seleccionar un ítem para actualizar.",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        boolean actualizacionExitosa = false;
+
+        try {
+            SaborHelado sabor = SaborHelado.valueOf(itemSeleccionadoStr);
+             actualizacionExitosa = gestorPromocion.agregarPromocion(sabor, nuevoPorcentaje);
+
+            actualizacionExitosa = true;
+
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, "Error: Sabor no reconocido.", "Error Interno", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (actualizacionExitosa) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Promoción " + itemSeleccionadoStr + " aplicado promoción de " + nuevoPorcentaje + "%.",
+                    "Actualización Exitosa",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+            cargarPromociones();
+            newStockPromocion.setText("");
+        } else {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "La actualización falló. Verifique la lógica del gestor.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void cargarPromociones() {
+        // Obtener las promociones del gestor
+        promocionesActuales = gestorPromocion.getListaPromociones();
+
+        // Crear el modelo de lista
+        javax.swing.DefaultListModel<String> modelo = new javax.swing.DefaultListModel<>();
+
+        if (promocionesActuales == null || promocionesActuales.isEmpty()) {
+            modelo.addElement("No hay promociones disponibles.");
+            btnEliminarPromocion.setVisible(false);
+        } else {
+            for (Promocion promo : promocionesActuales) {
+                String texto = String.format(
+                        "%s - Descuento: %.2f%%",
+                        promo.getSaborPromocion(),
+                        promo.getPorcentajeDescuento()
+                );
+                modelo.addElement(texto);
+            }
+        }
+
+        jListPromociones.setModel(modelo);
+    }
+
+
     // Funciones para actualizar registro clientes
     private void cedulaFieldActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
@@ -874,6 +1045,7 @@ public class VentanaHeladero extends javax.swing.JFrame {
     private javax.swing.JToggleButton btnBuscarCliente;
     private javax.swing.JButton btnCrearPromocion;
     private javax.swing.JToggleButton btnEliminarCliente;
+    private javax.swing.JButton btnEliminarPromocion;
     private javax.swing.JButton btnGenerarReporte;
     private javax.swing.JToggleButton btnModificarCliente;
     private javax.swing.ButtonGroup buttonGroup1;
@@ -881,8 +1053,9 @@ public class VentanaHeladero extends javax.swing.JFrame {
     private javax.swing.JRadioButton checkRecipienteStock;
     private javax.swing.JRadioButton checkSaboresStock;
     private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JList<String> jList1;
+    private javax.swing.JList<String> jListPromociones;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

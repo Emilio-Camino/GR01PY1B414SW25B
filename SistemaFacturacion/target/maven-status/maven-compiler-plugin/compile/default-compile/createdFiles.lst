@@ -23,6 +23,7 @@ interfazGrafica\VentanaHeladero.class
 interfazGrafica\LoginVentana.class
 facturacion\gestores\GestorCliente.class
 interfazGrafica\VentanaHeladero$17.class
+interfazGrafica\VentanaHeladero$20.class
 interfazGrafica\VentanaCajero$6.class
 interfazGrafica\VentanaHeladero$10.class
 interfazGrafica\VentanaHeladero$9.class
