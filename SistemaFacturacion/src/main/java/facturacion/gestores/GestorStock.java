@@ -72,9 +72,7 @@ public class GestorStock implements IGestorStockCajero, IGestorStockHeladero {
     @Override
     public ReporteStock generarReporteStock() {
         int nuevoIdReporte = obtenerUltimoIdReporte() + 1;
-        ReporteStock reporte = new ReporteStock(nuevoIdReporte, stockSabores(), getStockRecipiente());
-        reportesStock.add(reporte);
-        return reporte;
+        return new ReporteStock(nuevoIdReporte, stockSabores(), getStockRecipiente());
     }
 
     //Método que sirve para obtener cuál es la ID del ultimo registro en la lista de Reportes

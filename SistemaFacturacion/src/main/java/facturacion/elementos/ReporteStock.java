@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ReporteStock {
@@ -28,22 +27,11 @@ public class ReporteStock {
     }
 
     public String toStringReporteStock() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Reporte Stock #: ").append(idReporte).append("\n");
-        sb.append("Fecha de Reporte: ").append(fechaReporte).append("\n");
-        sb.append("Stock Sabores: ").append("\n");
-        for (Map.Entry<SaborHelado, Integer> entry : stockSabores.entrySet()) {
-            SaborHelado sabor = entry.getKey();
-            Integer cantidad = entry.getValue();
-            sb.append(sabor.toString()).append(": ").append(cantidad).append("\n");
-        }
-        sb.append("Stock Recipientes: ").append("\n");
-        for (Map.Entry<TipoRecipiente, Integer> entry : stockRecipiente.entrySet()) {
-            TipoRecipiente tipo = entry.getKey();
-            Integer cantidad = entry.getValue();
-            sb.append(tipo.toString()).append(": ").append(cantidad).append("\n");
-        }
-        return sb.toString();
+        return "Reporte ID: " + idReporte +
+                ", Sabores: " + stockSabores.size() +
+                ", Recipientes: " + stockRecipiente.size() +
+                ", Fecha del Reporte: " + fechaReporte.toString();
+
     }
 
     public int getIdReporte() {
@@ -70,9 +58,8 @@ public class ReporteStock {
         this.stockRecipiente = stockRecipiente;
     }
 
-    public String getFechaReporte() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return fechaReporte.format(formatter);
+    public LocalDateTime getFechaReporte() {
+        return fechaReporte;
     }
 
     public void setFechaReporte(LocalDateTime fechaReporte) {
