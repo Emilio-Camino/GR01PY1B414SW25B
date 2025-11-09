@@ -25,17 +25,9 @@ import java.util.List;
  */
 public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCajero {
 
-    // --- 1. Atributos Internos ---
-    // (Estos son Composición, se quedan)
     private ArrayList<Factura> listaFacturas;
     private ArrayList<ReporteVenta> listaReporte;
 
-    // --- 2. Dependencias ---
-    // (Campos eliminados para cambiar de Agregación a Uso)
-    // private GestorCliente gestorCliente;
-    // private GestorCaja gestorCaja;
-    // private GestorPedido gestorPedido;
-    // private GestorPromocion gestorPromocion;
 
     // --- 3. Constructor ---
     public GestorFactura(GestorCliente gestorCliente, GestorPedido gestorPedido) {

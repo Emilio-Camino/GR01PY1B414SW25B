@@ -6,12 +6,13 @@ package interfazGrafica;
 
 import facturacion.elementos.Helado;
 import facturacion.elementos.Pedido;
-import facturacion.elementos.Recipiente;
 import facturacion.elementos.enumeraciones.SaborHelado;
 import facturacion.elementos.enumeraciones.TipoRecipiente;
+import facturacion.gestores.GestorFactura;
 import facturacion.gestores.interfaces.*;
 import javax.swing.JFrame;
 import java.util.ArrayList;
+import java.util.Locale;
 import javax.swing.JOptionPane;
 
 /**
@@ -25,6 +26,7 @@ public class VentanaCajero extends javax.swing.JFrame {
     private IGestorCaja gestorCaja;
     private IGestorPromocionCajero gestorPromocion;
     private IGestorClienteCajero gestorCliente;
+    private IGestorFacturaCajero gestorFactura;
     private ArrayList<Helado> heladosDelPedidoActual;
     private int numBolas = 0;
     
@@ -32,13 +34,14 @@ public class VentanaCajero extends javax.swing.JFrame {
      * Creates new form VentanaCajero
      * @param login
      */
-    public VentanaCajero(IGestorStockCajero gStock, IGestorPedido gPedido, IGestorCaja gCaja, IGestorPromocionCajero gPromocion, IGestorClienteCajero gCliente, LoginVentana login) {
+    public VentanaCajero(IGestorStockCajero gStock, IGestorPedido gPedido, IGestorCaja gCaja, IGestorPromocionCajero gPromocion, IGestorClienteCajero gCliente, IGestorFacturaCajero gFactura, LoginVentana login) {
         this.loginDeOrigen = login;
         this.gestorStock = gStock;
         this.gestorPedido = gPedido;
         this.gestorCaja = gCaja;
         this.gestorPromocion = gPromocion;
         this.gestorCliente = gCliente;
+        this.gestorFactura = gFactura;
         this.heladosDelPedidoActual = new ArrayList<>();
 
         initComponents();
@@ -83,9 +86,20 @@ public class VentanaCajero extends javax.swing.JFrame {
         sabor3Op = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         comboRecipiente = new javax.swing.JComboBox<>();
-        jPanel2 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        labelNumPedido = new javax.swing.JLabel();
+        labelNumPedido.setText(String.format("# %d", Pedido.getSiguienteNumPedido()));
+        jLabel9 = new javax.swing.JLabel();
+        comboHelados = new javax.swing.JComboBox<>();
+        botonEliminarHelado = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        labelTotalFactura = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        campoTotalEfectivo = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        botonCerrarCaja = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -230,6 +244,27 @@ public class VentanaCajero extends javax.swing.JFrame {
                 .addGap(15, 15, 15))
         );
 
+        jLabel6.setText("Número de Pedido");
+
+        labelNumPedido.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        labelNumPedido.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        jLabel9.setText("¿Eliminar Helados?");
+
+        comboHelados.setModel(new javax.swing.DefaultComboBoxModel<>());
+        comboHelados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboHeladosActionPerformed(evt);
+            }
+        });
+
+        botonEliminarHelado.setText("Eliminar Helado");
+        botonEliminarHelado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonEliminarHeladoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -237,37 +272,49 @@ public class VentanaCajero extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
-                .addComponent(botonRegistrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(43, 43, 43))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(73, 73, 73))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel9)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(labelNumPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(botonRegistrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(41, 41, 41))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(47, 47, 47)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(botonEliminarHelado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(comboHelados, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(41, 41, 41))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(58, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(botonRegistrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(158, 158, 158))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30))))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(labelNumPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(comboHelados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(botonEliminarHelado)
+                        .addGap(34, 34, 34)
+                        .addComponent(botonRegistrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30))
         );
 
         jTabbedPane1.addTab("Crear un Pedido", jPanel1);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 588, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 365, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Actualizar Pedido", jPanel2);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -282,15 +329,90 @@ public class VentanaCajero extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Generar Factura", jPanel3);
 
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+
+        labelTotalFactura.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        labelTotalFactura.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelTotalFactura.setText("$ 0.00");
+
+        jLabel7.setText("Total Efectivo en las Facturas");
+
+        campoTotalEfectivo.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        campoTotalEfectivo.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        campoTotalEfectivo.setText("0.00");
+        campoTotalEfectivo.setToolTipText("");
+        campoTotalEfectivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                campoTotalEfectivoActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setText("Total obtenido en Caja");
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGap(24, 24, 24)
+                                .addComponent(jLabel7))
+                            .addComponent(labelTotalFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(67, 67, 67)
+                        .addComponent(jLabel8))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addComponent(campoTotalEfectivo, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(43, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap(35, Short.MAX_VALUE)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(campoTotalEfectivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(49, 49, 49)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelTotalFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(60, 60, 60))
+        );
+
+        botonCerrarCaja.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        botonCerrarCaja.setText("Cerrar Caja");
+        botonCerrarCaja.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonCerrarCajaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 588, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                .addComponent(botonCerrarCaja, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(55, 55, 55))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 365, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(48, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(botonCerrarCaja, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(54, 54, 54))
+                    .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(47, 47, 47))
         );
 
         jTabbedPane1.addTab("Cerrar Caja", jPanel4);
@@ -313,151 +435,239 @@ public class VentanaCajero extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void botonAgregarHeladoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgregarHeladoActionPerformed
-    try {
-        
-        // VALIDACIÓN DE CAMPOS OBLIGATORIOS ---
-        if (grupoNumBolas.getSelection() == null) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, seleccione el número de bolas.");
-            return; // Detiene la ejecución del método aquí
-        }
-        // Validar Recipiente (Buena práctica)
-        if (comboRecipiente.getSelectedItem() == null) {
-             javax.swing.JOptionPane.showMessageDialog(this, "Por favor, seleccione un recipiente.");
-            return;
-        }
+    private void botonCerrarCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrarCajaActionPerformed
+        try{
 
-        // Validar Sabor 1 (que siempre es obligatorio)
-         if (sabor1Op.getSelectedItem() == null) {
-             javax.swing.JOptionPane.showMessageDialog(this, "Por favor, seleccione al menos el Sabor 1.");
-            return;
-        }
-        
-        // --- 2. Obtener el Recipiente ---
-        TipoRecipiente recipiente = (TipoRecipiente) comboRecipiente.getSelectedItem();
+            System.out.println(campoTotalEfectivo.getText());
+            double totalIngresado = Double.parseDouble(campoTotalEfectivo.getText());
+            double totalCaja = gestorCaja.calcularTotalEfectivo((GestorFactura) gestorFactura);
 
-        // --- 3. Obtener los Sabores ---
-        // Creamos una lista para los sabores de ESTE helado
-        ArrayList<SaborHelado> saboresSeleccionados = new ArrayList<>();
-
-        // (Asumo que tus combos se llaman sabor1Op, sabor2Op, sabor3Op)
-        saboresSeleccionados.add((SaborHelado) sabor1Op.getSelectedItem());
-
-        if (numBolas >= 2) {
-            saboresSeleccionados.add((SaborHelado) sabor2Op.getSelectedItem());
-        }
-        if (numBolas == 3) {
-            saboresSeleccionados.add((SaborHelado) sabor3Op.getSelectedItem());
-        }
-
-       // --- 3. Contar Frecuencia de Sabores ---
-        // Esto es para manejar "2 bolas de Chocolate"
-        java.util.Map<SaborHelado, Integer> conteoRequerido = new java.util.HashMap<>();
-        for (SaborHelado sabor : saboresSeleccionados) {
-            conteoRequerido.put(sabor, conteoRequerido.getOrDefault(sabor, 0) + 1);
-        }
-
-        // --- 4. VERIFICAR STOCK (Este es el paso clave) ---
-        boolean stockSuficiente = true;
-        for (java.util.Map.Entry<SaborHelado, Integer> entry : conteoRequerido.entrySet()) {
-            SaborHelado sabor = entry.getKey();
-            int cantidadRequerida = entry.getValue();
-            
-            // Usamos tu método del gestor
-            int stockDisponible = gestorStock.buscarBolasHelado(sabor);
-
-            if (cantidadRequerida > stockDisponible) {
-                // Si no hay stock, mostramos error y paramos
-                javax.swing.JOptionPane.showMessageDialog(this, 
-                    "¡Stock insuficiente para " + sabor + "!\n" +
-                    "Requerido: " + cantidadRequerida + "\n" +
-                    "Disponible: " + stockDisponible,
-                    "Error de Stock", 
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
-                
-                stockSuficiente = false;
-                break; // Salir del bucle de verificación
+            if(totalIngresado < 0 || totalIngresado > 100_000){
+                throw new IllegalArgumentException();
             }
-        }
 
-        // --- 5. Si hay stock, proceder a crear el helado ---
-        if (stockSuficiente) {
-            
-            // Asumo que el constructor de Helado ahora solo necesita el recipiente
-            Helado nuevoHelado = new Helado(recipiente); 
+            boolean estadoBalance = gestorCaja.verificarEstadoCaja(totalIngresado, totalCaja);
+            labelTotalFactura.setText( String.format(Locale.US, "$ %.2f", totalCaja) );
 
-            // Ahora usamos tu método 'agregarBola' y DECREMENTAMOS el stock
-            for (SaborHelado sabor : saboresSeleccionados) {
-                
-                // 1. Agrega la bola al objeto Helado
-                nuevoHelado.agregarBola(sabor);
-                
-                // 2. ¡MUY IMPORTANTE! Decrementa el stock en tu gestor
-                // (Necesitarás un método como este en tu 'gestorStock')
-                gestorStock.decrementarStockSabor(sabor, 1); 
+            if(estadoBalance){
+                JOptionPane.showMessageDialog(null, "La Caja y el valor de efectivo ingresado están en Balance", "Balance Correcto",JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "El valor de efectivo ingresado no concuerda con el de Caja, intente de nuevo","Descuadre de Caja", JOptionPane.WARNING_MESSAGE);
             }
-                gestorStock.decrementarStockRecipiente(recipiente, 1); 
-            //Permite ingresar un nuevo helado
-            limpiarCamposHelado();
-            
-            heladosDelPedidoActual.add(nuevoHelado);
-            
-            
+
+        }catch (NumberFormatException e){
+            JOptionPane.showMessageDialog(this, "El valor ingresado no es un número, utlice el punto (.) para decimales", "ERROR" ,JOptionPane.ERROR_MESSAGE);
+        }catch (NullPointerException e){
+            JOptionPane.showMessageDialog(this, "Por favor, llene los campos requeridos");
+        }catch (IllegalArgumentException e){
+            JOptionPane.showMessageDialog(this, "No puede ingresar valores negativos, tampoco tiene sentido valor exorbitantes", "ERROR" ,JOptionPane.ERROR_MESSAGE);
         }
 
-    } catch (NullPointerException e) {
-        // Esto pasa si el usuario no seleccionó algo (ej. no eligió num de bolas)
-        javax.swing.JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos del helado.");
-    } catch (Exception e) {
-        // Otro error
-        javax.swing.JOptionPane.showMessageDialog(this, "Error al agregar helado: " + e.getMessage());
-    }
-    
-        
-    }//GEN-LAST:event_botonAgregarHeladoActionPerformed
+    }//GEN-LAST:event_botonCerrarCajaActionPerformed
 
-    private void opcionNumBolasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionNumBolasActionPerformed
-         numBolas = Integer.parseInt(evt.getActionCommand());
-        switch  (numBolas){
-            case 1:
-                sabor2Op.setEnabled(false);
-                sabor3Op.setEnabled(false);
-                break;
-            case 2:
-                sabor2Op.setEnabled(true);
-                sabor3Op.setEnabled(false);
-                break;
-            case 3:
-                sabor2Op.setEnabled(true);
-                sabor3Op.setEnabled(true);
-        }
-        
-      
-    }//GEN-LAST:event_opcionNumBolasActionPerformed
+    private void campoTotalEfectivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoTotalEfectivoActionPerformed
 
-    private void sabor1OpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sabor1OpActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_sabor1OpActionPerformed
+    }//GEN-LAST:event_campoTotalEfectivoActionPerformed
 
     private void sabor2OpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sabor2OpActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_sabor2OpActionPerformed
 
+    private void sabor1OpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sabor1OpActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sabor1OpActionPerformed
+
+    private void opcionNumBolasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionNumBolasActionPerformed
+        numBolas = Integer.parseInt(evt.getActionCommand());
+        switch  (numBolas){
+            case 1:
+            sabor2Op.setEnabled(false);
+            sabor3Op.setEnabled(false);
+            break;
+            case 2:
+            sabor2Op.setEnabled(true);
+            sabor3Op.setEnabled(false);
+            break;
+            case 3:
+            sabor2Op.setEnabled(true);
+            sabor3Op.setEnabled(true);
+        }
+
+    }//GEN-LAST:event_opcionNumBolasActionPerformed
+
+    private void botonAgregarHeladoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgregarHeladoActionPerformed
+        try {
+
+            // VALIDACIÓN DE CAMPOS OBLIGATORIOS ---
+            if (grupoNumBolas.getSelection() == null) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Por favor, seleccione el número de bolas.");
+                return; // Detiene la ejecución del método
+            }
+            // Validar Recipiente
+            if (comboRecipiente.getSelectedItem() == null) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Por favor, seleccione un recipiente.");
+                return;
+            }
+
+            // Validar Sabor 1 (Siempre va)
+            if (sabor1Op.getSelectedItem() == null) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Por favor, seleccione al menos el Sabor 1.");
+                return;
+            }
+
+            // --- 2. Obtener el Recipiente ---
+            TipoRecipiente tipoRecipiente = (TipoRecipiente) comboRecipiente.getSelectedItem();
+
+            // --- 3. Obtener los Sabores ---
+            // Lista de Sabores
+            ArrayList<SaborHelado> saboresSeleccionados = new ArrayList<>();
+            
+            //Se toma los sabores elegidos
+            saboresSeleccionados.add((SaborHelado) sabor1Op.getSelectedItem());
+
+            if (numBolas >= 2) {
+                saboresSeleccionados.add((SaborHelado) sabor2Op.getSelectedItem());
+            }
+            if (numBolas == 3) {
+                saboresSeleccionados.add((SaborHelado) sabor3Op.getSelectedItem());
+            }
+
+            // --- 3. Contar Frecuencia de Sabores ---
+            // Esto es para manejar "2 bolas de del mismo sabor por ejemplo"
+            java.util.Map<SaborHelado, Integer> conteoRequerido = new java.util.HashMap<>();
+            for (SaborHelado sabor : saboresSeleccionados) {
+                conteoRequerido.put(sabor, conteoRequerido.getOrDefault(sabor, 0) + 1);
+            }
+
+            // --- 4. VERIFICAR STOCK 
+            boolean stockSuficiente = true;
+            for (java.util.Map.Entry<SaborHelado, Integer> entry : conteoRequerido.entrySet()) {
+                SaborHelado sabor = entry.getKey();
+                int cantidadRequerida = entry.getValue();
+
+                // Se llama al gestor
+                int stockDisponibleSabor = gestorStock.buscarBolasHelado(sabor);
+
+                if (cantidadRequerida > stockDisponibleSabor) {
+                    // Si no hay stock, se muestra error
+                    javax.swing.JOptionPane.showMessageDialog(this,
+                        "¡Stock insuficiente para " + sabor + "!\n" +
+                        "Requerido: " + cantidadRequerida + "\n" +
+                        "Disponible: " + stockDisponibleSabor,
+                        "Error de Stock",
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
+
+                    stockSuficiente = false;
+                    break; // Salir del bucle de verificación
+                }
+                
+                int cantidadRequeridaRecipiente = 1; // 1 helado siempre tiene solo 1 recipiente
+                int stockDisponible = gestorStock.buscarRecipiente(tipoRecipiente);
+
+                if (cantidadRequeridaRecipiente > stockDisponible) {
+                    // Si no hay stock, se muestra error
+                    javax.swing.JOptionPane.showMessageDialog(this,
+                            "¡Stock insuficiente para " + tipoRecipiente + "!\n" +
+                            "Requerido: " + cantidadRequeridaRecipiente + "\n" +
+                            "Disponible: " + stockDisponible,
+                            "Error de Stock",
+                            javax.swing.JOptionPane.ERROR_MESSAGE);
+
+                    stockSuficiente = false;
+                    break; // Salir del bucle
+                }
+                
+                
+            }
+
+            // --- 5. Si hay stock, proceder a crear el helado ---
+            if (stockSuficiente) {
+
+                // Asumo que el constructor de Helado ahora solo necesita el recipiente
+                Helado nuevoHelado = new Helado(tipoRecipiente);
+
+                // Ahora usamos tu método 'agregarBola' y DECREMENTAMOS el stock
+                for (SaborHelado sabor : saboresSeleccionados) {
+
+                    // 1. Agrega la bola al objeto Helado
+                    nuevoHelado.agregarBola(sabor);
+
+                    // 2. ¡MUY IMPORTANTE! Decrementa el stock en tu gestor
+                    // (Necesitarás un método como este en tu 'gestorStock')
+                    gestorStock.decrementarStockSabor(sabor, 1);
+                }
+                gestorStock.decrementarStockRecipiente(tipoRecipiente, 1);
+                //Permite ingresar un nuevo helado
+                limpiarCamposHelado();
+
+                heladosDelPedidoActual.add(nuevoHelado);
+                actualizarComboHelados();
+
+            }
+
+        } catch (NullPointerException e) {
+            // Esto pasa si el usuario no seleccionó algo (ej. no eligió num de bolas)
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos del helado.");
+        } catch (Exception e) {
+            // Otro error
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al agregar helado: " + e.getMessage());
+        }
+
+    }//GEN-LAST:event_botonAgregarHeladoActionPerformed
+
     private void botonRegistrarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistrarPedidoActionPerformed
-       // 1. Validar que el pedido no esté vacío
-    if (heladosDelPedidoActual.isEmpty()) {
-        javax.swing.JOptionPane.showMessageDialog(this, "No hay helados en el pedido.");
+        // 1. Validar que el pedido no esté vacío
+        if (heladosDelPedidoActual.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "No hay helados en el pedido.");
+            return;
+        }
+
+        // 2. Crear el objeto Pedido
+        Pedido nuevo = new Pedido(heladosDelPedidoActual);
+        gestorPedido.iniciarNuevoPedido(nuevo);
+        JOptionPane.showMessageDialog(null, "Datos del Pedido \n" + nuevo.toString());
+        heladosDelPedidoActual.clear();
+        labelNumPedido.setText(String.format("# %d", Pedido.getSiguienteNumPedido()));
+        actualizarComboHelados();
+
+    }//GEN-LAST:event_botonRegistrarPedidoActionPerformed
+
+    private void comboHeladosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboHeladosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboHeladosActionPerformed
+
+    private void botonEliminarHeladoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEliminarHeladoActionPerformed
+       
+        // 1. Obtener el índice de lo que el usuario seleccionó en el ComboBox
+    int indiceSeleccionado = comboHelados.getSelectedIndex();
+    
+    // 2. MÉTODO DE CONTROL
+    // Si el índice es -1, lista está vacía o no hay nada seleccionado.
+    if (indiceSeleccionado == -1) {
+        JOptionPane.showMessageDialog(this, 
+                                    "No hay ningún helado seleccionado para eliminar.", 
+                                    "Error", 
+                                    JOptionPane.WARNING_MESSAGE);
         return;
     }
-
-    // 2. Crear el objeto Pedido
-    Pedido nuevo = new Pedido(heladosDelPedidoActual); 
-    gestorPedido.iniciarNuevoPedido(nuevo);
-    JOptionPane.showMessageDialog(null, "Datos del Pedido \n" + nuevo.toString());
-    heladosDelPedidoActual.clear();
-    
         
-    }//GEN-LAST:event_botonRegistrarPedidoActionPerformed
+        Helado heladoElim = heladosDelPedidoActual.get(indiceSeleccionado);
+        
+        // Ahora usamos tu método 'agregarBola' y DECREMENTAMOS el stock
+                for (SaborHelado sabor :heladoElim.getSaborHelado()) {
+                    gestorStock.aumentarStockSabor(sabor, 1);
+                }
+                gestorStock.aumentarStockRecipiente(heladoElim.getRecipiente().getTipo(), 1);
+                //Permite ingresar un nuevo helado
+                limpiarCamposHelado();
+
+    // 3. ELIMINACIÓN DEL HELADO
+    this.heladosDelPedidoActual.remove(indiceSeleccionado);
+
+    // 4. ACTUALIZAR LA VISTA
+    actualizarComboHelados();
+    
+    }//GEN-LAST:event_botonEliminarHeladoActionPerformed
     
     private void limpiarCamposHelado() {
     grupoNumBolas.clearSelection(); // Des-selecciona los radio buttons
@@ -469,6 +679,16 @@ public class VentanaCajero extends javax.swing.JFrame {
     // Vuelve a deshabilitar los combos 2 y 3
     sabor2Op.setEnabled(false);
     sabor3Op.setEnabled(false);
+    }
+    
+    private void actualizarComboHelados() {
+    // 1. Limpiar Lista
+    comboHelados.removeAllItems();
+
+    // 2. Recorrer la lista de helados del pedido actual
+    for (Helado helado : this.heladosDelPedidoActual) {
+        comboHelados.addItem(helado);
+    }
 }
     
     /**
@@ -478,7 +698,11 @@ public class VentanaCajero extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonAgregarHelado;
+    private javax.swing.JButton botonCerrarCaja;
+    private javax.swing.JButton botonEliminarHelado;
     private javax.swing.JButton botonRegistrarPedido;
+    private javax.swing.JTextField campoTotalEfectivo;
+    private javax.swing.JComboBox<Helado> comboHelados;
     private javax.swing.JComboBox<TipoRecipiente> comboRecipiente;
     private javax.swing.ButtonGroup grupoNumBolas;
     private javax.swing.JLabel jLabel1;
@@ -486,12 +710,18 @@ public class VentanaCajero extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel labelNumPedido;
+    private javax.swing.JLabel labelTotalFactura;
     private javax.swing.JRadioButton opcionDos;
     private javax.swing.JRadioButton opcionTres;
     private javax.swing.JRadioButton opcionUna;

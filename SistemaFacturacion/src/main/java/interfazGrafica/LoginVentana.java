@@ -19,15 +19,17 @@ public class LoginVentana extends javax.swing.JFrame {
     private GestorCaja gestorCaja;
     private GestorPromocion gestorPromocion;
     private GestorCliente gestorCliente;
+    private GestorFactura gestorFactura;
     /**
      * Creates new form LoginVentana
      */
-    public LoginVentana(GestorStock gStock, GestorPedido gPedido, GestorCaja gCaja, GestorPromocion gPromocion, GestorCliente gCliente) {
+    public LoginVentana(GestorStock gStock, GestorPedido gPedido, GestorCaja gCaja, GestorPromocion gPromocion, GestorCliente gCliente, GestorFactura gFactura) {
         this.gestorStock = gStock;
         this.gestorPedido = gPedido;
         this.gestorCaja = gCaja;
         this.gestorPromocion = gPromocion;
         this.gestorCliente = gCliente;
+        this.gestorFactura = gFactura;
         initComponents();
         
     }
@@ -187,7 +189,7 @@ public class LoginVentana extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonLoginCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLoginCActionPerformed
-        new VentanaCajero((IGestorStockCajero) gestorStock,(IGestorPedido) gestorPedido, (IGestorCaja) gestorCaja, (IGestorPromocionCajero) gestorPromocion, (IGestorClienteCajero) gestorCliente, this).setVisible(true);
+        new VentanaCajero((IGestorStockCajero) gestorStock,(IGestorPedido) gestorPedido, (IGestorCaja) gestorCaja, (IGestorPromocionCajero) gestorPromocion, (IGestorClienteCajero) gestorCliente, (IGestorFacturaCajero) gestorFactura ,this).setVisible(true);
         botonLoginC.setFocusPainted(false);
         this.setVisible(false);
     }//GEN-LAST:event_botonLoginCActionPerformed

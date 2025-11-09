@@ -85,5 +85,10 @@ public class Pedido {
         //Devuelve el string completo
         return sb.toString();
     }
+    
+    public static int getSiguienteNumPedido(){
+        return Pedido.contadorPedido + 1;
+    }
+    
 }
 
