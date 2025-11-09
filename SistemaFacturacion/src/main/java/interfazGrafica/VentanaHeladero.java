@@ -5,23 +5,35 @@
 package interfazGrafica;
 
 import facturacion.elementos.Cliente;
+import facturacion.elementos.ReporteStock;
 import facturacion.elementos.enumeraciones.SaborHelado;
 import facturacion.elementos.enumeraciones.TipoRecipiente;
 import facturacion.gestores.GestorStock;
 
 import facturacion.gestores.interfaces.*;
+import java.awt.Component;
+import java.awt.Font;
+import java.util.Map;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
-public class VentanaHeladero extends JFrame {
+public class VentanaHeladero extends javax.swing.JFrame {
 
     private LoginVentana loginDeOrigen;
     private IGestorStockHeladero gestorStock;
     private IGestorPromocionHeladero gestorPromocion;
     private IGestorClienteHeladero gestorCliente;
-    private Cliente cliente;
+
 
     // Constructor
+  
     /**
      * Creates new form VentanaHeladero
      */
@@ -32,6 +44,7 @@ public class VentanaHeladero extends JFrame {
         this.gestorPromocion = gPromocion;
         this.gestorCliente = gCliente;
 
+        
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
         this.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -41,14 +54,15 @@ public class VentanaHeladero extends JFrame {
                 dispose();
             }
         });
-
+        
         // Gestor Stock
+        
         buttonGroup1.add(checkSaboresStock);
         buttonGroup1.add(checkRecipienteStock);
         buttonGroup1.clearSelection();
         
-
         // Gestor Cliente
+        
         btnAplicarCambios.setVisible(false);
         btnEliminarCliente.setVisible(false);
         btnModificarCliente.setVisible(false);
@@ -59,12 +73,13 @@ public class VentanaHeladero extends JFrame {
         labelDireccionAct.setVisible(false);
         labelCorreoAct.setVisible(false);
         labelResultadoBusqueda.setVisible(false);
-
+        
         actCedulaField.setVisible(false);
         actNombreField.setVisible(false);
         actTelefonoField.setVisible(false);
         actCorreoField.setVisible(false);
         actDireccionField.setVisible(false);
+        
 
     }
 
@@ -92,6 +107,7 @@ public class VentanaHeladero extends JFrame {
         newStock = new javax.swing.JTextField();
         jScrollPane4 = new javax.swing.JScrollPane();
         stock = new javax.swing.JTextArea();
+        btnGenerarReporte = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         btnEliminarCliente = new javax.swing.JToggleButton();
         cedulaField = new javax.swing.JTextField();
@@ -166,32 +182,40 @@ public class VentanaHeladero extends JFrame {
         stock.setRows(5);
         jScrollPane4.setViewportView(stock);
 
+        btnGenerarReporte.setText("Generar Reporte");
+        btnGenerarReporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerarReporteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(159, 159, 159)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(159, 159, 159)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(16, 16, 16)
+                        .addComponent(labelActualizarStock))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(checkSaboresStock)
+                        .addGap(55, 55, 55)
+                        .addComponent(checkRecipienteStock))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(34, 34, 34)
                                 .addComponent(opcionesStock, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(newStock, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(16, 16, 16)
-                                .addComponent(labelActualizarStock))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(checkSaboresStock)
-                                .addGap(55, 55, 55)
-                                .addComponent(checkRecipienteStock))
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(239, 239, 239)
-                        .addComponent(btnActualizarStock)))
-                .addContainerGap(166, Short.MAX_VALUE))
+                                .addComponent(btnActualizarStock)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnGenerarReporte)))))
+                .addContainerGap(153, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -208,9 +232,11 @@ public class VentanaHeladero extends JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(opcionesStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(newStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                .addComponent(btnActualizarStock)
-                .addGap(15, 15, 15))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnActualizarStock)
+                    .addComponent(btnGenerarReporte))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         pantallaActualizarStock.addTab("ActualizarStock", jPanel1);
@@ -246,6 +272,12 @@ public class VentanaHeladero extends JFrame {
             }
         });
 
+        actNombreField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                actNombreFieldActionPerformed(evt);
+            }
+        });
+
         labelResultadoBusqueda.setText("Cliente encontrado");
 
         labelDireccionAct.setText("Dirección: ");
@@ -256,10 +288,34 @@ public class VentanaHeladero extends JFrame {
 
         labelCedulaAct.setText("Cédula:");
 
+        actTelefonoField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                actTelefonoFieldActionPerformed(evt);
+            }
+        });
+
+        actDireccionField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                actDireccionFieldActionPerformed(evt);
+            }
+        });
+
         btnModificarCliente.setText("Modificar Información del Cliente");
         btnModificarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnModificarClienteActionPerformed(evt);
+            }
+        });
+
+        actCorreoField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                actCorreoFieldActionPerformed(evt);
+            }
+        });
+
+        actCedulaField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                actCedulaFieldActionPerformed(evt);
             }
         });
 
@@ -269,70 +325,68 @@ public class VentanaHeladero extends JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(203, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(btnBuscarCliente)
-                        .addGap(272, 272, 272))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(labelCedula)
-                        .addGap(12, 12, 12)
-                        .addComponent(cedulaField, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(232, 232, 232))))
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(32, 32, 32)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
+                        .addGap(69, 69, 69)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnEliminarCliente)
+                            .addComponent(labelCedula))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(25, 25, 25)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(labelResultadoBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(btnBuscarCliente)
+                                            .addComponent(cedulaField, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(81, 81, 81)
+                                .addComponent(btnModificarCliente))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelNombreAct, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelTelefonoAct, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelCedulaAct))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(labelNombreAct, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(labelTelefonoAct, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(labelCedulaAct))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(actTelefonoField, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
-                                    .addComponent(actCedulaField)
-                                    .addComponent(actNombreField))
+                                    .addComponent(actCedulaField, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(actNombreField, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(58, 58, 58)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(labelDireccionAct, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(labelCorreoAct))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(actDireccionField, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
-                                            .addComponent(actCorreoField)))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                        .addGap(161, 161, 161)
-                                        .addComponent(btnAplicarCambios))))
+                                    .addComponent(labelCorreoAct)
+                                    .addComponent(labelDireccionAct, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(actCorreoField, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(actDireccionField, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(69, 69, 69)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(labelResultadoBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(btnEliminarCliente)
-                                        .addGap(81, 81, 81)
-                                        .addComponent(btnModificarCliente))))))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(labelActualizarInformacion)))
+                                .addComponent(actTelefonoField, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
+                                .addComponent(btnAplicarCambios)))))
+                .addGap(64, 64, 64))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(labelActualizarInformacion)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(10, 10, 10)
+                .addComponent(labelResultadoBusqueda)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cedulaField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(labelCedula))
+                .addGap(18, 18, 18)
                 .addComponent(btnBuscarCliente)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(labelResultadoBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addGap(29, 29, 29)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEliminarCliente)
                     .addComponent(btnModificarCliente))
@@ -358,7 +412,7 @@ public class VentanaHeladero extends JFrame {
                             .addComponent(labelCorreoAct)
                             .addComponent(actCedulaField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(labelCedulaAct))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                         .addComponent(btnAplicarCambios)
                         .addGap(26, 26, 26))))
         );
@@ -369,7 +423,7 @@ public class VentanaHeladero extends JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 613, Short.MAX_VALUE)
+            .addGap(0, 600, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -395,57 +449,95 @@ public class VentanaHeladero extends JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnGenerarReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarReporteActionPerformed
+            ReporteStock reporte = gestorStock.generarReporteStock();
+
+            // Crear el panel principal
+            JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+            panel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 20)); // márgenes alrededor
+
+            // ===== TÍTULO =====
+            JLabel titulo = new JLabel("Reporte de Stock");
+            titulo.setFont(new java.awt.Font("Segoe UI", Font.BOLD, 24));
+            titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+            panel.add(titulo);
+
+            panel.add(Box.createVerticalStrut(10));
+
+            // ===== INFORMACIÓN GENERAL =====
+            JLabel lblNumero = new JLabel("Reporte N°: " + reporte.getIdReporte());
+            lblNumero.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 16));
+            lblNumero.setAlignmentX(Component.LEFT_ALIGNMENT);
+            panel.add(lblNumero);
+
+            JLabel lblFecha = new JLabel("Fecha: " + reporte.getFechaReporte());
+            lblFecha.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 16));
+            lblFecha.setAlignmentX(Component.LEFT_ALIGNMENT);
+            panel.add(lblFecha);
+
+            panel.add(Box.createVerticalStrut(15));
+
+            // ===== STOCK DE SABORES =====
+            JLabel lblSabores = new JLabel("Stock de Sabores:");
+            lblSabores.setFont(new java.awt.Font("Segoe UI", Font.BOLD, 18));
+            lblSabores.setAlignmentX(Component.LEFT_ALIGNMENT);
+            panel.add(lblSabores);
+
+            for (Map.Entry<SaborHelado, Integer> entry : reporte.getStockSabores().entrySet()) {
+                JLabel lblItem = new JLabel(entry.getKey().toString() + ": " + entry.getValue());
+                lblItem.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 15));
+                lblItem.setAlignmentX(Component.LEFT_ALIGNMENT);
+                panel.add(lblItem);
+            }
+
+            panel.add(Box.createVerticalStrut(15));
+
+            // ===== STOCK DE RECIPIENTES =====
+            JLabel lblRecipientes = new JLabel("Stock de Recipientes:");
+            lblRecipientes.setFont(new java.awt.Font("Segoe UI", Font.BOLD, 18));
+            lblRecipientes.setAlignmentX(Component.LEFT_ALIGNMENT);
+            panel.add(lblRecipientes);
+
+            for (Map.Entry<TipoRecipiente, Integer> entry : reporte.getStockRecipiente().entrySet()) {
+                JLabel lblItem = new JLabel(entry.getKey().toString() + ": " + entry.getValue());
+                lblItem.setFont(new java.awt.Font("Segoe UI", Font.PLAIN, 15));
+                lblItem.setAlignmentX(Component.LEFT_ALIGNMENT);
+                panel.add(lblItem);
+            }
+
+            // ===== SCROLL Y DIÁLOGO =====
+            JScrollPane scroll = new JScrollPane(panel);
+            JOptionPane.showMessageDialog(
+                this,
+                scroll,
+                "Reporte de Stock N° " + reporte.getIdReporte() + " " + reporte.getFechaReporte(),
+                JOptionPane.INFORMATION_MESSAGE
+            );
+    }//GEN-LAST:event_btnGenerarReporteActionPerformed
+
     // ############################################################### 
     
-    private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {
+    private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         String cedula = cedulaField.getText().trim();
-        // Formato inválido o longitud incorrecta
-        if (!cedula.matches("^[0-9]{10}$")) {        
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Cédula inválida. Debe contener exactamente 10 dígitos.",
-                    "Error de Formato",
-                    JOptionPane.ERROR_MESSAGE
-            );
-            mostrar_ocultarLabelsActualizacion(false); 
-            return;
-        }
-        
+        //TODO: Logica para utilizar una regex que permita verificar que el string solo contenga digitos
+        //TODO: En caso de presentar un formato invalido (que no sea 10 digitos) o cosas similares, lanzar un jpane de error
         buscarCliente(cedula);
     }
 
-    private void mostrar_ocultarLabelsActualizacion (boolean flag) {
-        labelActualizarInformacion.setVisible(flag);
-        labelCedulaAct.setVisible(flag);
-        labelNombreAct.setVisible(flag);
-        labelTelefonoAct.setVisible(flag);
-        labelDireccionAct.setVisible(flag);
-        labelCorreoAct.setVisible(flag);
-        labelResultadoBusqueda.setVisible(flag);
-
-        actCedulaField.setVisible(flag);
-        actNombreField.setVisible(flag);
-        actTelefonoField.setVisible(flag);
-        actCorreoField.setVisible(flag);
-        actDireccionField.setVisible(flag);
-    }
-    private void buscarCliente(String cedula) {
+    private void buscarCliente(String cedula) {        
         if (validarCedula(cedula)) {
-            Cliente clienteAux = gestorCliente.buscarCliente(cedula);
-            if (clienteAux == null) {
+            Cliente cliente = gestorCliente.buscarCliente(cedula);
+            if ( cliente != null) {
                 labelResultadoBusqueda.setText("Cliente no encontrado");
                 labelResultadoBusqueda.setVisible(true);
-                mostrar_ocultarLabelsActualizacion(false);
                 return;
                 // se podría presentar la opcion de registrar cliente
-            } else {
-                cliente = clienteAux;
-                labelResultadoBusqueda.setText(String.format("Cliente encontrado: %s", cliente.getNombre()));
-                labelResultadoBusqueda.setVisible(true);
-                
+            }
+            else {
+                labelResultadoBusqueda.setText("Cliente encontrado: " + cliente.getNombre());
                 btnEliminarCliente.setVisible(true);
                 btnModificarCliente.setVisible(true);
-                mostrar_ocultarLabelsActualizacion(false);
             }
         }
         else {
@@ -461,10 +553,12 @@ public class VentanaHeladero extends JFrame {
 
     public boolean validarCedula(String cedula) {
         //Algortimo para la verificación de cedula tomado de Legion-Developers por Juan Pinzón
+
         int suma = 0;
         if (cedula.length() <= 9) {
             return false;
-        } else {
+        }
+        else {
             int a[] = new int[cedula.length() / 2];
             int b[] = new int[(cedula.length() / 2)];
             int c = 0;
@@ -487,15 +581,18 @@ public class VentanaHeladero extends JFrame {
             }
             int aux = suma / 10;
             int dec = (aux + 1) * 10;
-            if ((dec - suma) == Integer.parseInt(String.valueOf(cedula.charAt(cedula.length() - 1)))) {
+            if ((dec - suma) == Integer.parseInt(String.valueOf(cedula.charAt(cedula.length() - 1))))
                 return true;
-            } else if (suma % 10 == 0 && cedula.charAt(cedula.length() - 1) == '0') {
+            else if (suma % 10 == 0 && cedula.charAt(cedula.length() - 1) == '0') {
                 return true;
-            } else {
+            }
+            else {
                 return false;
             }
         }
     }
+
+    
 
     // Funciones para actualizar stock
     private void checkRecipienteStockActionPerformed(java.awt.event.ActionEvent evt) {
@@ -523,7 +620,7 @@ public class VentanaHeladero extends JFrame {
                     "Error de Formato",
                     JOptionPane.ERROR_MESSAGE
             );
-            return;
+            return; 
         }
 
         if (nuevoStock < 0) {
@@ -548,27 +645,28 @@ public class VentanaHeladero extends JFrame {
             );
             return;
         }
+
         boolean actualizacionExitosa = false;
 
         if (checkSaboresStock.isSelected()) {
-
+            
             try {
                 SaborHelado sabor = SaborHelado.valueOf(itemSeleccionadoStr);
                 actualizacionExitosa = gestorStock.actualizarHelados(sabor, nuevoStock);
                 stock.setText(gestorStock.obtenerStockSaboresHelado());
-
+                
             } catch (IllegalArgumentException ex) {
                 JOptionPane.showMessageDialog(this, "Error: Sabor no reconocido.", "Error Interno", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
         } else if (checkRecipienteStock.isSelected()) {
-
+            
             try {
                 TipoRecipiente recipiente = TipoRecipiente.valueOf(itemSeleccionadoStr);
                 actualizacionExitosa = gestorStock.actualizarRecipiente(recipiente, nuevoStock);
                 stock.setText(gestorStock.obtenerStockRecipiente());
-
+                
             } catch (IllegalArgumentException ex) {
                 JOptionPane.showMessageDialog(this, "Error: Tipo de recipiente no reconocido.", "Error Interno", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -582,7 +680,7 @@ public class VentanaHeladero extends JFrame {
                     "Actualización Exitosa",
                     JOptionPane.INFORMATION_MESSAGE
             );
-
+            
             newStock.setText("");
         } else {
             JOptionPane.showMessageDialog(
@@ -596,7 +694,7 @@ public class VentanaHeladero extends JFrame {
 
     private void cargarStockRecipientes() {
         stock.setText(this.gestorStock.obtenerStockRecipiente());
-
+        
         opcionesStock.removeAllItems();
 
         for (TipoRecipiente rec : TipoRecipiente.values()) {
@@ -605,6 +703,7 @@ public class VentanaHeladero extends JFrame {
     }
 
     private void cargarStockSabores() {
+        
         stock.setText(this.gestorStock.obtenerStockSaboresHelado());
         opcionesStock.removeAllItems();
         for (SaborHelado sabor : SaborHelado.values()) {
@@ -612,41 +711,36 @@ public class VentanaHeladero extends JFrame {
         }
     }
 
+    
+    
     // Funciones para actualizar registro clientes
     private void cedulaFieldActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
     private void btnEliminarClienteActionPerformed(java.awt.event.ActionEvent evt) {
-        gestorCliente.eliminarCliente(cliente.getCedula());
-        this.cliente = null;
+        // TODO add your handling code here:
     }
 
     private void btnAplicarCambiosActionPerformed(java.awt.event.ActionEvent evt) {
-        String cedula = actCedulaField.getText().trim();
-        String nombre = actNombreField.getText().trim();
-        String correo = actCorreoField.getText().trim();
-        String telefono = actTelefonoField.getText().trim();
-        String direccion = actDireccionField.getText().trim();
-        System.out.println(cedula + nombre + correo + telefono + direccion);
-        gestorCliente.modificarCliente(cliente, cedula, nombre, correo, telefono, direccion);
+        // TODO add your handling code here:
     }
 
+    private void actNombreFieldActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
 
-    // Actualizacion de la informacion del cliente
-    
+    private void actTelefonoFieldActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
+    private void actDireccionFieldActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+    }
+
     private void btnModificarClienteActionPerformed(java.awt.event.ActionEvent evt) {
-        // Mostrar los campos para la actualización
-        mostrar_ocultarLabelsActualizacion(true);
-        btnAplicarCambios.setVisible(true);
-        // Muestro la informacion almacenada
-        actCedulaField.setText(cliente.getCedula());
-        actNombreField.setText(cliente.getNombre());
-        actCorreoField.setText(cliente.getCorreoElectronico());
-        actTelefonoField.setText(cliente.getTelefono());
-        actDireccionField.setText(cliente.getDireccion());
+        // TODO add your handling code here:
     }
-    
 
     private void actCorreoFieldActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
@@ -667,6 +761,7 @@ public class VentanaHeladero extends JFrame {
     private javax.swing.JToggleButton btnAplicarCambios;
     private javax.swing.JToggleButton btnBuscarCliente;
     private javax.swing.JToggleButton btnEliminarCliente;
+    private javax.swing.JButton btnGenerarReporte;
     private javax.swing.JToggleButton btnModificarCliente;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JTextField cedulaField;
