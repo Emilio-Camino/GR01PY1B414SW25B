@@ -28,13 +28,21 @@ public class Helado {
     public Recipiente getRecipiente() {
         return recipiente;
     }
-
+    
     public void setRecipiente(Recipiente recipiente) {
         this.recipiente = recipiente;
     }
 
     public ArrayList<BolaHelado> getBolasHelado() {
         return bolasHelado;
+    }
+    
+    public ArrayList<SaborHelado> getSaborHelado() {
+        ArrayList<SaborHelado> sabores = new ArrayList<>();
+        for (BolaHelado bola : bolasHelado){
+            sabores.add(bola.getSabor());
+        }
+        return sabores;
     }
 
     public void setBolasHelado(ArrayList<BolaHelado> bolasHelado) {

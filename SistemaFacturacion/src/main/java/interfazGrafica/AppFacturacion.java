@@ -25,7 +25,7 @@ public class AppFacturacion {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new LoginVentana(gestorStock, gestorPedido, gestorCaja, gestorPromocion, gestorCliente).setVisible(true);
+                new LoginVentana(gestorStock, gestorPedido, gestorCaja, gestorPromocion, gestorCliente, gestorFactura).setVisible(true);
             }
         });
     }

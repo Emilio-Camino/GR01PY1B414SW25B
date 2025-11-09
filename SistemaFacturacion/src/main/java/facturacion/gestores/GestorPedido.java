@@ -67,6 +67,7 @@ public class GestorPedido implements IGestorPedido {
      * Usa el constructor de Pedido.java.
      * @return El Pedido recién creado.
      */
+    @Override
     public void iniciarNuevoPedido(Pedido pedidoNuevo) {
         // Añadimos el pedido a nuestra lista
         this.listaPedidos.add(pedidoNuevo);
@@ -79,6 +80,7 @@ public class GestorPedido implements IGestorPedido {
      * @param pedidoID El ID del pedido a buscar.
      * @return El Pedido si se encuentra, o null si no.
      */
+    @Override
     public Pedido buscarPedido(int pedidoID) {
         for (Pedido pedido : this.listaPedidos) {
             // Usamos el getter de tu clase Pedido
