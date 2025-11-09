@@ -25,10 +25,10 @@ public class GestorStock implements IGestorStockCajero, IGestorStockHeladero {
         stockSabores.put(SaborHelado.VAINILLA, 25);
         stockSabores.put(SaborHelado.COOKIESNCREAM, 30);
         stockSabores.put(SaborHelado.RONPASAS, 15);
-        stockSabores.put(SaborHelado.CHICLE, 12);
+        stockSabores.put(SaborHelado.CHICLE, 2);
 
         // Inicialización de tipos de recipiente con stock inicial
-        stockRecipiente.put(TipoRecipiente.VASO, 50);
+        stockRecipiente.put(TipoRecipiente.VASO, 3);
         stockRecipiente.put(TipoRecipiente.CONO, 40);
         stockRecipiente.put(TipoRecipiente.TULIPAN, 30);
     }
@@ -40,14 +40,13 @@ public class GestorStock implements IGestorStockCajero, IGestorStockHeladero {
         return cantidadRecipiente;
     }
 
-
     /* Busca la cantidad de bolas de Helado de acuerdo a su tipo. Si no existe la entrada en el Map, retorna 0.*/
     @Override
     public int buscarBolasHelado(SaborHelado saborHelado) {
         int cantidadHelado = stockSabores().getOrDefault(saborHelado, 0);
         return cantidadHelado;
     }
-
+    
     /* Actualiza cantidad de bolas de helado de acuerdo a su tipo. Retorna un booleano que verifica si se pudo actualizar o no.*/
     @Override
     public boolean actualizarHelados(SaborHelado saborHelado, int numHelados) {
@@ -84,6 +83,100 @@ public class GestorStock implements IGestorStockCajero, IGestorStockHeladero {
         ReporteStock ultimo = getReportesStock().get(getReportesStock().size() - 1);
         return ultimo != null ? ultimo.getIdReporte() : 0;
     }
+    
+    @Override
+    public boolean decrementarStockSabor(SaborHelado saborHelado, int cantidadADecrementar) {
+        
+        // 1. Obtener el stock actual usando tu método
+        int stockActual = this.buscarBolasHelado(saborHelado);
+
+        // 2. Validar que se puede decrementar
+        // (La cantidad debe ser positiva y debe haber suficiente stock)
+        if (cantidadADecrementar > 0 && stockActual >= cantidadADecrementar) {
+            
+            // 3. Calcular el nuevo stock
+            int nuevoStock = stockActual - cantidadADecrementar;
+            
+            // 4. Usar tu método existente para actualizar el stock en el mapa
+            // Tu método 'actualizarHelados' ya maneja el .put()
+            return this.actualizarHelados(saborHelado, nuevoStock);
+            
+        } else {
+            // No hay suficiente stock o la cantidad a restar es inválida (ej. 0 o negativa)
+            return false;
+        }
+    }
+    
+    @Override
+    public boolean decrementarStockRecipiente(TipoRecipiente tipoRecipiente, int cantidadADecrementar) {
+        
+        // 1. Obtener el stock actual usando tu método
+        int stockActual = this.buscarRecipiente(tipoRecipiente);
+
+        // 2. Validar que se puede decrementar
+        // (La cantidad debe ser positiva y debe haber suficiente stock)
+        if (cantidadADecrementar > 0 && stockActual >= cantidadADecrementar) {
+            
+            // 3. Calcular el nuevo stock
+            int nuevoStock = stockActual - cantidadADecrementar;
+            
+            // 4. Usar tu método existente para actualizar el stock en el mapa
+            // Tu método 'actualizarRecipiente' ya maneja el .put()
+            return this.actualizarRecipiente(tipoRecipiente, nuevoStock);
+            
+        } else {
+            // No hay suficiente stock o la cantidad a restar es inválida (ej. 0 o negativa)
+            return false;
+        }
+    }
+    
+    @Override
+        public boolean aumentarStockSabor(SaborHelado saborHelado, int cantidadAAumentar) {
+        
+        // 1. Obtener el stock actual 
+        int stockActual = this.buscarBolasHelado(saborHelado);
+
+        // 2. Aumentar
+        // (La cantidad debe ser positiva)
+        if (cantidadAAumentar > 0) {
+            
+            // 3. Calcular el nuevo stock
+            int nuevoStock = stockActual + cantidadAAumentar;
+            
+            // 4. Usar tu método existente para actualizar el stock en el mapa
+            // Tu método 'actualizarHelados' ya maneja el .put()
+            return this.actualizarHelados(saborHelado, nuevoStock);
+            
+        } else {
+            // No se puede aumentar stock
+            return false;
+        }
+    }
+    
+    
+    @Override
+    public boolean aumentarStockRecipiente(TipoRecipiente tipoRecipiente, int cantidadAAumentar) {
+        
+        // 1. Obtener el stock actual
+        int stockActual = this.buscarRecipiente(tipoRecipiente);
+
+        // 2. Aumentar
+        // (La cantidad debe ser positiva y debe haber suficiente stock)
+        if (cantidadAAumentar > 0) {
+            
+        // 3. Calcular el nuevo stock
+            int nuevoStock = stockActual + cantidadAAumentar;
+            
+        // 4. ActualizarStock
+            return this.actualizarRecipiente(tipoRecipiente, nuevoStock);
+            
+        } else {
+            // No se puede aumentar
+            return false;
+        }
+    }
+    
+    
 
     // --------------------------------------------------------
     // Getters y Setters

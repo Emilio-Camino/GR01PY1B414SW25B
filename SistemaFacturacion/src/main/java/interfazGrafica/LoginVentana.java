@@ -19,15 +19,17 @@ public class LoginVentana extends javax.swing.JFrame {
     private GestorCaja gestorCaja;
     private GestorPromocion gestorPromocion;
     private GestorCliente gestorCliente;
+    private GestorFactura gestorFactura;
     /**
      * Creates new form LoginVentana
      */
-    public LoginVentana(GestorStock gStock, GestorPedido gPedido, GestorCaja gCaja, GestorPromocion gPromocion, GestorCliente gCliente) {
+    public LoginVentana(GestorStock gStock, GestorPedido gPedido, GestorCaja gCaja, GestorPromocion gPromocion, GestorCliente gCliente, GestorFactura gFactura) {
         this.gestorStock = gStock;
         this.gestorPedido = gPedido;
         this.gestorCaja = gCaja;
         this.gestorPromocion = gPromocion;
         this.gestorCliente = gCliente;
+        this.gestorFactura = gFactura;
         initComponents();
         
     }
@@ -43,12 +45,6 @@ public class LoginVentana extends javax.swing.JFrame {
 
         PanelLogin = new javax.swing.JPanel();
         backPanel = new javax.swing.JPanel();
-        botonLoginC = new javax.swing.JToggleButton();
-        botonLoginC.setBackground(materialBlue);
-        botonLoginC.setForeground(Color.WHITE);
-        botonLoginC.setOpaque(true);
-        botonLoginC.setBorderPainted(false);
-        botonLoginC.setContentAreaFilled(true);
         jLabel2 = new javax.swing.JLabel();
         usuarioHeladero = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -61,20 +57,14 @@ public class LoginVentana extends javax.swing.JFrame {
         botonLoginH.setOpaque(true);
         botonLoginH.setBorderPainted(false);
         botonLoginH.setContentAreaFilled(true);
+        botonLoginC = new javax.swing.JButton();
+        botonLoginC.setBackground(materialBlue);  botonLoginC.setForeground(Color.WHITE);  botonLoginC.setOpaque(true);  botonLoginC.setBorderPainted(false);  botonLoginC.setContentAreaFilled(true);
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
         PanelLogin.setBackground(new java.awt.Color(255, 255, 255));
-
-        botonLoginC.setText("Acceder como Cajero");
-        botonLoginC.setBorderPainted(false);
-        botonLoginC.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonLoginCActionPerformed(evt);
-            }
-        });
 
         jLabel2.setText("Usuario");
 
@@ -92,6 +82,13 @@ public class LoginVentana extends javax.swing.JFrame {
         botonLoginH.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonLoginHActionPerformed(evt);
+            }
+        });
+
+        botonLoginC.setText("Acceder como Cajero");
+        botonLoginC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonLoginCActionPerformed(evt);
             }
         });
 
@@ -186,12 +183,6 @@ public class LoginVentana extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void botonLoginCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLoginCActionPerformed
-        new VentanaCajero((IGestorStockCajero) gestorStock,(IGestorPedido) gestorPedido, (IGestorCaja) gestorCaja, (IGestorPromocionCajero) gestorPromocion, (IGestorClienteCajero) gestorCliente, this).setVisible(true);
-        botonLoginC.setFocusPainted(false);
-        this.setVisible(false);
-    }//GEN-LAST:event_botonLoginCActionPerformed
-
     private void botonLoginHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLoginHActionPerformed
         String usuario = usuarioHeladero.getText();
         String pass = new String(passHeladero.getPassword());
@@ -209,11 +200,18 @@ public class LoginVentana extends javax.swing.JFrame {
         
     }//GEN-LAST:event_botonLoginHActionPerformed
 
+    private void botonLoginCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonLoginCActionPerformed
+        new VentanaCajero((IGestorStockCajero) gestorStock,(IGestorPedido) gestorPedido, (IGestorCaja) gestorCaja, (IGestorPromocionCajero) gestorPromocion, (IGestorClienteCajero) gestorCliente, (IGestorFacturaCajero) gestorFactura ,this).setVisible(true);
+        botonLoginC.setFocusPainted(false);
+        this.setVisible(false);
+
+    }//GEN-LAST:event_botonLoginCActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelLogin;
     private javax.swing.JPanel backPanel;
-    private javax.swing.JToggleButton botonLoginC;
+    private javax.swing.JButton botonLoginC;
     private javax.swing.JButton botonLoginH;
     private javax.swing.JLabel errorLoginLabel;
     private javax.swing.JLabel jLabel1;

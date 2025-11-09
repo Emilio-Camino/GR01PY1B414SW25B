@@ -8,6 +8,7 @@ import facturacion.elementos.Cliente;
 import facturacion.elementos.enumeraciones.SaborHelado;
 import facturacion.elementos.enumeraciones.TipoRecipiente;
 import facturacion.gestores.GestorStock;
+
 import facturacion.gestores.interfaces.*;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -21,6 +22,10 @@ public class VentanaHeladero extends javax.swing.JFrame {
 
 
     // Constructor
+  
+    /**
+     * Creates new form VentanaHeladero
+     */
     public VentanaHeladero(IGestorStockHeladero gStock, IGestorPromocionHeladero gPromocion, IGestorClienteHeladero gCliente, LoginVentana login) {
         initComponents();
         this.loginDeOrigen = login;
@@ -28,6 +33,7 @@ public class VentanaHeladero extends javax.swing.JFrame {
         this.gestorPromocion = gPromocion;
         this.gestorCliente = gCliente;
 
+        
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
         this.addWindowListener(new java.awt.event.WindowAdapter() {

@@ -133,18 +133,6 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JToggleButton" name="botonLoginC">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Acceder como Cajero"/>
-                <Property name="borderPainted" type="boolean" value="false"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonLoginCActionPerformed"/>
-              </Events>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="botonLoginC.setBackground(materialBlue);&#xd;&#xa;botonLoginC.setForeground(Color.WHITE);&#xd;&#xa;botonLoginC.setOpaque(true);&#xd;&#xa;botonLoginC.setBorderPainted(false);&#xd;&#xa;botonLoginC.setContentAreaFilled(true);&#xd;&#xa;"/>
-              </AuxValues>
-            </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Usuario"/>
@@ -190,6 +178,17 @@
               </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="botonLoginH.setBackground(materialBlue);&#xd;&#xa;botonLoginH.setForeground(Color.WHITE);&#xd;&#xa;botonLoginH.setOpaque(true);&#xd;&#xa;botonLoginH.setBorderPainted(false);&#xd;&#xa;botonLoginH.setContentAreaFilled(true);&#xd;&#xa;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JButton" name="botonLoginC">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Acceder como Cajero"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonLoginCActionPerformed"/>
+              </Events>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="botonLoginC.setBackground(materialBlue);  botonLoginC.setForeground(Color.WHITE);  botonLoginC.setOpaque(true);  botonLoginC.setBorderPainted(false);  botonLoginC.setContentAreaFilled(true);  "/>
               </AuxValues>
             </Component>
           </SubComponents>
