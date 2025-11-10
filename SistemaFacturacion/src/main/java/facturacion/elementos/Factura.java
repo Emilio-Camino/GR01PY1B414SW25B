@@ -18,10 +18,11 @@ public class Factura {
 
     public Factura() {
         // Inicializa la fecha al momento de la creación
+        this.idFactura = ++contadorFactura;
         this.fechaEmision = new Date();
     }
 
-    public Factura(int idFactura, Pedido pedido, Cliente cliente, double total, double impuestoIVA, double pago, double cambio, String tipoPago) {
+    public Factura(Pedido pedido, Cliente cliente, double total, double impuestoIVA, double pago, double cambio, String tipoPago) {
         this.idFactura = ++contadorFactura;
         this.pedidos = pedido;
         this.cliente = cliente;
