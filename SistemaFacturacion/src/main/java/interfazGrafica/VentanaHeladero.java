@@ -6,8 +6,10 @@ package interfazGrafica;
 
 import facturacion.elementos.Cliente;
 import facturacion.elementos.Factura;
+import facturacion.elementos.Helado;
 import facturacion.elementos.Promocion;
 import facturacion.elementos.ReporteStock;
+import facturacion.elementos.ReporteVenta;
 import facturacion.elementos.enumeraciones.SaborHelado;
 import facturacion.elementos.enumeraciones.TipoRecipiente;
 import facturacion.gestores.GestorStock;
@@ -17,6 +19,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Insets;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -162,7 +166,6 @@ public class VentanaHeladero extends JFrame {
         newStock.setBackground(Color.WHITE);
         newStock.setForeground(Color.BLACK);
         newStock.setOpaque(true);
-        newStock.setBorder(null);
         jScrollPane4 = new javax.swing.JScrollPane();
         stock = new javax.swing.JTextArea();
         btnGenerarReporte = new javax.swing.JButton();
@@ -189,7 +192,6 @@ public class VentanaHeladero extends JFrame {
         newStockPromocion.setBackground(Color.WHITE);
         newStockPromocion.setForeground(Color.BLACK);
         newStockPromocion.setOpaque(true);
-        newStockPromocion.setBorder(null);
         jScrollPane5 = new javax.swing.JScrollPane();
         jListPromociones = new javax.swing.JList<>();
         btnEliminarPromocion = new javax.swing.JButton();
@@ -211,7 +213,6 @@ public class VentanaHeladero extends JFrame {
         cedulaField.setBackground(Color.WHITE);
         cedulaField.setForeground(Color.BLACK);
         cedulaField.setOpaque(true);
-        cedulaField.setBorder(null);
         btnEliminarCliente = new javax.swing.JButton();
         btnEliminarCliente.setBackground(softPink);
         btnEliminarCliente.setForeground(Color.WHITE);
@@ -279,6 +280,12 @@ public class VentanaHeladero extends JFrame {
         btnGenerarReporteV.setOpaque(true);
         btnGenerarReporteV.setBorderPainted(false);
         btnGenerarReporteV.setContentAreaFilled(true);
+        btnVerFactura = new javax.swing.JButton();
+        btnVerFactura.setBackground(materialBlue);
+        btnVerFactura.setForeground(Color.WHITE);
+        btnVerFactura.setOpaque(true);
+        btnVerFactura.setBorderPainted(false);
+        btnVerFactura.setContentAreaFilled(true);
 
         jCheckBox1.setText("jCheckBox1");
 
@@ -661,6 +668,13 @@ public class VentanaHeladero extends JFrame {
             }
         });
 
+        btnVerFactura.setText("Ver Factura");
+        btnVerFactura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerFacturaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
@@ -671,7 +685,8 @@ public class VentanaHeladero extends JFrame {
                 .addGap(32, 32, 32)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnEliminarFactura, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
-                    .addComponent(btnGenerarReporteV, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnGenerarReporteV, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnVerFactura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(46, 46, 46))
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
@@ -690,6 +705,8 @@ public class VentanaHeladero extends JFrame {
                         .addGap(9, 9, 9)
                         .addComponent(btnEliminarFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnVerFactura)
+                        .addGap(28, 28, 28)
                         .addComponent(btnGenerarReporteV, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(100, 100, 100))
         );
@@ -754,11 +771,15 @@ public class VentanaHeladero extends JFrame {
             lblNumero.setFont(new Font("Segoe UI", Font.PLAIN, 16));
             lblNumero.setAlignmentX(Component.LEFT_ALIGNMENT);
             panel.add(lblNumero);
+            
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                String fechaFormateada = reporte.getFechaReporte().format(formatter);
 
-            JLabel lblFecha = new JLabel("Fecha: " + reporte.getFechaReporte());
-            lblFecha.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-            lblFecha.setAlignmentX(Component.LEFT_ALIGNMENT);
-            panel.add(lblFecha);
+                //Label para la fecha
+                JLabel lblFecha = new JLabel("Fecha del Reporte: " + fechaFormateada);
+                lblFecha.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+                lblFecha.setAlignmentX(Component.LEFT_ALIGNMENT);
+                panel.add(lblFecha);
 
             panel.add(Box.createVerticalStrut(15));
 
@@ -1035,7 +1056,101 @@ public class VentanaHeladero extends JFrame {
     }//GEN-LAST:event_btnEliminarFacturaActionPerformed
 
     private void btnGenerarReporteVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarReporteVActionPerformed
-        // TODO add your handling code here:
+        ReporteVenta reporteV= gestorFactura.generarReporteVenta();
+        // 2. Crear el panel principal
+    JPanel panel = new JPanel();
+    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20)); // Ajuste de márgenes
+
+    // 3. TÍTULO
+    JLabel titulo = new JLabel("Reporte de Venta");
+    titulo.setFont(new Font("Segoe UI", Font.BOLD, 24));
+    titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(titulo);
+
+    panel.add(Box.createVerticalStrut(10));
+
+    // 4. INFORMACIÓN GENERAL
+   
+    // Formateador para que la fecha/hora
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+    String fechaFormateada = reporteV.getFechaReporte().format(formatter);
+    
+    //Label para la fecha
+    JLabel lblFecha = new JLabel("Fecha del Reporte: " + fechaFormateada);
+    lblFecha.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    lblFecha.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(lblFecha);
+    
+    // Total Ventas 
+    JLabel lblTotal = new JLabel(String.format("Total de Ventas: $%.2f", reporteV.getTotalVentas()));
+    lblTotal.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    lblTotal.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(lblTotal);
+
+    // Facturas Procesadas
+    JLabel lblFacturas = new JLabel("Facturas Procesadas: " + reporteV.getFacturasProcesadas());
+    lblFacturas.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    lblFacturas.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(lblFacturas);
+    
+    panel.add(Box.createVerticalStrut(10)); // Espacio
+
+    // Sabor Más Vendido 
+    String saborMasVendido = (reporteV.getSaborMasVendido() != null) ? reporteV.getSaborMasVendido().toString() : "N/A";
+    JLabel lblSaborMax = new JLabel("Sabor Más Vendido: " + saborMasVendido);
+    lblSaborMax.setFont(new Font("Segoe UI", Font.BOLD, 16)); // En negrita para destacar
+    lblSaborMax.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(lblSaborMax);
+    
+    // Recipiente Más Vendido (con chequeo de nulo)
+    String recipMasVendido = (reporteV.getRecipienteMasVendido() != null) ? reporteV.getRecipienteMasVendido().toString() : "N/A";
+    JLabel lblRecipMax = new JLabel("Recipiente Más Vendido: " + recipMasVendido);
+    lblRecipMax.setFont(new Font("Segoe UI", Font.BOLD, 16)); // En negrita para destacar
+    lblRecipMax.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(lblRecipMax);
+
+    panel.add(Box.createVerticalStrut(15));
+
+    // 5. DETALLE DE SABORES
+    JLabel lblSabores = new JLabel("Detalle de Sabores Vendidos:");
+    lblSabores.setFont(new Font("Segoe UI", Font.BOLD, 18));
+    lblSabores.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(lblSabores);
+
+    for (Map.Entry<SaborHelado, Integer> entry : reporteV.getConteoSabor().entrySet()) {
+        JLabel lblItem = new JLabel(entry.getKey().toString() + ": " + entry.getValue() + " bolas");
+        lblItem.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        lblItem.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.add(lblItem);
+    }
+
+    panel.add(Box.createVerticalStrut(15));
+
+    // 6. DETALLE DE RECIPIENTES
+    JLabel lblRecipientes = new JLabel("Detalle de Recipientes Vendidos:");
+    lblRecipientes.setFont(new Font("Segoe UI", Font.BOLD, 18));
+    lblRecipientes.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(lblRecipientes);
+
+    for (Map.Entry<TipoRecipiente, Integer> entry : reporteV.getConteoRecipiente().entrySet()) {
+        JLabel lblItem = new JLabel(entry.getKey().toString() + ": " + entry.getValue() + " unidades");
+        lblItem.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        lblItem.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.add(lblItem);
+    }
+
+    // 7. SCROLL Y DIÁLOGO
+    JScrollPane scroll = new JScrollPane(panel);
+  
+
+    JOptionPane.showMessageDialog(
+            this, 
+            scroll,
+            "Reporte de Venta", // Título de la ventana
+            JOptionPane.INFORMATION_MESSAGE
+    );
+        
     }//GEN-LAST:event_btnGenerarReporteVActionPerformed
 
     private void newStockPromocionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newStockPromocionActionPerformed
@@ -1045,6 +1160,141 @@ public class VentanaHeladero extends JFrame {
     private void actDireccionFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actDireccionFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_actDireccionFieldActionPerformed
+
+    private void btnVerFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerFacturaActionPerformed
+int index = jListFacturas.getSelectedIndex();
+
+    if (index < 0 || facturasExistentes == null || facturasExistentes.isEmpty()) {
+        JOptionPane.showMessageDialog(
+                this,
+                "Debe seleccionar una alguna factura.",
+                "Error",
+                JOptionPane.WARNING_MESSAGE
+        );
+        return;
+    }
+
+    // 1. Obtener la factura seleccionada
+    Factura factura = facturasExistentes.get(index);
+
+    // 2. Crear el panel principal
+    JPanel panel = new JPanel();
+    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
+
+    // Formateador para la fecha 
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+    // 3. TÍTULO
+    JLabel titulo = new JLabel("Detalle de Factura");
+    titulo.setFont(new Font("Segoe UI", Font.BOLD, 24));
+    titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(titulo);
+    panel.add(Box.createVerticalStrut(10));
+
+    // 4. INFORMACIÓN GENERAL DE LA FACTURA
+    JLabel lblId = new JLabel("Factura N°: " + factura.getIdFactura());
+    lblId.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    lblId.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(lblId);
+
+    JLabel lblFecha = new JLabel("Fecha: " + sdf.format(factura.getFechaEmision()));
+    lblFecha.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    lblFecha.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(lblFecha);
+
+    JLabel lblPago = new JLabel("Método de Pago: " + factura.getTipoPago());
+    lblPago.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    lblPago.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(lblPago);
+    panel.add(Box.createVerticalStrut(15));
+
+    // 5. DATOS DEL CLIENTE
+    JLabel lblClienteTitulo = new JLabel("Datos del Cliente:");
+    lblClienteTitulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+    lblClienteTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(lblClienteTitulo);
+
+    try {
+        JLabel lblClienteNombre = new JLabel("Nombre: " + factura.getCliente().getNombre());
+        lblClienteNombre.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        lblClienteNombre.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.add(lblClienteNombre);
+        
+        JLabel lblClienteCedula = new JLabel("Cédula/RUC: " + factura.getCliente().getCedula());
+        lblClienteCedula.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        lblClienteCedula.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.add(lblClienteCedula);
+
+    } catch (Exception e) {
+        JLabel lblClienteError = new JLabel("No se pudieron cargar los datos del cliente.");
+        lblClienteError.setFont(new Font("Segoe UI", Font.ITALIC, 15));
+        lblClienteError.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.add(lblClienteError);
+    }
+    panel.add(Box.createVerticalStrut(15));
+
+
+    // 6. DETALLE DEL PEDIDO
+    JLabel lblPedidoTitulo = new JLabel("Detalle del Pedido (N° " + factura.getPedido().getPedidoID() + "):");
+    lblPedidoTitulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+    lblPedidoTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(lblPedidoTitulo);
+
+    for (Helado helado : factura.getPedido().getHelados()) {
+        JLabel lblItem = new JLabel("• " + helado.toString()); // El • es un bullet point
+        lblItem.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        lblItem.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.add(lblItem);
+    }
+    panel.add(Box.createVerticalStrut(15));
+
+    // 7. TOTALES
+    JLabel lblTotalesTitulo = new JLabel("Valores:");
+    lblTotalesTitulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+    lblTotalesTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(lblTotalesTitulo);
+
+    double subtotal = factura.getTotal() - factura.getImpuestoIVA();
+
+    JLabel lblSubtotal = new JLabel(String.format("Subtotal: $%.2f", subtotal));
+    lblSubtotal.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+    lblSubtotal.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(lblSubtotal);
+
+    JLabel lblIVA = new JLabel(String.format("IVA: $%.2f", factura.getImpuestoIVA()));
+    lblIVA.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+    lblIVA.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(lblIVA);
+
+    // Total en negrita
+    JLabel lblTotal = new JLabel(String.format("Total a Pagar: $%.2f", factura.getTotal()));
+    lblTotal.setFont(new Font("Segoe UI", Font.BOLD, 16));
+    lblTotal.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(lblTotal);
+    
+    panel.add(Box.createVerticalStrut(10)); // Separador
+
+    JLabel lblPagado = new JLabel(String.format("Monto Pagado: $%.2f", factura.getPago()));
+    lblPagado.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+    lblPagado.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(lblPagado);
+
+    JLabel lblCambio = new JLabel(String.format("Cambio: $%.2f", factura.getCambio()));
+    lblCambio.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+    lblCambio.setAlignmentX(Component.LEFT_ALIGNMENT);
+    panel.add(lblCambio);
+
+    // 8. SCROLL Y DIÁLOGO
+    JScrollPane scroll = new JScrollPane(panel);
+    JOptionPane.showMessageDialog(
+            this,
+            scroll,
+            "Factura N° " + factura.getIdFactura(), // Título de la ventana
+            JOptionPane.INFORMATION_MESSAGE
+    );
+        
+    }//GEN-LAST:event_btnVerFacturaActionPerformed
 
     private void btnEliminarPromocionActionPerformed(java.awt.event.ActionEvent evt) {
         int index = jListPromociones.getSelectedIndex();
@@ -1316,33 +1566,55 @@ public class VentanaHeladero extends JFrame {
     }
     
     private void cargarFacturas() {
-        // Obtener las promociones del gestor
-        facturasExistentes = gestorFactura.getListaFacturas();
+        // 1. Obtener la lista COMPLETA del gestor en una variable temporal
+        java.util.List<Factura> todasLasFacturas = gestorFactura.getListaFacturas();
 
-        // Crear el modelo de lista
+        // 2. Inicializar la variable de clase 'facturasExistentes' como una nueva lista
+        // Esta lista SÓLO contendrá las facturas activas (las que se mostrarán)
+        facturasExistentes = new java.util.ArrayList<>();
+        
+        // 3. Crear el modelo para la JList
         javax.swing.DefaultListModel<String> modelo = new javax.swing.DefaultListModel<>();
 
-        if (facturasExistentes == null || facturasExistentes.isEmpty()) {
-            modelo.addElement("No hay facturas registradas");
-            btnEliminarFactura.setEnabled(false);
-        } else {
-            for (Factura facturaActual : facturasExistentes) {
+        // 4. Iterar la lista COMPLETA (si no es nula)
+        if (todasLasFacturas != null && !todasLasFacturas.isEmpty()) {
+            
+            // Iteramos la lista completa para filtrar
+            for (Factura facturaActual : todasLasFacturas) {
                 
-                if(facturaActual.getTipoPago().equals("ANULADA")){
-                    continue;
+                // 5. Si la factura NO está anulada, la agregamos a AMBAS listas:
+                //    a la de datos (facturasExistentes) y a la visual (modelo)
+                if (!facturaActual.getTipoPago().equals("ANULADA")) {
+                    
+                    // a. Agregar a la lista de datos de la clase
+                    facturasExistentes.add(facturaActual); 
+                    
+                    // b. Agregar al modelo visual de la JList
+                    String texto = String.format(
+                            "ID: %d Cliente: %s",
+                            facturaActual.getIdFactura(),
+                            facturaActual.getCliente().getCedula()
+                    );
+                    modelo.addElement(texto);
                 }
-                
-                String texto = String.format(
-                        "ID: %d Cliente: %s",
-                        facturaActual.getIdFactura(),
-                        facturaActual.getCliente().getCedula()
-                );
-                modelo.addElement(texto);
-                btnEliminarFactura.setEnabled(true);
-            }   
+            }
         }
 
+        // 6. Manejar el caso de que la lista FILTRADA esté vacía
+        // (ya sea porque no había facturas o porque todas estaban anuladas)
+        if (facturasExistentes.isEmpty()) { 
+             modelo.addElement("No hay facturas activas registradas");
+             btnEliminarFactura.setEnabled(false);
+        }
+        
+        // 7. Asignar el modelo a la JList
         jListFacturas.setModel(modelo);
+
+        // 8. (Buena práctica) Asegurarse de que el botón esté deshabilitado
+        // si no hay nada seleccionado después de cargar.
+        if (jListFacturas.getSelectedIndex() == -1) {
+            btnEliminarFactura.setEnabled(false);
+        }
     }
 
 
@@ -1363,6 +1635,7 @@ public class VentanaHeladero extends JFrame {
     private javax.swing.JButton btnGenerarReporte;
     private javax.swing.JButton btnGenerarReporteV;
     private javax.swing.JButton btnModificarCliente;
+    private javax.swing.JButton btnVerFactura;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JTextField cedulaField;
     private javax.swing.JRadioButton checkRecipienteStock;

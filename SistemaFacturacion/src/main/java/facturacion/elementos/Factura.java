@@ -50,7 +50,7 @@ public class Factura {
     }
 
     public void setPedidos(Pedido pedido) {
-        this.pedidos = pedidos;
+        this.pedidos = pedido;
     }
 
     public Cliente getCliente() {
