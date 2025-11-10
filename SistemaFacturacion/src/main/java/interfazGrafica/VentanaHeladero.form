@@ -255,7 +255,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="newStock">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="newStock.setBackground(Color.WHITE);&#xd;&#xa;newStock.setForeground(Color.BLACK);&#xd;&#xa;newStock.setOpaque(true);&#xd;&#xa;newStock.setBorder(null);"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="newStock.setBackground(Color.WHITE);&#xd;&#xa;newStock.setForeground(Color.BLACK);&#xd;&#xa;newStock.setOpaque(true);&#xd;&#xa;"/>
               </AuxValues>
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane4">
@@ -416,7 +416,7 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newStockPromocionActionPerformed"/>
                   </Events>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="newStockPromocion.setBackground(Color.WHITE);&#xd;&#xa;newStockPromocion.setForeground(Color.BLACK);&#xd;&#xa;newStockPromocion.setOpaque(true);&#xd;&#xa;newStockPromocion.setBorder(null);"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="newStockPromocion.setBackground(Color.WHITE);&#xd;&#xa;newStockPromocion.setForeground(Color.BLACK);&#xd;&#xa;newStockPromocion.setOpaque(true);&#xd;&#xa;"/>
                   </AuxValues>
                 </Component>
                 <Container class="javax.swing.JScrollPane" name="jScrollPane5">
@@ -552,7 +552,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cedulaFieldActionPerformed"/>
               </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="cedulaField.setBackground(Color.WHITE);&#xd;&#xa;cedulaField.setForeground(Color.BLACK);&#xd;&#xa;cedulaField.setOpaque(true);&#xd;&#xa;cedulaField.setBorder(null);"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="cedulaField.setBackground(Color.WHITE);&#xd;&#xa;cedulaField.setForeground(Color.BLACK);&#xd;&#xa;cedulaField.setOpaque(true);"/>
               </AuxValues>
             </Component>
             <Component class="javax.swing.JButton" name="btnEliminarCliente">
@@ -780,6 +780,7 @@
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="btnEliminarFactura" pref="147" max="32767" attributes="0"/>
                               <Component id="btnGenerarReporteV" max="32767" attributes="0"/>
+                              <Component id="btnVerFactura" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
                       </Group>
@@ -802,6 +803,8 @@
                                   <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                                   <Component id="btnEliminarFactura" min="-2" pref="35" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="btnVerFactura" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                                   <Component id="btnGenerarReporteV" min="-2" pref="43" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -864,6 +867,17 @@
                   </Events>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnGenerarReporteV.setBackground(softGreen);&#xd;&#xa;btnGenerarReporteV.setForeground(Color.WHITE);&#xd;&#xa;btnGenerarReporteV.setOpaque(true);&#xd;&#xa;btnGenerarReporteV.setBorderPainted(false);&#xd;&#xa;btnGenerarReporteV.setContentAreaFilled(true);&#xd;&#xa;"/>
+                  </AuxValues>
+                </Component>
+                <Component class="javax.swing.JButton" name="btnVerFactura">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Ver Factura"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVerFacturaActionPerformed"/>
+                  </Events>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnVerFactura.setBackground(materialBlue);&#xd;&#xa;btnVerFactura.setForeground(Color.WHITE);&#xd;&#xa;btnVerFactura.setOpaque(true);&#xd;&#xa;btnVerFactura.setBorderPainted(false);&#xd;&#xa;btnVerFactura.setContentAreaFilled(true);&#xd;&#xa;"/>
                   </AuxValues>
                 </Component>
               </SubComponents>

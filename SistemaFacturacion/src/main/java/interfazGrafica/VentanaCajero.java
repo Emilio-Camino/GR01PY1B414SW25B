@@ -1541,6 +1541,7 @@ public class VentanaCajero extends javax.swing.JFrame {
             Cliente clienteDeFactura = this.gestorCliente.buscarCliente(clienteCedula);
             facturaGenerada.setCliente(clienteDeFactura);
             facturaGenerada.setPedidos(this.pedidoActualParaFacturar);
+            System.out.println(pedidoActualParaFacturar.toString());
             double ivaUI = Double.parseDouble(valIVA.getText().replace("$", ""));
             double totalUI = Double.parseDouble(valTotal.getText().replace("$", ""));
 

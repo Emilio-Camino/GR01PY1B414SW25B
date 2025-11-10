@@ -5,6 +5,7 @@ import facturacion.elementos.Factura;
 import facturacion.elementos.ReporteVenta;
 import facturacion.elementos.Pedido;
 import facturacion.elementos.Cliente;
+import facturacion.elementos.Helado;
 import facturacion.elementos.enumeraciones.SaborHelado;
 import facturacion.elementos.enumeraciones.TipoRecipiente;
 
@@ -17,7 +18,9 @@ import facturacion.gestores.interfaces.IGestorFacturaCajero;
 // Importaciones de Java
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Clase refactorizada para usar "Uso" (parámetros de método)
@@ -119,29 +122,58 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
     // --- 5. Métodos de IGestorFacturaHeladero ---
 
     // @Override // <-- No requiere gestores externos, la firma no cambia
-    public ReporteVenta generarReporteVenta() {
-        // Lógica simple de reporte: Suma el total de todas las facturas
+        public ReporteVenta generarReporteVenta() {
         double totalVentas = 0.0;
         int facturasProcesadas = 0;
 
-        // ... (Lógica interna del reporte) ...
+        // Mapas para llevar el conteo
+        Map<SaborHelado, Integer> conteoSabor = new HashMap<>();
+        Map<TipoRecipiente, Integer> conteoRecipiente = new HashMap<>();
 
         for (Factura f : this.listaFacturas) {
             if (!f.getTipoPago().equals("ANULADA")) {
                 totalVentas += f.getTotal();
                 facturasProcesadas++;
+
+                // Asumo que la Factura 'f' tiene un método getPedido()
+                Pedido pedido = f.getPedido(); // <--- ASUNCIÓN 1
+
+                if (pedido != null) {
+                    // Iteramos los helados de ese pedido
+                    for (Helado helado : pedido.getHelados()) {
+
+                        // Contamos el recipiente (Asumo que Helado tiene getTipoRecipiente())
+                        TipoRecipiente tr = helado.getRecipiente().getTipo();
+                        conteoRecipiente.put(tr, conteoRecipiente.getOrDefault(tr, 0) + 1);
+
+                        // Contamos las bolas (sabores) usando el método que validamos
+                        for (SaborHelado sabor : helado.getSaborHelado()) {
+                            conteoSabor.put(sabor, conteoSabor.getOrDefault(sabor, 0) + 1);
+                        }
+                    }
+                }
             }
         }
 
-        System.out.println("Reporte generado: " + totalVentas + " en " + facturasProcesadas + " facturas.");
+        // Encontrar el más vendido
+        SaborHelado saborMasVendido = conteoSabor.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(null);
 
-        SaborHelado saborMasVendido = null;
-        TipoRecipiente recipienteMasVendido = null;
+        TipoRecipiente recipienteMasVendido = conteoRecipiente.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(null);
 
+        // Crear el reporte con TODOS los datos (incluyendo los mapas)
         ReporteVenta reporte = new ReporteVenta(
                 totalVentas,
+                facturasProcesadas,
                 saborMasVendido,
-                recipienteMasVendido
+                recipienteMasVendido,
+                conteoSabor,
+                conteoRecipiente
         );
 
         this.listaReporte.add(reporte);
