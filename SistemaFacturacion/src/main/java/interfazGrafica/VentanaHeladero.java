@@ -12,7 +12,6 @@ import facturacion.elementos.ReporteStock;
 import facturacion.elementos.ReporteVenta;
 import facturacion.elementos.enumeraciones.SaborHelado;
 import facturacion.elementos.enumeraciones.TipoRecipiente;
-import facturacion.gestores.GestorStock;
 
 import facturacion.gestores.interfaces.*;
 import java.awt.Color;
@@ -886,8 +885,7 @@ public class VentanaHeladero extends JFrame {
     actCorreoField.setText("");
     actDireccionField.setText("");
     
-    // Se omite 'btnAplicarCambios' porque no es un campo de texto
-    // y la nueva lógica de setear texto no le aplica.
+
 }
      
      private void buscarCliente(String cedula) {
@@ -897,7 +895,6 @@ public class VentanaHeladero extends JFrame {
                 JOptionPane.showMessageDialog(null, "El cliente no se encuentra registrado", "Cliente inexistente", JOptionPane.ERROR_MESSAGE);
                 activar_DesactivarLabelsActualizacion(false);
                 return;
-                // se podría presentar la opcion de registrar cliente
             } else {
                 cliente = clienteAux;
                 JOptionPane.showMessageDialog(null, "Se encontró al cliente", "Cliente Encontrado", JOptionPane.INFORMATION_MESSAGE);
@@ -917,7 +914,7 @@ public class VentanaHeladero extends JFrame {
     }
      
       public boolean validarCedula(String cedula) {
-        //Algortimo para la verificación de cedula tomado de Legion-Developers por Juan Pinzón
+        //Algoritmo para la verificación de cedula
         int suma = 0;
         if (cedula.length() <= 9) {
             return false;
@@ -975,7 +972,6 @@ public class VentanaHeladero extends JFrame {
         String correo = actCorreoField.getText().trim();
         String telefono = actTelefonoField.getText().trim();
         String direccion = actDireccionField.getText().trim();
-        System.out.println(cedula + nombre + correo + telefono + direccion);
         gestorCliente.modificarCliente(cliente, nombre, cedula, direccion, telefono, correo);
         activar_DesactivarLabelsActualizacion(false);
         ocultarCamposActualizacion(false);
@@ -1072,7 +1068,7 @@ public class VentanaHeladero extends JFrame {
 
     // 4. INFORMACIÓN GENERAL
    
-    // Formateador para que la fecha/hora
+    // Formateador para la fecha/hora
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
     String fechaFormateada = reporteV.getFechaReporte().format(formatter);
     
@@ -1103,7 +1099,7 @@ public class VentanaHeladero extends JFrame {
     lblSaborMax.setAlignmentX(Component.LEFT_ALIGNMENT);
     panel.add(lblSaborMax);
     
-    // Recipiente Más Vendido (con chequeo de nulo)
+    // Recipiente Más Vendido
     String recipMasVendido = (reporteV.getRecipienteMasVendido() != null) ? reporteV.getRecipienteMasVendido().toString() : "N/A";
     JLabel lblRecipMax = new JLabel("Recipiente Más Vendido: " + recipMasVendido);
     lblRecipMax.setFont(new Font("Segoe UI", Font.BOLD, 16)); // En negrita para destacar
@@ -1112,7 +1108,7 @@ public class VentanaHeladero extends JFrame {
 
     panel.add(Box.createVerticalStrut(15));
 
-    // 5. DETALLE DE SABORES
+    // 5. Detalle de sabores
     JLabel lblSabores = new JLabel("Detalle de Sabores Vendidos:");
     lblSabores.setFont(new Font("Segoe UI", Font.BOLD, 18));
     lblSabores.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -1127,7 +1123,7 @@ public class VentanaHeladero extends JFrame {
 
     panel.add(Box.createVerticalStrut(15));
 
-    // 6. DETALLE DE RECIPIENTES
+    // 6. Detalle de recipientes
     JLabel lblRecipientes = new JLabel("Detalle de Recipientes Vendidos:");
     lblRecipientes.setFont(new Font("Segoe UI", Font.BOLD, 18));
     lblRecipientes.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -1140,7 +1136,7 @@ public class VentanaHeladero extends JFrame {
         panel.add(lblItem);
     }
 
-    // 7. SCROLL Y DIÁLOGO
+    // 7. Scroll y dialogo
     JScrollPane scroll = new JScrollPane(panel);
   
 
@@ -1322,7 +1318,6 @@ int index = jListFacturas.getSelectedIndex();
 
         if (confirm == JOptionPane.YES_OPTION) {
             boolean eliminado = false;
-            // Aquí llamas al método del gestor que elimina la promoción
             eliminado = gestorPromocion.eliminarPromocion(promoSeleccionada.getIdPromocion());
 
             if (eliminado) {
@@ -1489,7 +1484,7 @@ int index = jListFacturas.getSelectedIndex();
         if (nuevoPorcentaje < 5 || nuevoPorcentaje > 100) {
             JOptionPane.showMessageDialog(
                     this,
-                    "El stock no puede ser menor al 5% ni superar al 100%.",
+                    "La promoción puede ser menor al 5% ni superar al 100%.",
                     "Error de Valor",
                     JOptionPane.ERROR_MESSAGE
             );
@@ -1566,27 +1561,23 @@ int index = jListFacturas.getSelectedIndex();
     }
     
     private void cargarFacturas() {
-        // 1. Obtener la lista COMPLETA del gestor en una variable temporal
+        // 1. Obtener la lista completa del gestor
         java.util.List<Factura> todasLasFacturas = gestorFactura.getListaFacturas();
-
-        // 2. Inicializar la variable de clase 'facturasExistentes' como una nueva lista
-        // Esta lista SÓLO contendrá las facturas activas (las que se mostrarán)
         facturasExistentes = new java.util.ArrayList<>();
         
         // 3. Crear el modelo para la JList
         javax.swing.DefaultListModel<String> modelo = new javax.swing.DefaultListModel<>();
 
-        // 4. Iterar la lista COMPLETA (si no es nula)
+        // 4. Iterar la lista COMPLETA
         if (todasLasFacturas != null && !todasLasFacturas.isEmpty()) {
             
-            // Iteramos la lista completa para filtrar
+            //Se itera la lista completa para filtrar
             for (Factura facturaActual : todasLasFacturas) {
                 
-                // 5. Si la factura NO está anulada, la agregamos a AMBAS listas:
-                //    a la de datos (facturasExistentes) y a la visual (modelo)
+                // 5. Si la factura NO está anulada, la agregamos a las listas:
                 if (!facturaActual.getTipoPago().equals("ANULADA")) {
                     
-                    // a. Agregar a la lista de datos de la clase
+                    //Agregar a la lista de datos
                     facturasExistentes.add(facturaActual); 
                     
                     // b. Agregar al modelo visual de la JList
@@ -1600,8 +1591,7 @@ int index = jListFacturas.getSelectedIndex();
             }
         }
 
-        // 6. Manejar el caso de que la lista FILTRADA esté vacía
-        // (ya sea porque no había facturas o porque todas estaban anuladas)
+        // 6. Si la lista está vacia
         if (facturasExistentes.isEmpty()) { 
              modelo.addElement("No hay facturas activas registradas");
              btnEliminarFactura.setEnabled(false);
@@ -1610,8 +1600,6 @@ int index = jListFacturas.getSelectedIndex();
         // 7. Asignar el modelo a la JList
         jListFacturas.setModel(modelo);
 
-        // 8. (Buena práctica) Asegurarse de que el botón esté deshabilitado
-        // si no hay nada seleccionado después de cargar.
         if (jListFacturas.getSelectedIndex() == -1) {
             btnEliminarFactura.setEnabled(false);
         }

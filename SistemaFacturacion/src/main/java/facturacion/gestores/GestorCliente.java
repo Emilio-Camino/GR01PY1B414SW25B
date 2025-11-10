@@ -49,7 +49,7 @@ public class GestorCliente implements IGestorClienteCajero, IGestorClienteHelade
                 cliente.setCedula(cedulaMod);
                 cambios = true;
             } catch (IllegalArgumentException e) {
-                // Si falla la cédula, se añade el error y se anula el cambio.
+                // Si falla la cedula, se aniade el error y se anula el cambio.
                 errores.append("- Cédula: ").append(e.getMessage()).append("\n"); 
             }
         }
@@ -133,7 +133,6 @@ public class GestorCliente implements IGestorClienteCajero, IGestorClienteHelade
             clienteNuevo.setCorreoElectronico(correo);
         }
         catch (IllegalArgumentException e) {
-            // lanzar algun cuadro de dialogo
         }
         listaClientes.add(clienteNuevo);
     }
@@ -141,8 +140,8 @@ public class GestorCliente implements IGestorClienteCajero, IGestorClienteHelade
     private void quemarDatosClientes() {
         // 1. Cliente Válido 1
         Cliente c1 = new Cliente(
-                "Josue Gómez",
-                "1726339151",
+                "Ana Gómez",
+                "1712345675",
                 "ana.gomez@mail.com",
                 "Av. Amazonas 123, Quito",
                 "0987654321"
@@ -152,7 +151,7 @@ public class GestorCliente implements IGestorClienteCajero, IGestorClienteHelade
         // 2. Cliente Válido 2
         Cliente c2 = new Cliente(
                 "Luis Parra",
-                "1755580428",
+                "0920012341",
                 "luis.parra@mail.com",
                 "Av. Foch y Reina Victoria, Quito",
                 "0991234567"
@@ -162,7 +161,7 @@ public class GestorCliente implements IGestorClienteCajero, IGestorClienteHelade
         // 3. Cliente Válido 3
         Cliente c3 = new Cliente(
                 "María Sol",
-                "1755580402",
+                "0920012440",
                 "maria.sol@mail.com",
                 "Cumbayá, Quito",
                 "0988888888"

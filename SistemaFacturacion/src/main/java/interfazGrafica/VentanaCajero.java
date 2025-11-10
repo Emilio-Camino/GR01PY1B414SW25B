@@ -24,6 +24,14 @@ import facturacion.elementos.Promocion;
 import facturacion.elementos.BolaHelado;
 import facturacion.elementos.enumeraciones.SaborHelado;
 import facturacion.elementos.Factura;
+import java.awt.Component;
+import java.awt.Font;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -59,21 +67,12 @@ public class VentanaCajero extends javax.swing.JFrame {
         this.heladosDelPedidoActual = new ArrayList<>();
         
         
-       // Obtenemos el color de fondo gris estándar de las pestañas
+       // Estilo de la Ventnana Tabbed
         Color tabBgColor = UIManager.getColor("TabbedPane.background");
-
-        // 1. Hacemos que la PESTAÑA SELECCIONADA sea plana
-        // Pone el fondo de la pestaña seleccionada del mismo color que las otras
         UIManager.put("TabbedPane.selected", tabBgColor);
-        // Pone el "brillo" 3D del mismo color (lo oculta)
-        UIManager.put("TabbedPane.selectHighlight", tabBgColor); 
-        // Pone la "sombra" 3D del mismo color (lo oculta)
+        UIManager.put("TabbedPane.selectHighlight", tabBgColor);
         UIManager.put("TabbedPane.light", tabBgColor);
-
-        // 2. Quitamos el BORDE DEL CONTENIDO (de la respuesta anterior)
         UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
-        
-        // 3. Quitamos la LÍNEA DE FOCO punteada
         UIManager.put("TabbedPane.drawFocusIndicator", false);
         
         initComponents();
@@ -405,12 +404,11 @@ public class VentanaCajero extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(47, 47, 47)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(botonEliminarHelado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(108, 108, 108)
                                 .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(comboHelados, 0, 126, Short.MAX_VALUE))
-                            .addComponent(botonEliminarHelado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(comboHelados, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(41, 41, 41))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -424,7 +422,7 @@ public class VentanaCajero extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(135, 135, 135)
                                 .addComponent(botonRegistrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(143, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -435,10 +433,10 @@ public class VentanaCajero extends javax.swing.JFrame {
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(labelNumPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(28, 28, 28)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(comboHelados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(comboHelados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(botonEliminarHelado)
                         .addGap(18, 18, 18)
@@ -944,7 +942,6 @@ public class VentanaCajero extends javax.swing.JFrame {
     private void botonCerrarCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrarCajaActionPerformed
         try{
 
-            System.out.println(campoTotalEfectivo.getText());
             double totalIngresado = Double.parseDouble(campoTotalEfectivo.getText());
             double totalCaja = gestorCaja.calcularTotalEfectivo((GestorFactura) gestorFactura);
 
@@ -1041,7 +1038,6 @@ public class VentanaCajero extends javax.swing.JFrame {
             }
 
             // --- 3. Contar Frecuencia de Sabores ---
-            // Esto es para manejar "2 bolas de del mismo sabor por ejemplo"
             java.util.Map<SaborHelado, Integer> conteoRequerido = new java.util.HashMap<>();
             for (SaborHelado sabor : saboresSeleccionados) {
                 conteoRequerido.put(sabor, conteoRequerido.getOrDefault(sabor, 0) + 1);
@@ -1091,17 +1087,12 @@ public class VentanaCajero extends javax.swing.JFrame {
             // --- 5. Si hay stock, proceder a crear el helado ---
             if (stockSuficiente) {
 
-                // Asumo que el constructor de Helado ahora solo necesita el recipiente
                 Helado nuevoHelado = new Helado(tipoRecipiente);
 
-                // Ahora usamos tu método 'agregarBola' y DECREMENTAMOS el stock
+                // Decrementar Stock
                 for (SaborHelado sabor : saboresSeleccionados) {
 
-                    // 1. Agrega la bola al objeto Helado
                     nuevoHelado.agregarBola(sabor);
-
-                    // 2. ¡MUY IMPORTANTE! Decrementa el stock en tu gestor
-                    // (Necesitarás un método como este en tu 'gestorStock')
                     gestorStock.decrementarStockSabor(sabor, 1);
                 }
                 gestorStock.decrementarStockRecipiente(tipoRecipiente, 1);
@@ -1114,7 +1105,7 @@ public class VentanaCajero extends javax.swing.JFrame {
             }
 
         } catch (NullPointerException e) {
-            // Esto pasa si el usuario no seleccionó algo (ej. no eligió num de bolas)
+            // Esto pasa si el usuario no seleccionó algo
             javax.swing.JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos del helado.");
         } catch (Exception e) {
             // Otro error
@@ -1133,7 +1124,61 @@ public class VentanaCajero extends javax.swing.JFrame {
         // 2. Crear el objeto Pedido
         Pedido nuevo = new Pedido(heladosDelPedidoActual);
         gestorPedido.iniciarNuevoPedido(nuevo);
-        JOptionPane.showMessageDialog(null, "Datos del Pedido \n" + nuevo.toString());
+        
+        // 1. Crear el panel principal
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
+
+        // 2. TÍTULO
+        JLabel titulo = new JLabel("Detalle del Pedido");
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.add(titulo);
+        panel.add(Box.createVerticalStrut(10));
+
+        // 3. INFORMACIÓN GENERAL DEL PEDIDO
+        JLabel lblId = new JLabel("Pedido N°: " + nuevo.getPedidoID());
+        lblId.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        lblId.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.add(lblId);
+
+        JLabel lblEstado = new JLabel("Estado: " + nuevo.getEstado());
+        lblEstado.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        lblEstado.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.add(lblEstado);
+        panel.add(Box.createVerticalStrut(15)); // Espacio
+
+        // 4. DETALLE DEL PEDIDO
+        JLabel lblPedidoTitulo = new JLabel("Contenido del Pedido (" + nuevo.getHelados().size() + " helado(s)):");
+        lblPedidoTitulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lblPedidoTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.add(lblPedidoTitulo);
+
+        if (nuevo.getHelados().isEmpty()) {
+             JLabel lblItem = new JLabel("(Este pedido no tiene helados)");
+             lblItem.setFont(new Font("Segoe UI", Font.ITALIC, 15)); // Itálica para "vacío"
+             lblItem.setAlignmentX(Component.LEFT_ALIGNMENT);
+             panel.add(lblItem);
+        } else {
+            for (Helado helado : nuevo.getHelados()) {
+                JLabel lblItem = new JLabel("• " + helado.toString()); 
+                lblItem.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+                lblItem.setAlignmentX(Component.LEFT_ALIGNMENT);
+                panel.add(lblItem);
+            }
+        }
+
+
+        // 5. SCROLL Y DIÁLOGO
+        JScrollPane scroll = new JScrollPane(panel);
+        JOptionPane.showMessageDialog(
+                null,
+                scroll,
+                "Pedido N° " + nuevo.getPedidoID(), // Título de la ventana
+                JOptionPane.INFORMATION_MESSAGE
+        );
+        
         heladosDelPedidoActual.clear();
         labelNumPedido.setText(String.format("# %d", Pedido.getSiguienteNumPedido()));
         actualizarComboHelados();
@@ -1193,10 +1238,10 @@ public class VentanaCajero extends javax.swing.JFrame {
                 return;
             }
 
-            // 4. *** ¡GUARDAR EL PEDIDO PARA USARLO DESPUÉS! ***
+            // 4. Guardar el pedido
             this.pedidoActualParaFacturar = pedidoACargar;
 
-            // 5. Obtener el "modelo" de la tabla
+            // 5. Obtener el modelo de la tabla
             javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tablaPedido.getModel();
             model.setRowCount(0); // Limpiar
 
@@ -1207,7 +1252,6 @@ public class VentanaCajero extends javax.swing.JFrame {
                 double pUnitario = helado.getPrecio();
                 double total = pUnitario * cantidad;
 
-                // ¡Correcto! Guardamos el NÚMERO (Double)
                 model.addRow(new Object[]{cantidad, descripcion, pUnitario, total});
             }
         } catch (Exception e) {
@@ -1220,40 +1264,39 @@ public class VentanaCajero extends javax.swing.JFrame {
         String cedula = idCampo.getText().trim(); // .trim() quita espacios en blanco
 
         // 1. Validación simple de la UI
-        if (cedula.isEmpty() || cedula.equals("Ej. 1315267891")) {
+        if (cedula.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Por favor, ingrese una cédula para buscar.", "Campo Vacío", JOptionPane.WARNING_MESSAGE);
             return;
+        } else if(cedula.equals("9999999999")) {
+            JOptionPane.showMessageDialog(this, "No se puede modificar ni eliminar a CONSUMIDOR FINAL.", "Campo Vacío", JOptionPane.ERROR_MESSAGE);
         }
 
         Cliente clienteEncontrado = this.gestorCliente.buscarCliente(cedula);
 
         if (clienteEncontrado != null) {
-            // --- CASO 2: CLIENTE ENCONTRADO ---
+            // --- CLIENTE ENCONTRADO ---
             nomCamp.setText(clienteEncontrado.getNombre());
             dirCamp.setText(clienteEncontrado.getDireccion());
             emailCamp.setText(clienteEncontrado.getCorreoElectronico());
-            telefonoCamp.setText(clienteEncontrado.getTelefono()); // <-- CORREGIDO
+            telefonoCamp.setText(clienteEncontrado.getTelefono());
 
-            // ... (código para poner texto negro) ...
-            telefonoCamp.setForeground(Color.BLACK); // <-- CORREGIDO
+            telefonoCamp.setForeground(Color.BLACK);
 
             // 3. Deshabilitar campos
             nomCamp.setEnabled(false);
             dirCamp.setEnabled(false);
             emailCamp.setEnabled(false);
-            telefonoCamp.setEnabled(false); // <-- CORREGIDO
+            telefonoCamp.setEnabled(false);
             botAniadirCli.setEnabled(false);
 
-            // ... (JOptionPane) ...
         } else {
-            // --- CASO 3: CLIENTE NO ENCONTRADO ---
-            // ... (JOptionPane) ...
+            // --- CLIENTE NO ENCONTRADO ---
 
             // 2. Habilitar TODOS los campos
             nomCamp.setEnabled(true);
             dirCamp.setEnabled(true);
             emailCamp.setEnabled(true);
-            telefonoCamp.setEnabled(true); // <-- CORREGIDO
+            telefonoCamp.setEnabled(true);
 
             // 3. Habilitar el botón "AÑADIR CLIENTE"
             botAniadirCli.setEnabled(true);
@@ -1262,7 +1305,7 @@ public class VentanaCajero extends javax.swing.JFrame {
             nomCamp.setText("");
             dirCamp.setText("");
             emailCamp.setText("");
-            telefonoCamp.setText(""); // <-- CORREGIDO
+            telefonoCamp.setText("");
         }
     }//GEN-LAST:event_bttBuscarClienteActionPerformed
 
@@ -1293,14 +1336,14 @@ public class VentanaCajero extends javax.swing.JFrame {
             dirCamp.setText(cf.getDireccion());
             emailCamp.setText(cf.getCorreoElectronico());
 
-            telefonoCamp.setText(cf.getTelefono()); // <-- CORREGIDO
+            telefonoCamp.setText(cf.getTelefono());
 
             // Asegurarse de que el texto no sea gris
             idCampo.setForeground(Color.BLACK);
             nomCamp.setForeground(Color.BLACK);
             dirCamp.setForeground(Color.BLACK);
             emailCamp.setForeground(Color.BLACK);
-            telefonoCamp.setForeground(Color.BLACK); // <-- CORREGIDO
+            telefonoCamp.setForeground(Color.BLACK);
 
         } else {
             JOptionPane.showMessageDialog(this, "Error: No se pudo encontrar al Cliente 'Consumidor Final'", "Error de Gestor", JOptionPane.ERROR_MESSAGE);
@@ -1311,7 +1354,7 @@ public class VentanaCajero extends javax.swing.JFrame {
         nomCamp.setEnabled(false);
         dirCamp.setEnabled(false);
         emailCamp.setEnabled(false);
-        telefonoCamp.setEnabled(false); // <-- CORREGIDO
+        telefonoCamp.setEnabled(false);
         bttBuscarCliente.setEnabled(false);
         botAniadirCli.setEnabled(false);
     }//GEN-LAST:event_radConsumidorFinalActionPerformed
@@ -1329,7 +1372,7 @@ public class VentanaCajero extends javax.swing.JFrame {
             String email = emailCamp.getText().trim();
             String telefono = telefonoCamp.getText().trim();
 
-            // 2. Validación de campos obligatorios (los que tienen *)
+            // 2. Validación de campos obligatorios
             if (cedula.isEmpty() || cedula.equals("Ej. 1315267891")
                     || nombre.isEmpty() || nombre.equals("Ej. Maria Lopez")
                     || email.isEmpty() || email.equals("Ej. marialope1@gmail.com")) {
@@ -1374,13 +1417,13 @@ public class VentanaCajero extends javax.swing.JFrame {
             botAniadirCli.setEnabled(false);
 
         } catch (IllegalArgumentException e) {
-            // Captura errores de validación (ej. "La cédula ingresada no es válida")
+            // Captura errores de validación
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error de Validación", JOptionPane.ERROR_MESSAGE);
 
         } catch (Exception e) {
             // Captura cualquier otro error
             JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado al guardar el cliente.", "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace(); // Imprime el error en la consola de NetBeans
+            e.printStackTrace();
         }
     }//GEN-LAST:event_botAniadirCliActionPerformed
 
@@ -1394,13 +1437,13 @@ public class VentanaCajero extends javax.swing.JFrame {
         nomCamp.setText("");
         dirCamp.setText("");
         emailCamp.setText("");
-        telefonoCamp.setText(""); // <-- CORREGIDO
+        telefonoCamp.setText("");
 
         // 3. Asegurarse de que el resto sigue deshabilitado
         nomCamp.setEnabled(false);
         dirCamp.setEnabled(false);
         emailCamp.setEnabled(false);
-        telefonoCamp.setEnabled(false); // <-- CORREGIDO
+        telefonoCamp.setEnabled(false);
         botAniadirCli.setEnabled(false);
     }
     
@@ -1466,7 +1509,7 @@ public class VentanaCajero extends javax.swing.JFrame {
         double subtotal = 0.0;
         double descuento = 0.0;
 
-        // 2. Calcular el Subtotal (recorriendo el objeto Pedido)
+        // 2. Calcular el Subtotal
         for (Helado helado : this.pedidoActualParaFacturar.getHelados()) {
             subtotal += helado.getPrecio();
         }
@@ -1475,15 +1518,14 @@ public class VentanaCajero extends javax.swing.JFrame {
         if (apliProm.isSelected()) {
             try {
                 // --- LÓGICA DE PROMOCIÓN ---
-                // ASUNCIÓN: Usamos la promoción ID 1, ya que la UI no permite elegir.
-                // (Puedes cambiar este '1' por el ID de la promoción que quieras)
+                //Busqueda de promocion
                 Promocion promo = this.gestorPromocion.buscarPromocion(1);
 
                 if (promo != null) {
                     SaborHelado saborEnPromo = promo.getSaborPromocion();
                     double porcentajeDesc = promo.getPorcentajeDescuento(); // Ej. 0.5 para 50%
 
-                    // Recorremos cada bola de cada helado para aplicar el descuento
+                    // Recorrer cada bola de cada helado para aplicar el descuento
                     for (Helado helado : this.pedidoActualParaFacturar.getHelados()) {
                         for (BolaHelado bola : helado.getBolasHelado()) {
                             if (bola.getSabor() == saborEnPromo) {
@@ -1546,7 +1588,6 @@ public class VentanaCajero extends javax.swing.JFrame {
             Cliente clienteDeFactura = this.gestorCliente.buscarCliente(clienteCedula);
             facturaGenerada.setCliente(clienteDeFactura);
             facturaGenerada.setPedidos(this.pedidoActualParaFacturar);
-            System.out.println(pedidoActualParaFacturar.toString());
             double ivaUI = Double.parseDouble(valIVA.getText().replace("$", ""));
             double totalUI = Double.parseDouble(valTotal.getText().replace("$", ""));
 
@@ -1571,7 +1612,7 @@ public class VentanaCajero extends javax.swing.JFrame {
         // Resetea el cliente a "Consumidor Final"
         radConsumidorFinal.setSelected(true);
 
-        // Llama al método que ya programamos para resetear los campos de cliente
+        // Resetea campos clientes
         radConsumidorFinalActionPerformed(null);
 
         // Limpia la tabla
