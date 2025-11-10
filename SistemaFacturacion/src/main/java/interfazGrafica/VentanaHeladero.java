@@ -1486,10 +1486,10 @@ int index = jListFacturas.getSelectedIndex();
             return;
         }
 
-        if (nuevoPorcentaje < 0 || nuevoPorcentaje > 100) {
+        if (nuevoPorcentaje < 5 || nuevoPorcentaje > 100) {
             JOptionPane.showMessageDialog(
                     this,
-                    "El stock no puede ser un número negativo ni superar al 100%.",
+                    "El stock no puede ser menor al 5% ni superar al 100%.",
                     "Error de Valor",
                     JOptionPane.ERROR_MESSAGE
             );

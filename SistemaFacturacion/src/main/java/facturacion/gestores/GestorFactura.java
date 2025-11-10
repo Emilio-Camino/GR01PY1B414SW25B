@@ -214,7 +214,7 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
         // Usamos el constructor completo
         // (El ID '0' es ignorado y se autoincrementa)
         Factura f1 = new Factura(
-                0, p1, c1,
+                p1, c1,
                 5.00, // total
                 0.60, // iva
                 10.00, // pago
@@ -231,7 +231,7 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
         p2.setEstado("FACTURADO");
 
         Factura f2 = new Factura(
-                0, p2, c2,
+                p2, c2,
                 1.50, // total
                 0.18, // iva
                 1.50, // pago
@@ -248,7 +248,7 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
         p3.setEstado("FACTURADO");
 
         Factura f3 = new Factura(
-                0, p3, c3,
+                p3, c3,
                 2.00, // total (precio del helado de fresa con promo)
                 0.24, // iva
                 2.00, // pago
