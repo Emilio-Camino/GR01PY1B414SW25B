@@ -10,10 +10,7 @@ import facturacion.gestores.interfaces.IGestorPedido;
 
 import javax.swing.*;
 
-/**
- * GestorPedido: Se encarga de la creación, búsqueda,
- * actualización y eliminación de pedidos.
- */
+
 public class GestorPedido implements IGestorPedido {
 
     // --- 1. Atributos ---
@@ -30,7 +27,6 @@ public class GestorPedido implements IGestorPedido {
     private void quemarDatosPedidos() {
 
         // --- Pedido 1 (para Factura 1) ---
-        // Nota: El constructor de Pedido autoincrementa el ID (será ID 1)
         Pedido p1 = new Pedido();
 
         // Helado 1.1: Cono con Chocolate y Vainilla
@@ -44,7 +40,7 @@ public class GestorPedido implements IGestorPedido {
         this.listaPedidos.add(p1);
 
         // --- Pedido 2 (para Factura 2) ---
-        Pedido p2 = new Pedido(); // (Será ID 2)
+        Pedido p2 = new Pedido();
         // Helado 2.1: Vaso con Chicle
         SaborHelado[] saboresH3 = {SaborHelado.CHICLE};
         p2.agregarHelado(TipoRecipiente.VASO, 1, saboresH3);
@@ -52,7 +48,7 @@ public class GestorPedido implements IGestorPedido {
         this.listaPedidos.add(p2);
 
         // --- Pedido 3 (para Factura 3) ---
-        Pedido p3 = new Pedido(); // (Será ID 3)
+        Pedido p3 = new Pedido();
         // Helado 3.1: Cono con Fresa (para probar la promoción)
         SaborHelado[] saboresH4 = {SaborHelado.FRESA};
         p3.agregarHelado(TipoRecipiente.CONO, 1, saboresH4);
@@ -76,7 +72,6 @@ public class GestorPedido implements IGestorPedido {
 
     /**
      * Busca un pedido en la lista usando su ID.
-     * (Modificamos el método para que acepte el ID).
      * @param pedidoID El ID del pedido a buscar.
      * @return El Pedido si se encuentra, o null si no.
      */
@@ -93,7 +88,6 @@ public class GestorPedido implements IGestorPedido {
 
     /**
      * Actualiza el estado de un pedido existente.
-     * (Modificamos el método para que acepte el ID y el nuevo estado).
      * @param pedidoID El ID del pedido a actualizar.
      * @param nuevoEstado El nuevo estado (ej: "COMPLETADO", "FACTURADO").
      */
@@ -113,7 +107,6 @@ public class GestorPedido implements IGestorPedido {
 
     /**
      * Elimina un pedido de la lista usando su ID.
-     * (Modificamos el método para que acepte el ID).
      * @param pedidoID El ID del pedido a eliminar.
      */
     public void eliminarPedido(int pedidoID) {
