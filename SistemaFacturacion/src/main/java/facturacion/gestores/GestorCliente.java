@@ -27,6 +27,7 @@ public class GestorCliente implements IGestorClienteCajero, IGestorClienteHelade
     }
 
 
+    @Override
     public void modificarCliente(Cliente cliente, String nombreMod, String cedulaMod, String direccionMod, String telefonoMod, String correoMod) {
         if (!listaClientes.contains(cliente)){
             System.out.println("Error, el cliente ya debería de existir. revisar lógica");
@@ -106,29 +107,7 @@ public class GestorCliente implements IGestorClienteCajero, IGestorClienteHelade
     }
 
     
-    @Override
-    public void registrarCliente(Cliente cliente) {
-        // 1. Validar que el cliente no sea nulo
-        if (cliente == null) {
-            System.out.println("GestorCliente: Se intentó registrar un cliente nulo.");
-            return;
-        }
 
-        if (this.buscarCliente(cliente.getCedula()) != null) {
-            System.out.println("GestorCliente: El cliente con cédula " + cliente.getCedula() + " ya existe.");
-            return;
-        }
-
-        // 3. Añadir el nuevo cliente a la lista
-        this.listaClientes.add(cliente);
-        System.out.println("GestorCliente: Cliente " + cliente.getNombre() + " añadido con éxito.");
-    }
-    
-    @Override
-    public void modificarCliente(String cedula) {
-        
-    }
-    
     @Override
     public void eliminarCliente(String cedula) {
         boolean eliminado = listaClientes.removeIf(cliente -> cliente.getCedula().equals(cedula));

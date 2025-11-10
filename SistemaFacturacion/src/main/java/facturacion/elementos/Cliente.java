@@ -4,7 +4,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Cliente {
-
     private String nombre;
     private String cedula;
     private String correoElectronico;
@@ -21,11 +20,11 @@ public class Cliente {
     }
 
     // Funciones para validar datos
-    public boolean validarCedula(String cedula) {
+    private static boolean validarCedula(String cedula) {
         //Algortimo para la verificación de cedula tomado de Legion-Developers por Juan Pinzón
 
         int suma = 0;
-        if (cedula.length() <= 9) {
+        if (cedula.length() != 10) {
             return false;
         }
         else {
@@ -61,29 +60,34 @@ public class Cliente {
             }
         }
     }
-    
+
     private static boolean validarNombre (String nombre) {
         String regex = "^[a-zA-ZáéíóúÁÉÍÓÚÑñ ]+$";
         Pattern patron = Pattern.compile(regex);
         Matcher coincidencia = patron.matcher(nombre);
         return coincidencia.matches();
     }
-    
-    public boolean validarCorreo (String correo) {
-        //Algoritmo de validacion de correo tomado de mailtrap
-        String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+    private static boolean validarCorreo (String correo) {
+        String regex = "^[\\w.!#$%&'*+/=?`{|}~^-]+@[a-zA-Z0-9.-]+$";
         Pattern patron = Pattern.compile(regex);
         Matcher coincidencia = patron.matcher(correo);
         return coincidencia.matches();
     }
 
-    public boolean validarTelefono (String telefono) {
-        String regex = "^09\\d{8}$";
+    private static boolean validarTelefono (String telefono) {
+        String regex = "^09[0-9]{8}$";
         Pattern patron = Pattern.compile(regex);
         Matcher coincidencia = patron.matcher(telefono);
         return coincidencia.matches();
     }
     
+    private static boolean validarDireccion(String direccion) {
+        String regex = "^[a-zA-ZáéíóúÁÉÍÓÚÑñ0-9 ,.-/#°]+$";
+        Pattern patron = Pattern.compile(regex);
+        Matcher coincidencia = patron.matcher(direccion);
+        return coincidencia.matches();
+    }
+
     private static boolean validarDireccion(String direccion) {
         String regex = "^[a-zA-ZáéíóúÁÉÍÓÚÑñ0-9 ,.-/#°]+$";
         Pattern patron = Pattern.compile(regex);
@@ -138,7 +142,8 @@ public class Cliente {
     public void setDireccion(String direccion) {
         if (validarDireccion(direccion)) {
             this.direccion = direccion;
-        } else {
+        }
+        else {
             throw new IllegalArgumentException("La dirección ingresada no es válida");
         }
     }

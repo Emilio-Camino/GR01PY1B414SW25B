@@ -30,17 +30,21 @@ public class GestorPromocion implements IGestorPromocionCajero, IGestorPromocion
     }
 
     @Override
-    public void agregarPromocion(SaborHelado sabor, double porcentaje) {
-        listaPromociones.add(new Promocion(porcentaje, sabor));
+    public boolean agregarPromocion(SaborHelado sabor, double porcentaje) {
+        Promocion promocion = new Promocion(porcentaje, sabor);
+        listaPromociones.add(promocion);
+        return true;
     }
 
     @Override
-    public void eliminarPromocion(int idPromocion) {
+    public boolean eliminarPromocion(int idPromocion) {
         for (Promocion promocion : this.listaPromociones) {
             if (promocion.getIdPromocion() == idPromocion) {
                 listaPromociones.remove(promocion);
+                return true;
             }
         }
+        return false;
     }
 
     private void quemarDatosPromociones() {
