@@ -61,7 +61,14 @@ public class Cliente {
             }
         }
     }
-
+    
+    private static boolean validarNombre (String nombre) {
+        String regex = "^[a-zA-ZáéíóúÁÉÍÓÚÑñ ]+$";
+        Pattern patron = Pattern.compile(regex);
+        Matcher coincidencia = patron.matcher(nombre);
+        return coincidencia.matches();
+    }
+    
     public boolean validarCorreo (String correo) {
         //Algoritmo de validacion de correo tomado de mailtrap
         String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
@@ -76,6 +83,13 @@ public class Cliente {
         Matcher coincidencia = patron.matcher(telefono);
         return coincidencia.matches();
     }
+    
+    private static boolean validarDireccion(String direccion) {
+        String regex = "^[a-zA-ZáéíóúÁÉÍÓÚÑñ0-9 ,.-/#°]+$";
+        Pattern patron = Pattern.compile(regex);
+        Matcher coincidencia = patron.matcher(direccion);
+        return coincidencia.matches();
+    }
 
     // Getters y Setters
     public String getNombre() {
@@ -83,7 +97,12 @@ public class Cliente {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        if (validarNombre(nombre)) {
+            this.nombre = nombre;
+        }
+        else {
+            throw new IllegalArgumentException("El nombre ingresado no es válido");
+        }
     }
 
     public String getCedula() {
@@ -104,7 +123,7 @@ public class Cliente {
     }
 
     public void setCorreoElectronico(String correoElectronico) throws IllegalArgumentException {
-        if (validarCedula(correoElectronico)) {
+        if (validarCorreo(correoElectronico)) {
             this.correoElectronico = correoElectronico;
         }
         else {
@@ -117,7 +136,11 @@ public class Cliente {
     }
 
     public void setDireccion(String direccion) {
-        this.direccion = direccion;
+        if (validarDireccion(direccion)) {
+            this.direccion = direccion;
+        } else {
+            throw new IllegalArgumentException("La dirección ingresada no es válida");
+        }
     }
 
     public String getTelefono() {

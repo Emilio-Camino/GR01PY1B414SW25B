@@ -49,6 +49,19 @@ public class Helado {
         this.bolasHelado = bolasHelado;
     }
     
+    public double getPrecio() {
+        double precioTotal = 0.0;
+        if (this.recipiente != null) {
+            precioTotal += this.recipiente.getPrecio(); // <-- Confirmado
+        }
+        if (this.bolasHelado != null) {
+            for (BolaHelado bola : this.bolasHelado) {
+                precioTotal += bola.getPrecio(); // <-- Confirmado
+            }
+        }
+        return precioTotal;
+    }
+    
     @Override
     public String toString() {
         // 1. Obtiene el nombre del recipiente (confiando en Recipiente.toString())
