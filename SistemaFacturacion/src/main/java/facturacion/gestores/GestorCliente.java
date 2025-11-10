@@ -23,7 +23,6 @@ public class GestorCliente implements IGestorClienteCajero, IGestorClienteHelade
                 return cliente;
             }
         }
-        JOptionPane.showMessageDialog(null, "Cliente no encontrado");
         return null;
     }
 
@@ -117,7 +116,6 @@ public class GestorCliente implements IGestorClienteCajero, IGestorClienteHelade
         }
     }
 
-    @Override
     public void registrarCliente () {
         String nombre = "";
         String cedula = "";

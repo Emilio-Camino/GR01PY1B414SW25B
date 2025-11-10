@@ -4,6 +4,7 @@
  */
 package interfazGrafica;
 
+import facturacion.elementos.Cliente;
 import facturacion.elementos.Helado;
 import facturacion.elementos.Pedido;
 import facturacion.elementos.enumeraciones.SaborHelado;
@@ -17,6 +18,12 @@ import java.util.ArrayList;
 import java.util.Locale;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
+import java.util.Locale;
+import facturacion.elementos.Promocion;
+import facturacion.elementos.BolaHelado;
+import facturacion.elementos.enumeraciones.SaborHelado;
+import facturacion.elementos.Factura;
 
 /**
  *
@@ -35,6 +42,7 @@ public class VentanaCajero extends javax.swing.JFrame {
     private IGestorFacturaCajero gestorFactura;
     private ArrayList<Helado> heladosDelPedidoActual;
     private int numBolas = 0;
+    private Pedido pedidoActualParaFacturar;
     
     /**
      * Creates new form VentanaCajero
@@ -69,6 +77,8 @@ public class VentanaCajero extends javax.swing.JFrame {
         UIManager.put("TabbedPane.drawFocusIndicator", false);
         
         initComponents();
+        agregarListenersDePlaceholder(); 
+        radConsumidorFinalActionPerformed(null);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         //Listener que volvera al login cuando se cierre esta ventana
         this.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -93,6 +103,7 @@ public class VentanaCajero extends javax.swing.JFrame {
     private void initComponents() {
 
         grupoNumBolas = new javax.swing.ButtonGroup();
+        buttonSelecCliente = new javax.swing.ButtonGroup();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         botonRegistrarPedido = new javax.swing.JButton();
@@ -166,7 +177,6 @@ public class VentanaCajero extends javax.swing.JFrame {
         botonEliminarHelado.setOpaque(true);
         botonEliminarHelado.setBorderPainted(false);
         botonEliminarHelado.setContentAreaFilled(true);
-        jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         labelTotalFactura = new javax.swing.JLabel();
@@ -179,6 +189,40 @@ public class VentanaCajero extends javax.swing.JFrame {
         botonCerrarCaja.setOpaque(true);
         botonCerrarCaja.setBorderPainted(false);
         botonCerrarCaja.setContentAreaFilled(true);
+        PanelFactura = new javax.swing.JPanel();
+        titleFact = new javax.swing.JPanel();
+        panelDatosCliente = new javax.swing.JPanel();
+        radConsumidorFinal = new javax.swing.JRadioButton();
+        radIngresarDatos = new javax.swing.JRadioButton();
+        idCliente = new javax.swing.JLabel();
+        idCampo = new javax.swing.JTextField();
+        nombresCliente = new javax.swing.JLabel();
+        nomCamp = new javax.swing.JTextField();
+        direccionCliente = new javax.swing.JLabel();
+        dirCamp = new javax.swing.JTextField();
+        emailCliente = new javax.swing.JLabel();
+        emailCamp = new javax.swing.JTextField();
+        telfClient = new javax.swing.JLabel();
+        telefonoCamp = new javax.swing.JTextField();
+        bttBuscarCliente = new javax.swing.JButton();
+        botAniadirCli = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        bttCargPed = new javax.swing.JButton();
+        panelTab = new javax.swing.JScrollPane();
+        tablaPedido = new javax.swing.JTable();
+        panelResumFact = new javax.swing.JPanel();
+        apliProm = new javax.swing.JCheckBox();
+        laSubtotal = new javax.swing.JLabel();
+        lbDescuento = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        lbIVA = new javax.swing.JLabel();
+        lbTotal = new javax.swing.JLabel();
+        valSubtotal = new javax.swing.JLabel();
+        valDescuento = new javax.swing.JLabel();
+        valIVA = new javax.swing.JLabel();
+        valTotal = new javax.swing.JLabel();
+        botCalTotal = new javax.swing.JButton();
+        botGenFact = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -359,7 +403,7 @@ public class VentanaCajero extends javax.swing.JFrame {
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 237, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel6)
@@ -381,7 +425,7 @@ public class VentanaCajero extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(64, Short.MAX_VALUE)
+                .addContainerGap(94, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel6)
@@ -400,19 +444,6 @@ public class VentanaCajero extends javax.swing.JFrame {
         );
 
         jTabbedPane1.addTab("Crear un Pedido", jPanel1);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 588, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 365, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Generar Factura", jPanel3);
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -485,14 +516,14 @@ public class VentanaCajero extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 250, Short.MAX_VALUE)
                 .addComponent(botonCerrarCaja, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(55, 55, 55))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(54, Short.MAX_VALUE)
+                .addContainerGap(84, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addComponent(botonCerrarCaja, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -503,13 +534,397 @@ public class VentanaCajero extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Cerrar Caja", jPanel4);
 
+        PanelFactura.setBackground(new java.awt.Color(255, 255, 255));
+        PanelFactura.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+
+        titleFact.setBackground(new java.awt.Color(255, 255, 255));
+        titleFact.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "FACTURA", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Candara", 0, 24))); // NOI18N
+
+        javax.swing.GroupLayout titleFactLayout = new javax.swing.GroupLayout(titleFact);
+        titleFact.setLayout(titleFactLayout);
+        titleFactLayout.setHorizontalGroup(
+            titleFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 109, Short.MAX_VALUE)
+        );
+        titleFactLayout.setVerticalGroup(
+            titleFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        panelDatosCliente.setBackground(new java.awt.Color(255, 255, 204));
+        panelDatosCliente.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "1. Datos del cliente", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 14))); // NOI18N
+
+        buttonSelecCliente.add(radConsumidorFinal);
+        radConsumidorFinal.setSelected(true);
+        radConsumidorFinal.setText("Consumidor Final");
+        radConsumidorFinal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radConsumidorFinalActionPerformed(evt);
+            }
+        });
+
+        buttonSelecCliente.add(radIngresarDatos);
+        radIngresarDatos.setText("Datos del Cliente");
+        radIngresarDatos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radIngresarDatosActionPerformed(evt);
+            }
+        });
+
+        idCliente.setText("Cédula:*");
+
+        idCampo.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        idCampo.setForeground(new java.awt.Color(204, 204, 204));
+        idCampo.setText("Ej. 1315267891");
+        idCampo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                idCampoActionPerformed(evt);
+            }
+        });
+
+        nombresCliente.setText("Nombres:*");
+
+        nomCamp.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        nomCamp.setForeground(new java.awt.Color(204, 204, 204));
+        nomCamp.setText("Ej. Maria Lopez");
+
+        direccionCliente.setText("Dirección:*");
+
+        dirCamp.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        dirCamp.setForeground(new java.awt.Color(204, 204, 204));
+        dirCamp.setText("Ej. Av. Amazonas OE1");
+        dirCamp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dirCampActionPerformed(evt);
+            }
+        });
+
+        emailCliente.setText("Email:*");
+
+        emailCamp.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        emailCamp.setForeground(new java.awt.Color(204, 204, 204));
+        emailCamp.setText("Ej. marialope1@gmail.com");
+        emailCamp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                emailCampActionPerformed(evt);
+            }
+        });
+
+        telfClient.setText("Teléfono:*");
+        telfClient.setToolTipText("");
+
+        telefonoCamp.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        telefonoCamp.setForeground(new java.awt.Color(204, 204, 204));
+        telefonoCamp.setText("Ej. 0965742142");
+        telefonoCamp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                telefonoCampActionPerformed(evt);
+            }
+        });
+
+        bttBuscarCliente.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        bttBuscarCliente.setText("BUSCAR");
+        bttBuscarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bttBuscarClienteActionPerformed(evt);
+            }
+        });
+
+        botAniadirCli.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        botAniadirCli.setText(" AÑADIR CLIENTE");
+        botAniadirCli.setEnabled(false);
+        botAniadirCli.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botAniadirCliActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelDatosClienteLayout = new javax.swing.GroupLayout(panelDatosCliente);
+        panelDatosCliente.setLayout(panelDatosClienteLayout);
+        panelDatosClienteLayout.setHorizontalGroup(
+            panelDatosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelDatosClienteLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelDatosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelDatosClienteLayout.createSequentialGroup()
+                        .addGroup(panelDatosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(nomCamp)
+                            .addGroup(panelDatosClienteLayout.createSequentialGroup()
+                                .addComponent(idCampo, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(15, 15, 15)
+                                .addComponent(bttBuscarCliente)
+                                .addGap(82, 82, 82)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelDatosClienteLayout.createSequentialGroup()
+                        .addGroup(panelDatosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(telfClient)
+                            .addGroup(panelDatosClienteLayout.createSequentialGroup()
+                                .addComponent(radConsumidorFinal)
+                                .addGap(40, 40, 40)
+                                .addComponent(radIngresarDatos))
+                            .addComponent(emailCamp, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nombresCliente)
+                            .addComponent(direccionCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(emailCliente)
+                            .addComponent(idCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(panelDatosClienteLayout.createSequentialGroup()
+                        .addGroup(panelDatosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(telefonoCamp)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDatosClienteLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(botAniadirCli))
+                            .addGroup(panelDatosClienteLayout.createSequentialGroup()
+                                .addComponent(dirCamp, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 2, Short.MAX_VALUE)))
+                        .addContainerGap())))
+        );
+        panelDatosClienteLayout.setVerticalGroup(
+            panelDatosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelDatosClienteLayout.createSequentialGroup()
+                .addGroup(panelDatosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(radConsumidorFinal)
+                    .addComponent(radIngresarDatos))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(idCliente)
+                .addGap(1, 1, 1)
+                .addGroup(panelDatosClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(idCampo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bttBuscarCliente))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nombresCliente)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nomCamp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(direccionCliente)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(dirCamp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(emailCliente)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(emailCamp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(telfClient, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(telefonoCamp, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botAniadirCli)
+                .addContainerGap(14, Short.MAX_VALUE))
+        );
+
+        jPanel2.setBackground(new java.awt.Color(231, 253, 234));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "2. Detalle del Pedido", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
+
+        bttCargPed.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        bttCargPed.setText("CARGAR PEDIDO");
+        bttCargPed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bttCargPedActionPerformed(evt);
+            }
+        });
+
+        panelTab.setBackground(new java.awt.Color(204, 255, 255));
+
+        tablaPedido.setBackground(new java.awt.Color(204, 255, 255));
+        tablaPedido.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        tablaPedido.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Cantidad", "Descripción", "P. Unitario", "Total"
+            }
+        ));
+        panelTab.setViewportView(tablaPedido);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(bttCargPed)
+                    .addComponent(panelTab, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(bttCargPed)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelTab, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        panelResumFact.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "3. Resumen de Factura", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12))); // NOI18N
+
+        apliProm.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        apliProm.setText("Aplicar Promoción");
+        apliProm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                apliPromActionPerformed(evt);
+            }
+        });
+
+        laSubtotal.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        laSubtotal.setText("SUBTOTAL:");
+
+        lbDescuento.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbDescuento.setText("DESCUENTO:");
+
+        lbIVA.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbIVA.setText("IVA 15%:");
+
+        lbTotal.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbTotal.setText("TOTAL:");
+
+        valSubtotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        valSubtotal.setText("$0.00");
+        valSubtotal.setToolTipText("");
+
+        valDescuento.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        valDescuento.setText("-$0.00");
+
+        valIVA.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        valIVA.setText("$0.00");
+
+        valTotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        valTotal.setText("$0.00");
+
+        botCalTotal.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        botCalTotal.setText("Calcular Total");
+        botCalTotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botCalTotalActionPerformed(evt);
+            }
+        });
+
+        botGenFact.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        botGenFact.setText("Generar Factura");
+        botGenFact.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botGenFactActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelResumFactLayout = new javax.swing.GroupLayout(panelResumFact);
+        panelResumFact.setLayout(panelResumFactLayout);
+        panelResumFactLayout.setHorizontalGroup(
+            panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelResumFactLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelResumFactLayout.createSequentialGroup()
+                        .addComponent(apliProm)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(botCalTotal))
+                    .addGroup(panelResumFactLayout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbIVA)
+                            .addGroup(panelResumFactLayout.createSequentialGroup()
+                                .addComponent(lbTotal)
+                                .addGap(63, 63, 63)
+                                .addComponent(botGenFact))
+                            .addComponent(laSubtotal)
+                            .addComponent(lbDescuento))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(valTotal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(valIVA, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(valSubtotal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(valDescuento, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(32, 32, 32))
+        );
+        panelResumFactLayout.setVerticalGroup(
+            panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelResumFactLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(apliProm)
+                    .addComponent(botCalTotal))
+                .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelResumFactLayout.createSequentialGroup()
+                        .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelResumFactLayout.createSequentialGroup()
+                                .addGap(50, 50, 50)
+                                .addComponent(jLabel12))
+                            .addGroup(panelResumFactLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelResumFactLayout.createSequentialGroup()
+                                        .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(panelResumFactLayout.createSequentialGroup()
+                                                .addComponent(laSubtotal)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(lbDescuento))
+                                            .addGroup(panelResumFactLayout.createSequentialGroup()
+                                                .addGap(44, 44, 44)
+                                                .addComponent(lbIVA)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lbTotal))
+                                    .addGroup(panelResumFactLayout.createSequentialGroup()
+                                        .addComponent(valSubtotal)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(valDescuento)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(valIVA)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(valTotal)))))
+                        .addContainerGap(32, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResumFactLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(botGenFact)
+                        .addGap(18, 18, 18))))
+        );
+
+        javax.swing.GroupLayout PanelFacturaLayout = new javax.swing.GroupLayout(PanelFactura);
+        PanelFactura.setLayout(PanelFacturaLayout);
+        PanelFacturaLayout.setHorizontalGroup(
+            PanelFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelFacturaLayout.createSequentialGroup()
+                .addGroup(PanelFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelFacturaLayout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(panelDatosCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(PanelFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelResumFact, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(PanelFacturaLayout.createSequentialGroup()
+                        .addGap(306, 306, 306)
+                        .addComponent(titleFact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(26, Short.MAX_VALUE))
+        );
+        PanelFacturaLayout.setVerticalGroup(
+            PanelFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelFacturaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(titleFact, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelFacturaLayout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panelResumFact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelDatosCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(14, 14, 14))
+        );
+
+        titleFact.getAccessibleContext().setAccessibleName("");
+
+        jTabbedPane1.addTab("Generar Factura", PanelFactura);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -550,7 +965,9 @@ public class VentanaCajero extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_botonCerrarCajaActionPerformed
-
+    
+   
+    
     private void campoTotalEfectivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoTotalEfectivoActionPerformed
 
     }//GEN-LAST:event_campoTotalEfectivoActionPerformed
@@ -754,6 +1171,420 @@ public class VentanaCajero extends javax.swing.JFrame {
     actualizarComboHelados();
     
     }//GEN-LAST:event_botonEliminarHeladoActionPerformed
+
+    private void bttCargPedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttCargPedActionPerformed
+        try {
+            int ultimoPedidoID = Pedido.getSiguienteNumPedido() - 1;
+            if (ultimoPedidoID == 0) {
+                JOptionPane.showMessageDialog(this, "Aún no se ha registrado ningún pedido en esta sesión.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // 3. Buscar el pedido
+            Pedido pedidoACargar = this.gestorPedido.buscarPedido(ultimoPedidoID);
+
+            if (pedidoACargar == null) {
+                JOptionPane.showMessageDialog(this, "Error: No se pudo encontrar el pedido #" + ultimoPedidoID, "Error del Gestor", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // 4. *** ¡GUARDAR EL PEDIDO PARA USARLO DESPUÉS! ***
+            this.pedidoActualParaFacturar = pedidoACargar;
+
+            // 5. Obtener el "modelo" de la tabla
+            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tablaPedido.getModel();
+            model.setRowCount(0); // Limpiar
+
+            // 6. Llenar la tabla
+            for (Helado helado : this.pedidoActualParaFacturar.getHelados()) {
+                int cantidad = 1;
+                String descripcion = helado.toString();
+                double pUnitario = helado.getPrecio();
+                double total = pUnitario * cantidad;
+
+                // ¡Correcto! Guardamos el NÚMERO (Double)
+                model.addRow(new Object[]{cantidad, descripcion, pUnitario, total});
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado al cargar el pedido.", "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_bttCargPedActionPerformed
+
+    private void bttBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttBuscarClienteActionPerformed
+        String cedula = idCampo.getText().trim(); // .trim() quita espacios en blanco
+
+        // 1. Validación simple de la UI
+        if (cedula.isEmpty() || cedula.equals("Ej. 1315267891")) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese una cédula para buscar.", "Campo Vacío", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Cliente clienteEncontrado = this.gestorCliente.buscarCliente(cedula);
+
+        if (clienteEncontrado != null) {
+            // --- CASO 2: CLIENTE ENCONTRADO ---
+            nomCamp.setText(clienteEncontrado.getNombre());
+            dirCamp.setText(clienteEncontrado.getDireccion());
+            emailCamp.setText(clienteEncontrado.getCorreoElectronico());
+            telefonoCamp.setText(clienteEncontrado.getTelefono()); // <-- CORREGIDO
+
+            // ... (código para poner texto negro) ...
+            telefonoCamp.setForeground(Color.BLACK); // <-- CORREGIDO
+
+            // 3. Deshabilitar campos
+            nomCamp.setEnabled(false);
+            dirCamp.setEnabled(false);
+            emailCamp.setEnabled(false);
+            telefonoCamp.setEnabled(false); // <-- CORREGIDO
+            botAniadirCli.setEnabled(false);
+
+            // ... (JOptionPane) ...
+        } else {
+            // --- CASO 3: CLIENTE NO ENCONTRADO ---
+            // ... (JOptionPane) ...
+
+            // 2. Habilitar TODOS los campos
+            nomCamp.setEnabled(true);
+            dirCamp.setEnabled(true);
+            emailCamp.setEnabled(true);
+            telefonoCamp.setEnabled(true); // <-- CORREGIDO
+
+            // 3. Habilitar el botón "AÑADIR CLIENTE"
+            botAniadirCli.setEnabled(true);
+
+            // 4. Limpiar campos
+            nomCamp.setText("");
+            dirCamp.setText("");
+            emailCamp.setText("");
+            telefonoCamp.setText(""); // <-- CORREGIDO
+        }
+    }//GEN-LAST:event_bttBuscarClienteActionPerformed
+
+    private void telefonoCampActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_telefonoCampActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_telefonoCampActionPerformed
+
+    private void emailCampActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailCampActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_emailCampActionPerformed
+
+    private void dirCampActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dirCampActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dirCampActionPerformed
+
+    private void idCampoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idCampoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_idCampoActionPerformed
+
+    private void radConsumidorFinalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radConsumidorFinalActionPerformed
+        // 1. LLAMAMOS AL GESTOR
+        Cliente cf = this.gestorCliente.buscarCliente("9999999999");
+
+        if (cf != null) {
+            // 2. Rellenar los campos
+            idCampo.setText(cf.getCedula());
+            nomCamp.setText(cf.getNombre());
+            dirCamp.setText(cf.getDireccion());
+            emailCamp.setText(cf.getCorreoElectronico());
+
+            telefonoCamp.setText(cf.getTelefono()); // <-- CORREGIDO
+
+            // Asegurarse de que el texto no sea gris
+            idCampo.setForeground(Color.BLACK);
+            nomCamp.setForeground(Color.BLACK);
+            dirCamp.setForeground(Color.BLACK);
+            emailCamp.setForeground(Color.BLACK);
+            telefonoCamp.setForeground(Color.BLACK); // <-- CORREGIDO
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Error: No se pudo encontrar al Cliente 'Consumidor Final'", "Error de Gestor", JOptionPane.ERROR_MESSAGE);
+        }
+
+        // 3. Deshabilitar todos los campos y botones
+        idCampo.setEnabled(false);
+        nomCamp.setEnabled(false);
+        dirCamp.setEnabled(false);
+        emailCamp.setEnabled(false);
+        telefonoCamp.setEnabled(false); // <-- CORREGIDO
+        bttBuscarCliente.setEnabled(false);
+        botAniadirCli.setEnabled(false);
+    }//GEN-LAST:event_radConsumidorFinalActionPerformed
+
+    private void apliPromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_apliPromActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_apliPromActionPerformed
+
+    private void botAniadirCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botAniadirCliActionPerformed
+        try {
+            // 1. Obtener todos los datos de los campos
+            String cedula = idCampo.getText().trim();
+            String nombre = nomCamp.getText().trim();
+            String direccion = dirCamp.getText().trim();
+            String email = emailCamp.getText().trim();
+            String telefono = telefonoCamp.getText().trim();
+
+            // 2. Validación de campos obligatorios (los que tienen *)
+            if (cedula.isEmpty() || cedula.equals("Ej. 1315267891")
+                    || nombre.isEmpty() || nombre.equals("Ej. Maria Lopez")
+                    || email.isEmpty() || email.equals("Ej. marialope1@gmail.com")) {
+
+                throw new IllegalArgumentException("Los campos Cédula, Nombres y Email son obligatorios.");
+            }
+
+            // 3. Crear el objeto Cliente
+            Cliente nuevoCliente = new Cliente();
+
+            // --- Campos Obligatorios (con validación) ---
+            nuevoCliente.setCedula(cedula);
+            nuevoCliente.setNombre(nombre);
+            nuevoCliente.setCorreoElectronico(email);
+
+            // --- Campos Opcionales (con validación SÓLO SI no están vacíos) ---
+            // Si el campo Dirección no está vacío, validarlo.
+            if (!direccion.isEmpty() && !direccion.equals("Ej. Av. Amazonas OE1")) {
+                nuevoCliente.setDireccion(direccion); // Se valida aquí
+            } else {
+                nuevoCliente.setDireccion("N/A"); // Valor por defecto si está vacío
+            }
+
+            // Si el campo Teléfono no está vacío, validarlo.
+            if (!telefono.isEmpty() && !telefono.equals("Ej. 0965742142")) {
+                nuevoCliente.setTelefono(telefono); // Se valida aquí
+            } else {
+                nuevoCliente.setTelefono("N/A"); // Valor por defecto si está vacío
+            }
+
+            // 4. Llamar al Gestor para registrar
+            this.gestorCliente.registrarCliente(nuevoCliente);
+
+            // 5. Éxito
+            JOptionPane.showMessageDialog(this, "Cliente '" + nombre + "' registrado con éxito.", "Cliente Guardado", JOptionPane.INFORMATION_MESSAGE);
+
+            // 6. Deshabilitar todo de nuevo (el cliente ya está guardado)
+            nomCamp.setEnabled(false);
+            dirCamp.setEnabled(false);
+            emailCamp.setEnabled(false);
+            telefonoCamp.setEnabled(false);
+            botAniadirCli.setEnabled(false);
+
+        } catch (IllegalArgumentException e) {
+            // Captura errores de validación (ej. "La cédula ingresada no es válida")
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error de Validación", JOptionPane.ERROR_MESSAGE);
+
+        } catch (Exception e) {
+            // Captura cualquier otro error
+            JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado al guardar el cliente.", "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace(); // Imprime el error en la consola de NetBeans
+        }
+    }//GEN-LAST:event_botAniadirCliActionPerformed
+
+    private void radIngresarDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radIngresarDatosActionPerformed
+        // 1. Habilitar SÓLO el ID y el botón Buscar
+        idCampo.setEnabled(true);
+        bttBuscarCliente.setEnabled(true);
+
+        // 2. Limpiar todos los campos
+        idCampo.setText("");
+        nomCamp.setText("");
+        dirCamp.setText("");
+        emailCamp.setText("");
+        telefonoCamp.setText(""); // <-- CORREGIDO
+
+        // 3. Asegurarse de que el resto sigue deshabilitado
+        nomCamp.setEnabled(false);
+        dirCamp.setEnabled(false);
+        emailCamp.setEnabled(false);
+        telefonoCamp.setEnabled(false); // <-- CORREGIDO
+        botAniadirCli.setEnabled(false);
+    }
+    
+    /**
+     * Añade FocusListeners a los campos de texto para limpiar el texto gris de
+     * ejemplo ("placeholder") cuando el usuario hace clic.
+     */
+    private void agregarListenersDePlaceholder() {
+        // Campos de Cliente
+        crearPlaceholder(idCampo, "Ej. 1315267891");
+        crearPlaceholder(nomCamp, "Ej. Maria Lopez");
+        crearPlaceholder(dirCamp, "Ej. Av. Amazonas OE1");
+        crearPlaceholder(emailCamp, "Ej. marialope1@gmail.com");
+        crearPlaceholder(telefonoCamp, "Ej. 0965742142");
+    }
+
+    /**
+     * Método de utilidad para crear un efecto de placeholder.
+     *
+     * @param campo El JTextField
+     * @param textoPlaceholder El texto gris de ejemplo
+     */
+    private void crearPlaceholder(javax.swing.JTextField campo, String textoPlaceholder) {
+        // Color gris para el placeholder
+        Color placeholderColor = new Color(204, 204, 204);
+        // Color negro para el texto normal
+        Color textColor = Color.BLACK;
+
+        // Estado inicial
+        if (campo.getText().isEmpty()) {
+            campo.setText(textoPlaceholder);
+            campo.setForeground(placeholderColor);
+        }
+
+        campo.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                // Si el texto es el placeholder, borrarlo y poner color negro
+                if (campo.getText().equals(textoPlaceholder)) {
+                    campo.setText("");
+                    campo.setForeground(textColor);
+                }
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                // Si el campo está vacío, volver a poner el placeholder
+                if (campo.getText().isEmpty()) {
+                    campo.setText(textoPlaceholder);
+                    campo.setForeground(placeholderColor);
+                }
+            }
+        });
+    }//GEN-LAST:event_radIngresarDatosActionPerformed
+
+    private void botCalTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botCalTotalActionPerformed
+        // 1. Validar que un pedido esté cargado
+        if (this.pedidoActualParaFacturar == null) {
+            JOptionPane.showMessageDialog(this, "Debe presionar 'CARGAR PEDIDO' primero.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        double subtotal = 0.0;
+        double descuento = 0.0;
+
+        // 2. Calcular el Subtotal (recorriendo el objeto Pedido)
+        for (Helado helado : this.pedidoActualParaFacturar.getHelados()) {
+            subtotal += helado.getPrecio();
+        }
+
+        // 3. Revisar si se aplica la promoción
+        if (apliProm.isSelected()) {
+            try {
+                // --- LÓGICA DE PROMOCIÓN ---
+                // ASUNCIÓN: Usamos la promoción ID 1, ya que la UI no permite elegir.
+                // (Puedes cambiar este '1' por el ID de la promoción que quieras)
+                Promocion promo = this.gestorPromocion.buscarPromocion(1);
+
+                if (promo != null) {
+                    SaborHelado saborEnPromo = promo.getSaborPromocion();
+                    double porcentajeDesc = promo.getPorcentajeDescuento(); // Ej. 0.5 para 50%
+
+                    // Recorremos cada bola de cada helado para aplicar el descuento
+                    for (Helado helado : this.pedidoActualParaFacturar.getHelados()) {
+                        for (BolaHelado bola : helado.getBolasHelado()) {
+                            if (bola.getSabor() == saborEnPromo) {
+                                // Suma el descuento (precio de la bola * porcentaje)
+                                descuento += bola.getPrecio() * porcentajeDesc;
+                            }
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Promoción (ID 1) no encontrada.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al buscar la promoción: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        // 4. Calcular el IVA y el Total Final
+        double baseImponible = subtotal - descuento;
+        double iva = baseImponible * 0.15; // 15% como dice tu UI
+        double totalFinal = baseImponible + iva;
+
+        // 5. Actualizar los JLabels
+        valSubtotal.setText(String.format(Locale.US, "$%.2f", subtotal));
+        valDescuento.setText(String.format(Locale.US, "-$%.2f", descuento));
+        valIVA.setText(String.format(Locale.US, "$%.2f", iva));
+        valTotal.setText(String.format(Locale.US, "$%.2f", totalFinal));
+    }//GEN-LAST:event_botCalTotalActionPerformed
+
+    private void botGenFactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botGenFactActionPerformed
+        try {
+            // --- 1. VALIDACIONES ---
+            if (this.pedidoActualParaFacturar == null) {
+                JOptionPane.showMessageDialog(this, "Debe presionar 'CARGAR PEDIDO' primero.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (valTotal.getText().equals("$0.00") || valTotal.getText().equals("$0.0")) {
+                JOptionPane.showMessageDialog(this, "Debe presionar 'CALCULAR TOTAL' primero.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            String clienteCedula = idCampo.getText().trim();
+            if (clienteCedula.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No se ha definido un cliente.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // --- 2. LLAMAR AL GESTOR PARA CREAR LA FACTURA ---
+            Factura facturaGenerada = this.gestorFactura.generarFactura(
+                    this.pedidoActualParaFacturar.getPedidoID(),
+                    clienteCedula,
+                    (facturacion.gestores.GestorPedido) this.gestorPedido,
+                    (facturacion.gestores.GestorCliente) this.gestorCliente,
+                    (facturacion.gestores.GestorPromocion) this.gestorPromocion
+            );
+
+            if (facturaGenerada == null) {
+                throw new NullPointerException("El gestor de facturas devolvió un objeto nulo (factura no creada).");
+            }
+
+            // --- 3. ASIGNAR VALORES DE LA UI A LA FACTURA ---
+            Cliente clienteDeFactura = this.gestorCliente.buscarCliente(clienteCedula);
+            facturaGenerada.setCliente(clienteDeFactura);
+            facturaGenerada.setPedidos(this.pedidoActualParaFacturar);
+            double ivaUI = Double.parseDouble(valIVA.getText().replace("$", ""));
+            double totalUI = Double.parseDouble(valTotal.getText().replace("$", ""));
+
+            facturaGenerada.setImpuestoIVA(ivaUI);
+            facturaGenerada.setTotal(totalUI);
+
+            // --- 4. MOSTRAR LA VENTANA DE FACTURA ---
+            VentanaFactura factura = new VentanaFactura(this, true, facturaGenerada);
+            factura.setVisible(true);
+
+            // --- 5. LIMPIAR TODO PARA EL SIGUIENTE CLIENTE ---
+            limpiarPestanaFactura();
+
+        } catch (ClassCastException cce) {
+            JOptionPane.showMessageDialog(this, "Error de Programación: Incompatibilidad de Gestores. " + cce.getMessage(), "Error Crítico", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un error final al generar la factura: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_botGenFactActionPerformed
+
+    private void limpiarPestanaFactura() {
+        // Resetea el cliente a "Consumidor Final"
+        radConsumidorFinal.setSelected(true);
+
+        // Llama al método que ya programamos para resetear los campos de cliente
+        radConsumidorFinalActionPerformed(null);
+
+        // Limpia la tabla
+        ((javax.swing.table.DefaultTableModel) tablaPedido.getModel()).setRowCount(0);
+
+        // Resetea el pedido guardado
+        this.pedidoActualParaFacturar = null;
+
+        // Resetea el checkbox de promoción
+        apliProm.setSelected(false);
+
+        // Resetea los totales
+        valSubtotal.setText("$0.00");
+        valDescuento.setText("-$0.00");
+        valIVA.setText("$0.00");
+        valTotal.setText("$0.00");
+
+        agregarListenersDePlaceholder();
+    }
     
     private void limpiarCamposHelado() {
     grupoNumBolas.clearSelection(); // Des-selecciona los radio buttons
@@ -783,15 +1614,30 @@ public class VentanaCajero extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel PanelFactura;
+    private javax.swing.JCheckBox apliProm;
+    private javax.swing.JButton botAniadirCli;
+    private javax.swing.JButton botCalTotal;
+    private javax.swing.JButton botGenFact;
     private javax.swing.JButton botonAgregarHelado;
     private javax.swing.JButton botonCerrarCaja;
     private javax.swing.JButton botonEliminarHelado;
     private javax.swing.JButton botonRegistrarPedido;
+    private javax.swing.JButton bttBuscarCliente;
+    private javax.swing.JButton bttCargPed;
+    private javax.swing.ButtonGroup buttonSelecCliente;
     private javax.swing.JTextField campoTotalEfectivo;
     private javax.swing.JComboBox<Helado> comboHelados;
     private javax.swing.JComboBox<TipoRecipiente> comboRecipiente;
+    private javax.swing.JTextField dirCamp;
+    private javax.swing.JLabel direccionCliente;
+    private javax.swing.JTextField emailCamp;
+    private javax.swing.JLabel emailCliente;
     private javax.swing.ButtonGroup grupoNumBolas;
+    private javax.swing.JTextField idCampo;
+    private javax.swing.JLabel idCliente;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -801,18 +1647,37 @@ public class VentanaCajero extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel laSubtotal;
     private javax.swing.JLabel labelNumPedido;
     private javax.swing.JLabel labelTotalFactura;
+    private javax.swing.JLabel lbDescuento;
+    private javax.swing.JLabel lbIVA;
+    private javax.swing.JLabel lbTotal;
+    private javax.swing.JTextField nomCamp;
+    private javax.swing.JLabel nombresCliente;
     private javax.swing.JRadioButton opcionDos;
     private javax.swing.JRadioButton opcionTres;
     private javax.swing.JRadioButton opcionUna;
+    private javax.swing.JPanel panelDatosCliente;
+    private javax.swing.JPanel panelResumFact;
+    private javax.swing.JScrollPane panelTab;
+    private javax.swing.JRadioButton radConsumidorFinal;
+    private javax.swing.JRadioButton radIngresarDatos;
     private javax.swing.JComboBox<SaborHelado> sabor1Op;
     private javax.swing.JComboBox<SaborHelado> sabor2Op;
     private javax.swing.JComboBox<SaborHelado> sabor3Op;
+    private javax.swing.JTable tablaPedido;
+    private javax.swing.JTextField telefonoCamp;
+    private javax.swing.JLabel telfClient;
+    private javax.swing.JPanel titleFact;
+    private javax.swing.JLabel valDescuento;
+    private javax.swing.JLabel valIVA;
+    private javax.swing.JLabel valSubtotal;
+    private javax.swing.JLabel valTotal;
     // End of variables declaration//GEN-END:variables
 }

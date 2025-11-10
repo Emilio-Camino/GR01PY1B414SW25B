@@ -4,5 +4,5 @@ import facturacion.elementos.Cliente;
 
 public interface IGestorClienteCajero {
     public Cliente buscarCliente(String cedula);
-    public void registrarCliente();
+    public void registrarCliente(Cliente cliente);
 }
