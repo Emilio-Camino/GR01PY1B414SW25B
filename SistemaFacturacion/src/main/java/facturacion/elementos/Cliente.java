@@ -80,13 +80,6 @@ public class Cliente {
         Matcher coincidencia = patron.matcher(telefono);
         return coincidencia.matches();
     }
-    
-    private static boolean validarDireccion(String direccion) {
-        String regex = "^[a-zA-ZáéíóúÁÉÍÓÚÑñ0-9 ,.-/#°]+$";
-        Pattern patron = Pattern.compile(regex);
-        Matcher coincidencia = patron.matcher(direccion);
-        return coincidencia.matches();
-    }
 
     private static boolean validarDireccion(String direccion) {
         String regex = "^[a-zA-ZáéíóúÁÉÍÓÚÑñ0-9 ,.-/#°]+$";

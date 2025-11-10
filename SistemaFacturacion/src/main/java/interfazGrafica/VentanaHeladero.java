@@ -5,6 +5,7 @@
 package interfazGrafica;
 
 import facturacion.elementos.Cliente;
+import facturacion.elementos.Factura;
 import facturacion.elementos.Promocion;
 import facturacion.elementos.ReporteStock;
 import facturacion.elementos.enumeraciones.SaborHelado;
@@ -12,8 +13,10 @@ import facturacion.elementos.enumeraciones.TipoRecipiente;
 import facturacion.gestores.GestorStock;
 
 import facturacion.gestores.interfaces.*;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Insets;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -24,14 +27,19 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.UIManager;
 
 public class VentanaHeladero extends JFrame {
-
+    Color materialBlue = new Color(66, 133, 244);
+    Color softPink = new Color(208, 60, 62);
+    Color softGreen = new Color(73, 159, 44);
     private LoginVentana loginDeOrigen;
     private IGestorStockHeladero gestorStock;
     private IGestorPromocionHeladero gestorPromocion;
     private IGestorClienteHeladero gestorCliente;
+    private IGestorFacturaHeladero gestorFactura;
     private java.util.List<Promocion> promocionesActuales;
+    private java.util.List<Factura> facturasExistentes;
     private Cliente cliente;
 
 
@@ -40,12 +48,22 @@ public class VentanaHeladero extends JFrame {
     /**
      * Creates new form VentanaHeladero
      */
-    public VentanaHeladero(IGestorStockHeladero gStock, IGestorPromocionHeladero gPromocion, IGestorClienteHeladero gCliente, LoginVentana login) {
+    public VentanaHeladero(IGestorStockHeladero gStock, IGestorPromocionHeladero gPromocion, IGestorClienteHeladero gCliente,IGestorFacturaHeladero gFactura , LoginVentana login) {
+        // Disenio de las pestanias
+        UIManager.put("TabbedPane.shadow", Color.WHITE);
+        UIManager.put("TabbedPane.darkShadow", Color.WHITE);
+        UIManager.put("TabbedPane.selected", Color.WHITE);
+        UIManager.put("TabbedPane.selectHighlight", Color.WHITE); 
+        UIManager.put("TabbedPane.light", Color.WHITE);
+        UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
+        UIManager.put("TabbedPane.drawFocusIndicator", false);
+        
         initComponents();
         this.loginDeOrigen = login;
         this.gestorStock = gStock;
         this.gestorPromocion = gPromocion;
         this.gestorCliente = gCliente;
+        this.gestorFactura = gFactura;
 
         
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -65,19 +83,13 @@ public class VentanaHeladero extends JFrame {
         buttonGroup1.clearSelection();
         
         // Gestor Cliente
-        
-        btnAplicarCambios.setVisible(false);
-        btnEliminarCliente.setVisible(false);
-        btnModificarCliente.setVisible(false);
-        labelActualizarInformacion.setVisible(false);
-        labelCedulaAct.setVisible(false);
-        labelNombreAct.setVisible(false);
-        labelTelefonoAct.setVisible(false);
-        labelDireccionAct.setVisible(false);
-        labelCorreoAct.setVisible(false);
-        labelResultadoBusqueda.setVisible(false);
+        activar_DesactivarLabelsActualizacion(false);
+
         cargarOpcionesPromocion();
         cargarPromociones();
+        
+        cargarFacturas();
+        
         jListPromociones.addListSelectionListener(event -> {
         if (!event.getValueIsAdjusting()) {
             int index = jListPromociones.getSelectedIndex();
@@ -91,13 +103,18 @@ public class VentanaHeladero extends JFrame {
         }
     });
         
-        actCedulaField.setVisible(false);
-        actNombreField.setVisible(false);
-        actTelefonoField.setVisible(false);
-        actCorreoField.setVisible(false);
-        actDireccionField.setVisible(false);
-        btnEliminarPromocion.setVisible(false);
-        
+        jListFacturas.addListSelectionListener(event -> {
+        if (!event.getValueIsAdjusting()) {
+            int index = jListFacturas.getSelectedIndex();
+
+            // Si hay una selección válida y no es el mensaje de "sin promociones"
+            if (index >= 0 && !jListFacturas.getSelectedValue().contains("No hay facturas registradas")) {
+                btnEliminarFactura.setEnabled(true);
+            } else {
+                btnEliminarFactura.setEnabled(false);
+            }
+        }
+    });
 
     }
 
@@ -118,44 +135,150 @@ public class VentanaHeladero extends JFrame {
         pantallaActualizarStock = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         btnActualizarStock = new javax.swing.JButton();
+        btnActualizarStock.setBackground(materialBlue);
+        btnActualizarStock.setForeground(Color.WHITE);
+        btnActualizarStock.setOpaque(true);
+        btnActualizarStock.setBorderPainted(false);
+        btnActualizarStock.setContentAreaFilled(true);
         checkSaboresStock = new javax.swing.JRadioButton();
+        checkSaboresStock.setBackground(Color.WHITE);
+        checkSaboresStock.setForeground(Color.BLACK);
+        checkSaboresStock.setOpaque(true);
+        checkSaboresStock.setContentAreaFilled(false);
+        checkSaboresStock.setBorderPainted(false);
         checkRecipienteStock = new javax.swing.JRadioButton();
+        checkRecipienteStock.setBackground(Color.WHITE);
+        checkRecipienteStock.setForeground(Color.BLACK);
+        checkRecipienteStock.setOpaque(true);
+        checkRecipienteStock.setContentAreaFilled(false);
+        checkRecipienteStock.setBorderPainted(false);
         labelActualizarStock = new javax.swing.JLabel();
         opcionesStock = new javax.swing.JComboBox<>();
+        opcionesStock.setBackground(Color.WHITE);
+        opcionesStock.setForeground(Color.BLACK);
+        opcionesStock.setOpaque(true);
+        opcionesStock.setBorder(null);
         newStock = new javax.swing.JTextField();
+        newStock.setBackground(Color.WHITE);
+        newStock.setForeground(Color.BLACK);
+        newStock.setOpaque(true);
+        newStock.setBorder(null);
         jScrollPane4 = new javax.swing.JScrollPane();
         stock = new javax.swing.JTextArea();
         btnGenerarReporte = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        labelCedula = new javax.swing.JLabel();
-        btnBuscarCliente = new javax.swing.JButton();
-        cedulaField = new javax.swing.JTextField();
-        labelResultadoBusqueda = new javax.swing.JLabel();
-        btnEliminarCliente = new javax.swing.JButton();
-        btnModificarCliente = new javax.swing.JButton();
-        labelActualizarInformacion = new javax.swing.JLabel();
-        labelNombreAct = new javax.swing.JLabel();
-        labelCedulaAct = new javax.swing.JLabel();
-        labelTelefonoAct = new javax.swing.JLabel();
-        labelDireccionAct = new javax.swing.JLabel();
-        labelCorreoAct = new javax.swing.JLabel();
-        btnAplicarCambios = new javax.swing.JButton();
-        actNombreField = new javax.swing.JTextField();
-        actCedulaField = new javax.swing.JTextField();
-        actTelefonoField = new javax.swing.JTextField();
-        actDireccionField = new javax.swing.JTextField();
-        actCorreoField = new javax.swing.JTextField();
-        jPanel3 = new javax.swing.JPanel();
+        btnGenerarReporte.setBackground(softGreen);
+        btnGenerarReporte.setForeground(Color.WHITE);
+        btnGenerarReporte.setOpaque(true);
+        btnGenerarReporte.setBorderPainted(false);
+        btnGenerarReporte.setContentAreaFilled(true);
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         btnCrearPromocion = new javax.swing.JButton();
+        btnCrearPromocion.setBackground(softGreen);
+        btnCrearPromocion.setForeground(Color.WHITE);
+        btnCrearPromocion.setOpaque(true);
+        btnCrearPromocion.setBorderPainted(false);
+        btnCrearPromocion.setContentAreaFilled(true);
         labelActualizarStock1 = new javax.swing.JLabel();
         opcionesPromocion = new javax.swing.JComboBox<>();
+        opcionesPromocion.setBackground(Color.WHITE);
+        opcionesPromocion.setForeground(Color.BLACK);
+        opcionesPromocion.setOpaque(true);
+        opcionesPromocion.setBorder(null);
         newStockPromocion = new javax.swing.JTextField();
+        newStockPromocion.setBackground(Color.WHITE);
+        newStockPromocion.setForeground(Color.BLACK);
+        newStockPromocion.setOpaque(true);
+        newStockPromocion.setBorder(null);
         jScrollPane5 = new javax.swing.JScrollPane();
         jListPromociones = new javax.swing.JList<>();
         btnEliminarPromocion = new javax.swing.JButton();
+        btnEliminarPromocion.setBackground(softPink);
+        btnEliminarPromocion.setForeground(Color.WHITE);
+        btnEliminarPromocion.setOpaque(true);
+        btnEliminarPromocion.setBorderPainted(false);
+        btnEliminarPromocion.setContentAreaFilled(true);
         jLabel1 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        labelCedula = new javax.swing.JLabel();
+        btnBuscarCliente = new javax.swing.JButton();
+        btnBuscarCliente.setBackground(materialBlue);
+        btnBuscarCliente.setForeground(Color.WHITE);
+        btnBuscarCliente.setOpaque(true);
+        btnBuscarCliente.setBorderPainted(false);
+        btnBuscarCliente.setContentAreaFilled(true);
+        cedulaField = new javax.swing.JTextField();
+        cedulaField.setBackground(Color.WHITE);
+        cedulaField.setForeground(Color.BLACK);
+        cedulaField.setOpaque(true);
+        cedulaField.setBorder(null);
+        btnEliminarCliente = new javax.swing.JButton();
+        btnEliminarCliente.setBackground(softPink);
+        btnEliminarCliente.setForeground(Color.WHITE);
+        btnEliminarCliente.setOpaque(true);
+        btnEliminarCliente.setBorderPainted(false);
+        btnEliminarCliente.setContentAreaFilled(true);
+        btnModificarCliente = new javax.swing.JButton();
+        btnModificarCliente.setBackground(materialBlue);
+        btnModificarCliente.setForeground(Color.WHITE);
+        btnModificarCliente.setOpaque(true);
+        btnModificarCliente.setBorderPainted(false);
+        btnModificarCliente.setContentAreaFilled(true);
+        jPanel6 = new javax.swing.JPanel();
+        labelNombreAct = new javax.swing.JLabel();
+        labelCedulaAct = new javax.swing.JLabel();
+        labelTelefonoAct = new javax.swing.JLabel();
+        actNombreField = new javax.swing.JTextField();
+        actNombreField.setBackground(Color.WHITE);
+        actNombreField.setForeground(Color.BLACK);
+        actNombreField.setOpaque(true);
+        actNombreField.setBorder(null);
+        actCedulaField = new javax.swing.JTextField();
+        actCedulaField.setBackground(Color.WHITE);
+        actCedulaField.setForeground(Color.BLACK);
+        actCedulaField.setOpaque(true);
+        actCedulaField.setBorder(null);
+        actTelefonoField = new javax.swing.JTextField();
+        actTelefonoField.setBackground(Color.WHITE);
+        actTelefonoField.setForeground(Color.BLACK);
+        actTelefonoField.setOpaque(true);
+        actTelefonoField.setBorder(null);
+        labelDireccionAct = new javax.swing.JLabel();
+        labelCorreoAct = new javax.swing.JLabel();
+        actCorreoField = new javax.swing.JTextField();
+        actCorreoField.setBackground(Color.WHITE);
+        actCorreoField.setForeground(Color.BLACK);
+        actCorreoField.setOpaque(true);
+        actCorreoField.setBorder(null);
+        actDireccionField = new javax.swing.JTextField();
+        actDireccionField.setBackground(Color.WHITE);
+        actDireccionField.setForeground(Color.BLACK);
+        actDireccionField.setOpaque(true);
+        actDireccionField.setBorder(null);
+        btnAplicarCambios = new javax.swing.JButton();
+        btnAplicarCambios.setBackground(softGreen);
+        btnAplicarCambios.setForeground(Color.WHITE);
+        btnAplicarCambios.setOpaque(true);
+        btnAplicarCambios.setBorderPainted(false);
+        btnAplicarCambios.setContentAreaFilled(true);
+        labelActualizarInformacion = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel8 = new javax.swing.JPanel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        jListFacturas = new javax.swing.JList<>();
+        btnEliminarFactura = new javax.swing.JButton();
+        btnEliminarFactura.setBackground(softPink);
+        btnEliminarFactura.setForeground(Color.WHITE);
+        btnEliminarFactura.setOpaque(true);
+        btnEliminarFactura.setBorderPainted(false);
+        btnEliminarFactura.setContentAreaFilled(true);
+        jLabel2 = new javax.swing.JLabel();
+        btnGenerarReporteV = new javax.swing.JButton();
+        btnGenerarReporteV.setBackground(softGreen);
+        btnGenerarReporteV.setForeground(Color.WHITE);
+        btnGenerarReporteV.setOpaque(true);
+        btnGenerarReporteV.setBorderPainted(false);
+        btnGenerarReporteV.setContentAreaFilled(true);
 
         jCheckBox1.setText("jCheckBox1");
 
@@ -174,10 +297,14 @@ public class VentanaHeladero extends JFrame {
         jLabel4.setText("Cliente encontrado");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
         setResizable(false);
 
+        pantallaActualizarStock.setBackground(new java.awt.Color(255, 255, 255));
         pantallaActualizarStock.setToolTipText("");
         pantallaActualizarStock.setName(""); // NOI18N
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         btnActualizarStock.setText("Actualizar Stock");
         btnActualizarStock.addActionListener(new java.awt.event.ActionListener() {
@@ -248,7 +375,7 @@ public class VentanaHeladero extends JFrame {
                                 .addComponent(btnActualizarStock)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnGenerarReporte)))))
-                .addContainerGap(143, Short.MAX_VALUE))
+                .addContainerGap(152, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -269,191 +396,12 @@ public class VentanaHeladero extends JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnActualizarStock)
                     .addComponent(btnGenerarReporte))
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
 
         pantallaActualizarStock.addTab("ActualizarStock", jPanel1);
 
-        labelCedula.setText("Cedula: ");
-
-        btnBuscarCliente.setText("Buscar Cliente");
-        btnBuscarCliente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarClienteActionPerformed(evt);
-            }
-        });
-
-        cedulaField.setToolTipText("");
-        cedulaField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cedulaFieldActionPerformed(evt);
-            }
-        });
-
-        labelResultadoBusqueda.setText("Cliente Encontrado");
-
-        btnEliminarCliente.setText("Eliminar Cliente");
-        btnEliminarCliente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarClienteActionPerformed(evt);
-            }
-        });
-
-        btnModificarCliente.setText("Modificar Cliente");
-        btnModificarCliente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnModificarClienteActionPerformed(evt);
-            }
-        });
-
-        labelActualizarInformacion.setText("Actualizar informacion del Cliente");
-
-        labelNombreAct.setText("Nombre:");
-
-        labelCedulaAct.setText("Cedula:");
-
-        labelTelefonoAct.setText("Telefono:");
-
-        labelDireccionAct.setText("Direccion:");
-
-        labelCorreoAct.setText("Correo:");
-
-        btnAplicarCambios.setText("Aplicar Cambios");
-        btnAplicarCambios.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAplicarCambiosActionPerformed(evt);
-            }
-        });
-
-        actNombreField.setText("jTextField1");
-        actNombreField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                actNombreFieldActionPerformed(evt);
-            }
-        });
-
-        actCedulaField.setText("jTextField1");
-
-        actTelefonoField.setText("jTextField1");
-
-        actDireccionField.setText("jTextField1");
-
-        actCorreoField.setText("jTextField1");
-        actCorreoField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                actCorreoFieldActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(labelActualizarInformacion)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(139, 139, 139)
-                                .addComponent(labelCedula)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(labelResultadoBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cedulaField, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(64, 64, 64)
-                                .addComponent(btnEliminarCliente)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(231, 231, 231)
-                        .addComponent(btnBuscarCliente))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(81, 81, 81)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(labelNombreAct, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(labelCedulaAct, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(labelTelefonoAct))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(actNombreField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(actCedulaField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(121, 121, 121)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(labelDireccionAct)
-                                    .addComponent(labelCorreoAct))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnModificarCliente)
-                                    .addComponent(btnAplicarCambios)
-                                    .addComponent(actDireccionField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(actCorreoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(actTelefonoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(57, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(labelResultadoBusqueda)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelCedula)
-                    .addComponent(cedulaField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnBuscarCliente)
-                .addGap(35, 35, 35)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnEliminarCliente)
-                    .addComponent(btnModificarCliente))
-                .addGap(8, 8, 8)
-                .addComponent(labelActualizarInformacion)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelNombreAct)
-                    .addComponent(labelDireccionAct)
-                    .addComponent(actNombreField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(actDireccionField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(71, 71, 71)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(labelTelefonoAct)
-                            .addComponent(actTelefonoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(67, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(labelCedulaAct)
-                            .addComponent(labelCorreoAct)
-                            .addComponent(actCedulaField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(actCorreoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnAplicarCambios)
-                        .addGap(28, 28, 28))))
-        );
-
-        pantallaActualizarStock.addTab("Actualizar Registro Clientes", jPanel2);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 590, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 377, Short.MAX_VALUE)
-        );
-
-        pantallaActualizarStock.addTab("tab3", jPanel3);
+        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
 
         btnCrearPromocion.setText("Crear Promoción");
         btnCrearPromocion.addActionListener(new java.awt.event.ActionListener() {
@@ -469,6 +417,12 @@ public class VentanaHeladero extends JFrame {
         opcionesPromocion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 opcionesPromocionActionPerformed(evt);
+            }
+        });
+
+        newStockPromocion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newStockPromocionActionPerformed(evt);
             }
         });
 
@@ -541,18 +495,232 @@ public class VentanaHeladero extends JFrame {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(9, Short.MAX_VALUE)
+                .addContainerGap(10, Short.MAX_VALUE)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         pantallaActualizarStock.addTab("Actualizar Promociones", jPanel4);
 
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+
+        labelCedula.setText("Cedula: ");
+
+        btnBuscarCliente.setText("Buscar Cliente");
+        btnBuscarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarClienteActionPerformed(evt);
+            }
+        });
+
+        cedulaField.setToolTipText("");
+        cedulaField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cedulaFieldActionPerformed(evt);
+            }
+        });
+
+        btnEliminarCliente.setText("Eliminar Cliente");
+        btnEliminarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarClienteActionPerformed(evt);
+            }
+        });
+
+        btnModificarCliente.setText("Modificar Cliente");
+        btnModificarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarClienteActionPerformed(evt);
+            }
+        });
+
+        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        labelNombreAct.setText("Nombre:");
+        jPanel6.add(labelNombreAct, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 44, -1, -1));
+
+        labelCedulaAct.setText("Cedula:");
+        jPanel6.add(labelCedulaAct, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 96, 47, -1));
+
+        labelTelefonoAct.setText("Telefono:");
+        jPanel6.add(labelTelefonoAct, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 148, -1, -1));
+
+        actNombreField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                actNombreFieldActionPerformed(evt);
+            }
+        });
+        jPanel6.add(actNombreField, new org.netbeans.lib.awtextra.AbsoluteConstraints(73, 41, 116, -1));
+        jPanel6.add(actCedulaField, new org.netbeans.lib.awtextra.AbsoluteConstraints(73, 93, 116, -1));
+
+        actTelefonoField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                actTelefonoFieldActionPerformed(evt);
+            }
+        });
+        jPanel6.add(actTelefonoField, new org.netbeans.lib.awtextra.AbsoluteConstraints(73, 145, 116, -1));
+
+        labelDireccionAct.setText("Direccion:");
+        jPanel6.add(labelDireccionAct, new org.netbeans.lib.awtextra.AbsoluteConstraints(237, 41, -1, -1));
+
+        labelCorreoAct.setText("Correo:");
+        jPanel6.add(labelCorreoAct, new org.netbeans.lib.awtextra.AbsoluteConstraints(237, 87, -1, -1));
+
+        actCorreoField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                actCorreoFieldActionPerformed(evt);
+            }
+        });
+        jPanel6.add(actCorreoField, new org.netbeans.lib.awtextra.AbsoluteConstraints(296, 84, 116, -1));
+
+        actDireccionField.setToolTipText("");
+        actDireccionField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                actDireccionFieldActionPerformed(evt);
+            }
+        });
+        jPanel6.add(actDireccionField, new org.netbeans.lib.awtextra.AbsoluteConstraints(296, 41, 116, -1));
+
+        btnAplicarCambios.setText("Aplicar Cambios");
+        btnAplicarCambios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAplicarCambiosActionPerformed(evt);
+            }
+        });
+        jPanel6.add(btnAplicarCambios, new org.netbeans.lib.awtextra.AbsoluteConstraints(295, 145, -1, -1));
+
+        labelActualizarInformacion.setText("Actualizar informacion del Cliente");
+        jPanel6.add(labelActualizarInformacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 7, -1, -1));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(81, 81, 81)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(106, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(labelCedula)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cedulaField, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnModificarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnEliminarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(46, 46, 46)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelCedula)
+                    .addComponent(cedulaField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnModificarCliente))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnBuscarCliente)
+                    .addComponent(btnEliminarCliente))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(49, 49, 49))
+        );
+
+        pantallaActualizarStock.addTab("Actualizar Registro Clientes", jPanel2);
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+
+        jPanel8.setBackground(new java.awt.Color(255, 255, 255));
+
+        jListFacturas.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane6.setViewportView(jListFacturas);
+
+        btnEliminarFactura.setText("Anular Factura");
+        btnEliminarFactura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarFacturaActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel2.setText("REVISAR FACTURAS");
+
+        btnGenerarReporteV.setText("Generar Reporte");
+        btnGenerarReporteV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerarReporteVActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnEliminarFactura, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
+                    .addComponent(btnGenerarReporteV, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(46, 46, 46))
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                .addContainerGap(25, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addComponent(btnEliminarFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnGenerarReporteV, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(100, 100, 100))
+        );
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(83, 83, 83)
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(108, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(26, Short.MAX_VALUE))
+        );
+
+        pantallaActualizarStock.addTab("Revisar Facturas", jPanel3);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pantallaActualizarStock, javax.swing.GroupLayout.PREFERRED_SIZE, 590, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(pantallaActualizarStock)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -654,46 +822,66 @@ public class VentanaHeladero extends JFrame {
                     "Error de Formato",
                     JOptionPane.ERROR_MESSAGE
             );
-            mostrar_ocultarLabelsActualizacion(false); 
+            activar_DesactivarLabelsActualizacion(false); 
             return;
         }
         
         buscarCliente(cedula);
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 
-     private void mostrar_ocultarLabelsActualizacion (boolean flag) {
-        labelActualizarInformacion.setVisible(flag);
-        labelCedulaAct.setVisible(flag);
-        labelNombreAct.setVisible(flag);
-        labelTelefonoAct.setVisible(flag);
-        labelDireccionAct.setVisible(flag);
-        labelCorreoAct.setVisible(flag);
-        labelResultadoBusqueda.setVisible(flag);
+     private void activar_DesactivarLabelsActualizacion (boolean flag) {
+        labelCedulaAct.setEnabled(flag);
+        labelNombreAct.setEnabled(flag);
+        labelTelefonoAct.setEnabled(flag);
+        labelDireccionAct.setEnabled(flag);
+        labelCorreoAct.setEnabled(flag);
+        
 
-        actCedulaField.setVisible(flag);
-        actNombreField.setVisible(flag);
-        actTelefonoField.setVisible(flag);
-        actCorreoField.setVisible(flag);
-        actDireccionField.setVisible(flag);
+        actCedulaField.setEnabled(flag);
+        actNombreField.setEnabled(flag);
+        actTelefonoField.setEnabled(flag);
+        actCorreoField.setEnabled(flag);
+        actDireccionField.setEnabled(flag);
+        btnAplicarCambios.setEnabled(flag);
+        btnModificarCliente.setEnabled(flag);
+        btnEliminarCliente.setEnabled(flag);
+        
     }
+     private void activar_DesactivarCamposActualizacion (boolean flag){
+        actCedulaField.setEnabled(flag);
+        actNombreField.setEnabled(flag);
+        actTelefonoField.setEnabled(flag);
+        actCorreoField.setEnabled(flag);
+        actDireccionField.setEnabled(flag);
+        btnAplicarCambios.setEnabled(flag);
+     }
+     
+    private void ocultarCamposActualizacion(boolean flag) {
+    // La variable 'flag' ya no se utiliza en esta lógica.
+    
+    actCedulaField.setText("");
+    actNombreField.setText("");
+    actTelefonoField.setText("");
+    actCorreoField.setText("");
+    actDireccionField.setText("");
+    
+    // Se omite 'btnAplicarCambios' porque no es un campo de texto
+    // y la nueva lógica de setear texto no le aplica.
+}
      
      private void buscarCliente(String cedula) {
         if (validarCedula(cedula)) {
             Cliente clienteAux = gestorCliente.buscarCliente(cedula);
             if (clienteAux == null) {
-                labelResultadoBusqueda.setText("Cliente no encontrado");
-                labelResultadoBusqueda.setVisible(true);
-                mostrar_ocultarLabelsActualizacion(false);
+                JOptionPane.showMessageDialog(null, "El cliente no se encuentra registrado", "Cliente inexistente", JOptionPane.ERROR_MESSAGE);
+                activar_DesactivarLabelsActualizacion(false);
                 return;
                 // se podría presentar la opcion de registrar cliente
             } else {
                 cliente = clienteAux;
-                labelResultadoBusqueda.setText(String.format("Cliente encontrado: %s", cliente.getNombre()));
-                labelResultadoBusqueda.setVisible(true);
-                
-                btnEliminarCliente.setVisible(true);
-                btnModificarCliente.setVisible(true);
-                mostrar_ocultarLabelsActualizacion(false);
+                JOptionPane.showMessageDialog(null, "Se encontró al cliente", "Cliente Encontrado", JOptionPane.INFORMATION_MESSAGE);
+                activar_DesactivarLabelsActualizacion(true);
+                activar_DesactivarCamposActualizacion(false);
             }
         }
         else {
@@ -749,7 +937,7 @@ public class VentanaHeladero extends JFrame {
     
     private void btnModificarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarClienteActionPerformed
         // Mostrar los campos para la actualización
-        mostrar_ocultarLabelsActualizacion(true);
+        activar_DesactivarCamposActualizacion(true);
         btnAplicarCambios.setVisible(true);
         // Muestro la informacion almacenada
         actCedulaField.setText(cliente.getCedula());
@@ -757,6 +945,7 @@ public class VentanaHeladero extends JFrame {
         actCorreoField.setText(cliente.getCorreoElectronico());
         actTelefonoField.setText(cliente.getTelefono());
         actDireccionField.setText(cliente.getDireccion());
+        
     }//GEN-LAST:event_btnModificarClienteActionPerformed
 
     private void btnAplicarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAplicarCambiosActionPerformed
@@ -767,11 +956,15 @@ public class VentanaHeladero extends JFrame {
         String direccion = actDireccionField.getText().trim();
         System.out.println(cedula + nombre + correo + telefono + direccion);
         gestorCliente.modificarCliente(cliente, nombre, cedula, direccion, telefono, correo);
+        activar_DesactivarLabelsActualizacion(false);
+        ocultarCamposActualizacion(false);
     }//GEN-LAST:event_btnAplicarCambiosActionPerformed
 
     private void btnEliminarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarClienteActionPerformed
         gestorCliente.eliminarCliente(cliente.getCedula());
         this.cliente = null;
+        activar_DesactivarLabelsActualizacion(false);
+        ocultarCamposActualizacion(false);
     }//GEN-LAST:event_btnEliminarClienteActionPerformed
 
     private void cedulaFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cedulaFieldActionPerformed
@@ -785,6 +978,73 @@ public class VentanaHeladero extends JFrame {
     private void actCorreoFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actCorreoFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_actCorreoFieldActionPerformed
+
+    private void actTelefonoFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actTelefonoFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_actTelefonoFieldActionPerformed
+
+    private void btnEliminarFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarFacturaActionPerformed
+        int index = jListFacturas.getSelectedIndex();
+
+        if (index < 0 || facturasExistentes == null || facturasExistentes.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Debe seleccionar una alguna factura.",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        // Obtener la promoción real correspondiente
+        Factura facturaElegida = facturasExistentes.get(index);
+        if(facturaElegida.getCliente().getCedula().equals("9999999999")){
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No puede eliminar una factura a nombre de Consumidor Final.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        // Confirmar la eliminación
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro que desea eliminar la factura " + String.format( "ID: %d a nombre del Cliente: %s",facturaElegida.getIdFactura(), facturaElegida.getCliente().getCedula()) + "?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            boolean eliminado = false;
+            // Aquí llamas al método del gestor que elimina la promoción
+            eliminado = gestorFactura.anularFactura(facturaElegida.getIdFactura());
+
+            if (eliminado) {
+                JOptionPane.showMessageDialog(this, "Factura: " +String.format( "ID: %d a nombre del Cliente: %s",facturaElegida.getIdFactura(), facturaElegida.getCliente().getCedula()) + " eliminada correctamente.");
+                cargarFacturas(); // refrescar lista
+            } else {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "No se pudo eliminar la factura.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }
+    }//GEN-LAST:event_btnEliminarFacturaActionPerformed
+
+    private void btnGenerarReporteVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarReporteVActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnGenerarReporteVActionPerformed
+
+    private void newStockPromocionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newStockPromocionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_newStockPromocionActionPerformed
+
+    private void actDireccionFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actDireccionFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_actDireccionFieldActionPerformed
 
     private void btnEliminarPromocionActionPerformed(java.awt.event.ActionEvent evt) {
         int index = jListPromociones.getSelectedIndex();
@@ -829,7 +1089,7 @@ public class VentanaHeladero extends JFrame {
             }
         }
     }
-
+    
 
     // ############################################################### 
     
@@ -960,7 +1220,7 @@ public class VentanaHeladero extends JFrame {
             opcionesPromocion.addItem(sabor.name());
         }
     }
-
+    
     private void ingresarPorcentaje() {
         double nuevoPorcentaje;
         try {
@@ -1054,6 +1314,36 @@ public class VentanaHeladero extends JFrame {
 
         jListPromociones.setModel(modelo);
     }
+    
+    private void cargarFacturas() {
+        // Obtener las promociones del gestor
+        facturasExistentes = gestorFactura.getListaFacturas();
+
+        // Crear el modelo de lista
+        javax.swing.DefaultListModel<String> modelo = new javax.swing.DefaultListModel<>();
+
+        if (facturasExistentes == null || facturasExistentes.isEmpty()) {
+            modelo.addElement("No hay facturas registradas");
+            btnEliminarFactura.setEnabled(false);
+        } else {
+            for (Factura facturaActual : facturasExistentes) {
+                
+                if(facturaActual.getTipoPago().equals("ANULADA")){
+                    continue;
+                }
+                
+                String texto = String.format(
+                        "ID: %d Cliente: %s",
+                        facturaActual.getIdFactura(),
+                        facturaActual.getCliente().getCedula()
+                );
+                modelo.addElement(texto);
+                btnEliminarFactura.setEnabled(true);
+            }   
+        }
+
+        jListFacturas.setModel(modelo);
+    }
 
 
 
@@ -1068,8 +1358,10 @@ public class VentanaHeladero extends JFrame {
     private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnCrearPromocion;
     private javax.swing.JButton btnEliminarCliente;
+    private javax.swing.JButton btnEliminarFactura;
     private javax.swing.JButton btnEliminarPromocion;
     private javax.swing.JButton btnGenerarReporte;
+    private javax.swing.JButton btnGenerarReporteV;
     private javax.swing.JButton btnModificarCliente;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JTextField cedulaField;
@@ -1077,18 +1369,23 @@ public class VentanaHeladero extends JFrame {
     private javax.swing.JRadioButton checkSaboresStock;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JList<String> jListFacturas;
     private javax.swing.JList<String> jListPromociones;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea3;
@@ -1100,7 +1397,6 @@ public class VentanaHeladero extends JFrame {
     private javax.swing.JLabel labelCorreoAct;
     private javax.swing.JLabel labelDireccionAct;
     private javax.swing.JLabel labelNombreAct;
-    private javax.swing.JLabel labelResultadoBusqueda;
     private javax.swing.JLabel labelTelefonoAct;
     private javax.swing.JTextField newStock;
     private javax.swing.JTextField newStockPromocion;

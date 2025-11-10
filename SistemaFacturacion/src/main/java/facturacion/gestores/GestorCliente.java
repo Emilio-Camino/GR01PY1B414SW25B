@@ -116,7 +116,7 @@ public class GestorCliente implements IGestorClienteCajero, IGestorClienteHelade
         }
     }
 
-    public void registrarCliente () {
+    public void registrarCliente (Cliente cliente) {
         String nombre = "";
         String cedula = "";
         String direccion = "";
@@ -152,7 +152,7 @@ public class GestorCliente implements IGestorClienteCajero, IGestorClienteHelade
         // 2. Cliente Válido 2
         Cliente c2 = new Cliente(
                 "Luis Parra",
-                "0925804008",
+                "1755580428",
                 "luis.parra@mail.com",
                 "Av. Foch y Reina Victoria, Quito",
                 "0991234567"
@@ -162,7 +162,7 @@ public class GestorCliente implements IGestorClienteCajero, IGestorClienteHelade
         // 3. Cliente Válido 3
         Cliente c3 = new Cliente(
                 "María Sol",
-                "1715806936",
+                "1755580402",
                 "maria.sol@mail.com",
                 "Cumbayá, Quito",
                 "0988888888"

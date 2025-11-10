@@ -188,7 +188,7 @@ public class LoginVentana extends javax.swing.JFrame {
         String pass = new String(passHeladero.getPassword());
         
         if(usuario.equals("heladero") && pass.equals("1234")){
-           new VentanaHeladero( (IGestorStockHeladero) gestorStock, (IGestorPromocionHeladero) gestorPromocion,(IGestorClienteHeladero) gestorCliente, this).setVisible(true);
+           new VentanaHeladero( (IGestorStockHeladero) gestorStock, (IGestorPromocionHeladero) gestorPromocion,(IGestorClienteHeladero) gestorCliente,(IGestorFacturaHeladero) gestorFactura, this).setVisible(true);
            usuarioHeladero.setText("");
            passHeladero.setText("");
            this.setVisible(false);

@@ -160,20 +160,22 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
     }
 
     // @Override // <-- Comentado, la firma del método en la interfaz ya no coincide
-    public void anularFactura(int idFactura) {
+    public boolean anularFactura(int idFactura) {
         Factura factura = buscarFactura(idFactura);
         if (factura != null) {
             factura.setTipoPago("ANULADA");
             factura.setPago(0.0);
             factura.setCambio(0.0);
             System.out.println("Factura " + idFactura + " anulada.");
+            return true;
         }
+        return false;
     }
 
     private void quemarDatosFacturas(GestorCliente gestorCliente, GestorPedido gestorPedido) {
 
         // --- Factura 1 (Cliente Ana Gomez, Pedido 1) ---
-        Cliente c1 = gestorCliente.buscarCliente("1718013350");
+        Cliente c1 = gestorCliente.buscarCliente("1755580402");
         Pedido p1 = gestorPedido.buscarPedido(1); // El primer pedido que creamos
         p1.setEstado("FACTURADO"); // Actualizamos el estado del pedido
 
@@ -192,7 +194,7 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
 
 
         // --- Factura 2 (Cliente Luis Parra, Pedido 2) ---
-        Cliente c2 = gestorCliente.buscarCliente("0925804008");
+        Cliente c2 = gestorCliente.buscarCliente("1755580428");
         Pedido p2 = gestorPedido.buscarPedido(2);
         p2.setEstado("FACTURADO");
 

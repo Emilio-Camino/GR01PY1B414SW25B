@@ -2,6 +2,7 @@ package facturacion.gestores.interfaces;
 
 import facturacion.elementos.Factura;
 import facturacion.elementos.ReporteVenta;
+import java.util.ArrayList;
 
 public interface IGestorFacturaHeladero {
 
@@ -17,5 +18,6 @@ public interface IGestorFacturaHeladero {
      * Anula una factura por su ID.
      * @param idFactura El ID de la factura a anular.
      */
-    void anularFactura(int idFactura);
+    boolean anularFactura(int idFactura);
+    public ArrayList<Factura> getListaFacturas();
 }
