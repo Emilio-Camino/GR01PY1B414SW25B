@@ -197,6 +197,8 @@ public class VentanaCajero extends javax.swing.JFrame {
         bttCargPed = new javax.swing.JButton();
         panelTab = new javax.swing.JScrollPane();
         tablaPedido = new javax.swing.JTable();
+        textID = new javax.swing.JLabel();
+        idCamp = new javax.swing.JTextField();
         panelResumFact = new javax.swing.JPanel();
         apliProm = new javax.swing.JCheckBox();
         laSubtotal = new javax.swing.JLabel();
@@ -231,12 +233,17 @@ public class VentanaCajero extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(5580, 365));
 
-        botonRegistrarPedido.setText("Registrar Pedido");
+        botonRegistrarPedido.setBackground(new java.awt.Color(102, 102, 102));
+        botonRegistrarPedido.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        botonRegistrarPedido.setForeground(new java.awt.Color(255, 255, 255));
+        botonRegistrarPedido.setText("REGISTRAR PEDIDO");
         botonRegistrarPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonRegistrarPedidoActionPerformed(evt);
             }
         });
+
+        jPanel5.setBackground(new java.awt.Color(255, 204, 255));
 
         botonAgregarHelado.setText("Agregar Helado");
         botonAgregarHelado.addActionListener(new java.awt.event.ActionListener() {
@@ -371,8 +378,10 @@ public class VentanaCajero extends javax.swing.JFrame {
                 .addGap(15, 15, 15))
         );
 
+        jLabel6.setBackground(new java.awt.Color(255, 255, 204));
         jLabel6.setText("Número de Pedido");
 
+        labelNumPedido.setBackground(new java.awt.Color(204, 255, 204));
         labelNumPedido.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         labelNumPedido.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
@@ -404,46 +413,47 @@ public class VentanaCajero extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(47, 47, 47)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(botonEliminarHelado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(comboHelados, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(41, 41, 41))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(134, 134, 134)
+                                .addGap(87, 87, 87)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel6)
                                         .addGap(32, 32, 32))
-                                    .addComponent(labelNumPedido, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(labelNumPedido, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(144, 144, 144))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(135, 135, 135)
-                                .addComponent(botonRegistrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(143, Short.MAX_VALUE))))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(botonEliminarHelado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel9)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(comboHelados, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(41, 41, 41))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(138, 138, 138)
+                        .addComponent(botonRegistrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(94, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGap(58, 58, 58)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(labelNumPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(labelNumPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(comboHelados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(botonEliminarHelado)
-                        .addGap(18, 18, 18)
-                        .addComponent(botonRegistrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(11, 11, 11))
+                        .addGap(27, 27, 27)
+                        .addComponent(botonRegistrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(15, 15, 15))
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Crear un Pedido", jPanel1);
@@ -651,22 +661,38 @@ public class VentanaCajero extends javax.swing.JFrame {
         ));
         panelTab.setViewportView(tablaPedido);
 
+        textID.setText("ID:");
+
+        idCamp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                idCampActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(bttCargPed)
-                    .addComponent(panelTab, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(panelTab, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(textID)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(idCamp, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(bttCargPed)))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(bttCargPed)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bttCargPed)
+                    .addComponent(textID)
+                    .addComponent(idCamp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelTab, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
@@ -834,6 +860,8 @@ public class VentanaCajero extends javax.swing.JFrame {
         jTabbedPane1.addTab("Generar Factura", PanelFactura);
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+
+        jPanel6.setBackground(new java.awt.Color(255, 255, 204));
 
         labelTotalFactura.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         labelTotalFactura.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -1224,28 +1252,41 @@ public class VentanaCajero extends javax.swing.JFrame {
 
     private void bttCargPedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttCargPedActionPerformed
         try {
-            int ultimoPedidoID = Pedido.getSiguienteNumPedido() - 1;
-            if (ultimoPedidoID == 0) {
-                JOptionPane.showMessageDialog(this, "Aún no se ha registrado ningún pedido en esta sesión.", "Error", JOptionPane.ERROR_MESSAGE);
+            // --- 1. OBTENER Y VALIDAR EL ID DEL CAMPO DE TEXTO ---
+            String idTexto = idCamp.getText().trim();
+            int pedidoID;
+
+            // Validamos que no esté vacío
+            if (idTexto.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, ingrese un Número de Pedido.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // 3. Buscar el pedido
-            Pedido pedidoACargar = this.gestorPedido.buscarPedido(ultimoPedidoID);
+            // Validamos que sea un número
+            try {
+                pedidoID = Integer.parseInt(idTexto);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "El Número de Pedido debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
+            // --- 2. USAR EL GESTOR PARA BUSCAR ESE ID ---
+            Pedido pedidoACargar = this.gestorPedido.buscarPedido(pedidoID);
+
+            // 3. Validar que el gestor lo haya encontrado
             if (pedidoACargar == null) {
-                JOptionPane.showMessageDialog(this, "Error: No se pudo encontrar el pedido #" + ultimoPedidoID, "Error del Gestor", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No se encontró ningún pedido con el ID: " + pedidoID, "Pedido no Encontrado", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // 4. Guardar el pedido
+            // --- 4. ¡GUARDAR EL PEDIDO PARA USARLO DESPUÉS! ---
             this.pedidoActualParaFacturar = pedidoACargar;
 
-            // 5. Obtener el modelo de la tabla
+            // 5. Obtener el "modelo" de la tabla
             javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tablaPedido.getModel();
             model.setRowCount(0); // Limpiar
 
-            // 6. Llenar la tabla
+            // 6. Llenar la tabla (Esta lógica es la misma que ya tenías)
             for (Helado helado : this.pedidoActualParaFacturar.getHelados()) {
                 int cantidad = 1;
                 String descripcion = helado.toString();
@@ -1254,6 +1295,7 @@ public class VentanaCajero extends javax.swing.JFrame {
 
                 model.addRow(new Object[]{cantidad, descripcion, pUnitario, total});
             }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado al cargar el pedido.", "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
@@ -1365,51 +1407,67 @@ public class VentanaCajero extends javax.swing.JFrame {
 
     private void botAniadirCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botAniadirCliActionPerformed
         try {
-            // 1. Obtener todos los datos de los campos
+            // --- 1. OBTENER Y LIMPIAR LOS DATOS ---
+            // Obtenemos el texto y, si ES el placeholder, lo convertimos en "" (vacío)
+
             String cedula = idCampo.getText().trim();
+            if (cedula.equals("Ej. 1315267891")) {
+                cedula = "";
+            }
+
             String nombre = nomCamp.getText().trim();
+            if (nombre.equals("Ej. Maria Lopez")) {
+                nombre = "";
+            }
+
             String direccion = dirCamp.getText().trim();
+            if (direccion.equals("Ej. Av. Amazonas OE1")) {
+                direccion = "";
+            }
+
             String email = emailCamp.getText().trim();
+            if (email.equals("Ej. marialope1@gmail.com")) {
+                email = "";
+            }
+
             String telefono = telefonoCamp.getText().trim();
+            if (telefono.equals("Ej. 0965742142")) {
+                telefono = "";
+            }
 
-            // 2. Validación de campos obligatorios
-            if (cedula.isEmpty() || cedula.equals("Ej. 1315267891")
-                    || nombre.isEmpty() || nombre.equals("Ej. Maria Lopez")
-                    || email.isEmpty() || email.equals("Ej. marialope1@gmail.com")) {
-
+            // --- 2. VALIDACIÓN (Ahora sí, solo revisamos si está vacío) ---
+            if (cedula.isEmpty() || nombre.isEmpty() || email.isEmpty()) {
                 throw new IllegalArgumentException("Los campos Cédula, Nombres y Email son obligatorios.");
             }
 
-            // 3. Crear el objeto Cliente
+            // --- 3. CREAR EL OBJETO CLIENTE ---
             Cliente nuevoCliente = new Cliente();
 
-            // --- Campos Obligatorios (con validación) ---
+            // Campos Obligatorios (con validación de Cliente.java)
             nuevoCliente.setCedula(cedula);
             nuevoCliente.setNombre(nombre);
             nuevoCliente.setCorreoElectronico(email);
 
-            // --- Campos Opcionales (con validación SÓLO SI no están vacíos) ---
-            // Si el campo Dirección no está vacío, validarlo.
-            if (!direccion.isEmpty() && !direccion.equals("Ej. Av. Amazonas OE1")) {
-                nuevoCliente.setDireccion(direccion); // Se valida aquí
+            // Campos Opcionales (con validación SÓLO SI no están vacíos)
+            if (!direccion.isEmpty()) {
+                nuevoCliente.setDireccion(direccion);
             } else {
-                nuevoCliente.setDireccion("N/A"); // Valor por defecto si está vacío
+                nuevoCliente.setDireccion("N/A"); // Valor por defecto
             }
 
-            // Si el campo Teléfono no está vacío, validarlo.
-            if (!telefono.isEmpty() && !telefono.equals("Ej. 0965742142")) {
-                nuevoCliente.setTelefono(telefono); // Se valida aquí
+            if (!telefono.isEmpty()) {
+                nuevoCliente.setTelefono(telefono);
             } else {
-                nuevoCliente.setTelefono("N/A"); // Valor por defecto si está vacío
+                nuevoCliente.setTelefono("N/A"); // Valor por defecto
             }
 
-            // 4. Llamar al Gestor para registrar
+            // --- 4. LLAMAR AL GESTOR ---
             this.gestorCliente.registrarCliente(nuevoCliente);
 
-            // 5. Éxito
+            // --- 5. ÉXITO ---
             JOptionPane.showMessageDialog(this, "Cliente '" + nombre + "' registrado con éxito.", "Cliente Guardado", JOptionPane.INFORMATION_MESSAGE);
 
-            // 6. Deshabilitar todo de nuevo (el cliente ya está guardado)
+            // --- 6. DESHABILITAR CAMPOS ---
             nomCamp.setEnabled(false);
             dirCamp.setEnabled(false);
             emailCamp.setEnabled(false);
@@ -1417,7 +1475,7 @@ public class VentanaCajero extends javax.swing.JFrame {
             botAniadirCli.setEnabled(false);
 
         } catch (IllegalArgumentException e) {
-            // Captura errores de validación
+            // Captura TODOS los errores (de campos vacíos o de Cliente.java)
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error de Validación", JOptionPane.ERROR_MESSAGE);
 
         } catch (Exception e) {
@@ -1608,28 +1666,34 @@ public class VentanaCajero extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_botGenFactActionPerformed
 
-    private void limpiarPestanaFactura() {
-        // Resetea el cliente a "Consumidor Final"
-        radConsumidorFinal.setSelected(true);
+    private void idCampActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idCampActionPerformed
+        bttCargPed.doClick();
+    }//GEN-LAST:event_idCampActionPerformed
 
-        // Resetea campos clientes
+    private void limpiarPestanaFactura() {
+        // 1. Resetea el cliente a "Consumidor Final"
+        radConsumidorFinal.setSelected(true);
         radConsumidorFinalActionPerformed(null);
 
-        // Limpia la tabla
+        // 2. Limpia el campo de ID de Pedido
+        idCamp.setText("");
+
+        // 3. Limpia la tabla
         ((javax.swing.table.DefaultTableModel) tablaPedido.getModel()).setRowCount(0);
 
-        // Resetea el pedido guardado
+        // 4. Resetea el pedido guardado
         this.pedidoActualParaFacturar = null;
 
-        // Resetea el checkbox de promoción
+        // 5. Resetea el checkbox de promoción
         apliProm.setSelected(false);
 
-        // Resetea los totales
+        // 6. Resetea los totales
         valSubtotal.setText("$0.00");
         valDescuento.setText("-$0.00");
         valIVA.setText("$0.00");
         valTotal.setText("$0.00");
 
+        // 7. Vuelve a poner el texto de ejemplo (placeholder)
         agregarListenersDePlaceholder();
     }
     
@@ -1681,6 +1745,7 @@ public class VentanaCajero extends javax.swing.JFrame {
     private javax.swing.JTextField emailCamp;
     private javax.swing.JLabel emailCliente;
     private javax.swing.ButtonGroup grupoNumBolas;
+    private javax.swing.JTextField idCamp;
     private javax.swing.JTextField idCampo;
     private javax.swing.JLabel idCliente;
     private javax.swing.JLabel jLabel1;
@@ -1721,6 +1786,7 @@ public class VentanaCajero extends javax.swing.JFrame {
     private javax.swing.JTable tablaPedido;
     private javax.swing.JTextField telefonoCamp;
     private javax.swing.JLabel telfClient;
+    private javax.swing.JLabel textID;
     private javax.swing.JPanel titleFact;
     private javax.swing.JLabel valDescuento;
     private javax.swing.JLabel valIVA;
