@@ -1617,6 +1617,12 @@ public class VentanaCajero extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Debe presionar 'CARGAR PEDIDO' primero.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            
+            if (this.pedidoActualParaFacturar.getEstado().equals("FACTURADO")){
+            JOptionPane.showMessageDialog(this, "NO se puede emplear un pedido ya FACTURADO", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
             if (valTotal.getText().equals("$0.00") || valTotal.getText().equals("$0.0")) {
                 JOptionPane.showMessageDialog(this, "Debe presionar 'CALCULAR TOTAL' primero.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;

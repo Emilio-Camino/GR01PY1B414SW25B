@@ -103,7 +103,6 @@ public class LoginVentana extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("jButton1");
         jButton1.setBorderPainted(false);
         jButton1.setContentAreaFilled(false);
         jButton1.setFocusPainted(false);
