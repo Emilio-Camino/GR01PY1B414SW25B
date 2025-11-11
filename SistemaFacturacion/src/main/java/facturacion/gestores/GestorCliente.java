@@ -99,7 +99,7 @@ public class GestorCliente implements IGestorClienteCajero, IGestorClienteHelade
         }
 
         else {
-            // No hay errores: La actualización fue exitosa (los set de arriba funcionaron)
+            // No hay errores
             JOptionPane.showMessageDialog(
                 null, "¡Información del cliente actualizada con éxito!", 
                 "Éxito", JOptionPane.INFORMATION_MESSAGE);
@@ -116,7 +116,7 @@ public class GestorCliente implements IGestorClienteCajero, IGestorClienteHelade
         }
     }
 
-    // Reemplaza el método buggy con este
+    
     @Override
     public void registrarCliente(Cliente cliente) {
         // 1. Validar que el cliente que recibimos no sea nulo
@@ -127,7 +127,7 @@ public class GestorCliente implements IGestorClienteCajero, IGestorClienteHelade
 
         // 2. Verificar si ya existe
         if (this.buscarCliente(cliente.getCedula()) != null) {
-            // Como buscarCliente es silencioso, podemos mostrar un JOptionPane aquí
+            // Si existe moestrar en un panel
             JOptionPane.showMessageDialog(null,
                     "La cédula " + cliente.getCedula() + " ya está registrada.",
                     "Error al Guardar",
@@ -135,10 +135,10 @@ public class GestorCliente implements IGestorClienteCajero, IGestorClienteHelade
             return;
         }
 
-        // 3. Añadir el nuevo cliente (el que SÍ recibimos) a la lista
+        // 3. Añadir el nuevo cliente a la lista
         this.listaClientes.add(cliente);
         System.out.println("GestorCliente: Cliente " + cliente.getNombre() + " añadido con éxito.");
-        // (El JOptionPane de éxito ya lo muestra la VentanaCajero)
+        
     }
 
     private void quemarDatosClientes() {
