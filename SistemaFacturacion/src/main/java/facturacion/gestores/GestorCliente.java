@@ -116,25 +116,29 @@ public class GestorCliente implements IGestorClienteCajero, IGestorClienteHelade
         }
     }
 
-    public void registrarCliente (Cliente cliente) {
-        String nombre = "";
-        String cedula = "";
-        String direccion = "";
-        String telefono = "";
-        String correo = "";
-
-        Cliente clienteNuevo = new Cliente();
-
-        try {
-            clienteNuevo.setNombre(nombre);
-            clienteNuevo.setCedula(cedula);
-            clienteNuevo.setDireccion(direccion);
-            clienteNuevo.setTelefono(telefono);
-            clienteNuevo.setCorreoElectronico(correo);
+    // Reemplaza el método buggy con este
+    @Override
+    public void registrarCliente(Cliente cliente) {
+        // 1. Validar que el cliente que recibimos no sea nulo
+        if (cliente == null) {
+            System.out.println("GestorCliente: Se intentó registrar un cliente nulo.");
+            return;
         }
-        catch (IllegalArgumentException e) {
+
+        // 2. Verificar si ya existe
+        if (this.buscarCliente(cliente.getCedula()) != null) {
+            // Como buscarCliente es silencioso, podemos mostrar un JOptionPane aquí
+            JOptionPane.showMessageDialog(null,
+                    "La cédula " + cliente.getCedula() + " ya está registrada.",
+                    "Error al Guardar",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
         }
-        listaClientes.add(clienteNuevo);
+
+        // 3. Añadir el nuevo cliente (el que SÍ recibimos) a la lista
+        this.listaClientes.add(cliente);
+        System.out.println("GestorCliente: Cliente " + cliente.getNombre() + " añadido con éxito.");
+        // (El JOptionPane de éxito ya lo muestra la VentanaCajero)
     }
 
     private void quemarDatosClientes() {
