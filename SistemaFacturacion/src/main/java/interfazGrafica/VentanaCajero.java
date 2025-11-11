@@ -233,7 +233,7 @@ public class VentanaCajero extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(5580, 365));
 
-        botonRegistrarPedido.setBackground(new java.awt.Color(102, 102, 102));
+        botonRegistrarPedido.setBackground(new java.awt.Color(73, 159, 44));
         botonRegistrarPedido.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         botonRegistrarPedido.setForeground(new java.awt.Color(255, 255, 255));
         botonRegistrarPedido.setText("REGISTRAR PEDIDO");
@@ -242,8 +242,6 @@ public class VentanaCajero extends javax.swing.JFrame {
                 botonRegistrarPedidoActionPerformed(evt);
             }
         });
-
-        jPanel5.setBackground(new java.awt.Color(255, 204, 255));
 
         botonAgregarHelado.setText("Agregar Helado");
         botonAgregarHelado.addActionListener(new java.awt.event.ActionListener() {

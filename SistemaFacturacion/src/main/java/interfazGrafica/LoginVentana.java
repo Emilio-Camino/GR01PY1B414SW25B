@@ -72,13 +72,18 @@ public class LoginVentana extends javax.swing.JFrame {
 
         jLabel2.setText("Usuario");
 
-        usuarioHeladero.setBackground(new java.awt.Color(255, 255, 204));
+        usuarioHeladero.setBackground(new java.awt.Color(242, 242, 242));
         usuarioHeladero.setBorder(null);
 
         jLabel3.setText("Contraseña");
 
-        passHeladero.setBackground(new java.awt.Color(255, 255, 204));
+        passHeladero.setBackground(new java.awt.Color(242, 242, 242));
         passHeladero.setBorder(null);
+        passHeladero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passHeladeroActionPerformed(evt);
+            }
+        });
 
         errorLoginLabel.setForeground(new java.awt.Color(255, 51, 51));
         errorLoginLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -98,11 +103,15 @@ public class LoginVentana extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setIcon(new javax.swing.ImageIcon("C:\\Users\\elian\\NetBeans Project\\FacturacionHeladeria\\SistemaFacturacion\\src\\assets\\logo.png")); // NOI18N
         jButton1.setText("jButton1");
         jButton1.setBorderPainted(false);
         jButton1.setContentAreaFilled(false);
         jButton1.setFocusPainted(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout backPanelLayout = new javax.swing.GroupLayout(backPanel);
         backPanel.setLayout(backPanelLayout);
@@ -238,6 +247,14 @@ public class LoginVentana extends javax.swing.JFrame {
         this.setVisible(false);
 
     }//GEN-LAST:event_botonLoginCActionPerformed
+
+    private void passHeladeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passHeladeroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_passHeladeroActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
