@@ -283,7 +283,7 @@ public class VentanaCajero extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Numero de Bolas de Helado");
+        jLabel1.setText("Número de Bolas de Helado");
 
         sabor1Op.setModel(new javax.swing.DefaultComboBoxModel<>(SaborHelado.values()));
         sabor1Op.setBorder(null);

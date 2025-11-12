@@ -530,7 +530,7 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="labelCedula">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Cedula: "/>
+                <Property name="text" type="java.lang.String" value="C&#xe9;dula: "/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btnBuscarCliente">
@@ -595,7 +595,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="labelCedulaAct">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Cedula:"/>
+                    <Property name="text" type="java.lang.String" value="C&#xe9;dula:"/>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -651,7 +651,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="labelDireccionAct">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Direccion:"/>
+                    <Property name="text" type="java.lang.String" value="Direcci&#xf3;n:"/>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -716,7 +716,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="labelActualizarInformacion">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Actualizar informacion del Cliente"/>
+                    <Property name="text" type="java.lang.String" value="Actualizar Informaci&#xf3;n del Cliente"/>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">

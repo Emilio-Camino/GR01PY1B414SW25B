@@ -510,7 +510,7 @@ public class VentanaHeladero extends JFrame {
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
-        labelCedula.setText("Cedula: ");
+        labelCedula.setText("Cédula: ");
 
         btnBuscarCliente.setText("Buscar Cliente");
         btnBuscarCliente.addActionListener(new java.awt.event.ActionListener() {
@@ -545,7 +545,7 @@ public class VentanaHeladero extends JFrame {
         labelNombreAct.setText("Nombre:");
         jPanel6.add(labelNombreAct, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 44, -1, -1));
 
-        labelCedulaAct.setText("Cedula:");
+        labelCedulaAct.setText("Cédula:");
         jPanel6.add(labelCedulaAct, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 96, 47, -1));
 
         labelTelefonoAct.setText("Telefono:");
@@ -566,7 +566,7 @@ public class VentanaHeladero extends JFrame {
         });
         jPanel6.add(actTelefonoField, new org.netbeans.lib.awtextra.AbsoluteConstraints(73, 145, 116, -1));
 
-        labelDireccionAct.setText("Direccion:");
+        labelDireccionAct.setText("Dirección:");
         jPanel6.add(labelDireccionAct, new org.netbeans.lib.awtextra.AbsoluteConstraints(237, 41, -1, -1));
 
         labelCorreoAct.setText("Correo:");
@@ -595,7 +595,7 @@ public class VentanaHeladero extends JFrame {
         });
         jPanel6.add(btnAplicarCambios, new org.netbeans.lib.awtextra.AbsoluteConstraints(295, 145, -1, -1));
 
-        labelActualizarInformacion.setText("Actualizar informacion del Cliente");
+        labelActualizarInformacion.setText("Actualizar Información del Cliente");
         jPanel6.add(labelActualizarInformacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 7, -1, -1));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
