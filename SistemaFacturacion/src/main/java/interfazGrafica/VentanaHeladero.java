@@ -927,8 +927,6 @@ public class VentanaHeladero extends JFrame {
      }
      
     private void ocultarCamposActualizacion(boolean flag) {
-    // La variable 'flag' ya no se utiliza en esta lógica.
-    
     actCedulaField.setText("");
     actNombreField.setText("");
     actTelefonoField.setText("");
@@ -950,13 +948,6 @@ public class VentanaHeladero extends JFrame {
                 JOptionPane.showMessageDialog(null, "Se encontró al cliente", "Cliente Encontrado", JOptionPane.INFORMATION_MESSAGE);
                 activar_DesactivarLabelsActualizacion(true);
                 activar_DesactivarCamposActualizacion(false);
-                
-                actCedulaField.setText(cliente.getCedula());
-                actNombreField.setText(cliente.getNombre());
-                actCorreoField.setText(cliente.getCorreoElectronico());
-                actTelefonoField.setText(cliente.getTelefono());
-                actDireccionField.setText(cliente.getDireccion());
-
             }
         }
         else {
