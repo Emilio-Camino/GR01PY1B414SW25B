@@ -540,44 +540,33 @@ public class VentanaHeladero extends JFrame {
             }
         });
 
-        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
         labelNombreAct.setText("Nombre:");
-        jPanel6.add(labelNombreAct, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 44, -1, -1));
 
         labelCedulaAct.setText("Cédula:");
-        jPanel6.add(labelCedulaAct, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 96, 47, -1));
 
-        labelTelefonoAct.setText("Telefono:");
-        jPanel6.add(labelTelefonoAct, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 148, -1, -1));
+        labelTelefonoAct.setText("Teléfono:");
 
         actNombreField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 actNombreFieldActionPerformed(evt);
             }
         });
-        jPanel6.add(actNombreField, new org.netbeans.lib.awtextra.AbsoluteConstraints(73, 41, 116, -1));
-        jPanel6.add(actCedulaField, new org.netbeans.lib.awtextra.AbsoluteConstraints(73, 93, 116, -1));
 
         actTelefonoField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 actTelefonoFieldActionPerformed(evt);
             }
         });
-        jPanel6.add(actTelefonoField, new org.netbeans.lib.awtextra.AbsoluteConstraints(73, 145, 116, -1));
 
         labelDireccionAct.setText("Dirección:");
-        jPanel6.add(labelDireccionAct, new org.netbeans.lib.awtextra.AbsoluteConstraints(237, 41, -1, -1));
 
         labelCorreoAct.setText("Correo:");
-        jPanel6.add(labelCorreoAct, new org.netbeans.lib.awtextra.AbsoluteConstraints(237, 87, -1, -1));
 
         actCorreoField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 actCorreoFieldActionPerformed(evt);
             }
         });
-        jPanel6.add(actCorreoField, new org.netbeans.lib.awtextra.AbsoluteConstraints(296, 84, 116, -1));
 
         actDireccionField.setToolTipText("");
         actDireccionField.addActionListener(new java.awt.event.ActionListener() {
@@ -585,7 +574,6 @@ public class VentanaHeladero extends JFrame {
                 actDireccionFieldActionPerformed(evt);
             }
         });
-        jPanel6.add(actDireccionField, new org.netbeans.lib.awtextra.AbsoluteConstraints(296, 41, 116, -1));
 
         btnAplicarCambios.setText("Aplicar Cambios");
         btnAplicarCambios.addActionListener(new java.awt.event.ActionListener() {
@@ -593,10 +581,75 @@ public class VentanaHeladero extends JFrame {
                 btnAplicarCambiosActionPerformed(evt);
             }
         });
-        jPanel6.add(btnAplicarCambios, new org.netbeans.lib.awtextra.AbsoluteConstraints(295, 145, -1, -1));
 
         labelActualizarInformacion.setText("Actualizar Información del Cliente");
-        jPanel6.add(labelActualizarInformacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 7, -1, -1));
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(labelActualizarInformacion))
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(labelNombreAct)
+                .addGap(6, 6, 6)
+                .addComponent(actNombreField, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(48, 48, 48)
+                .addComponent(labelDireccionAct)
+                .addGap(6, 6, 6)
+                .addComponent(actDireccionField, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(labelCedulaAct, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6)
+                .addComponent(actCedulaField, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(48, 48, 48)
+                .addComponent(labelCorreoAct)
+                .addGap(20, 20, 20)
+                .addComponent(actCorreoField, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(labelTelefonoAct)
+                .addGap(3, 3, 3)
+                .addComponent(actTelefonoField, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(106, 106, 106)
+                .addComponent(btnAplicarCambios))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(7, 7, 7)
+                .addComponent(labelActualizarInformacion)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(labelNombreAct))
+                    .addComponent(actNombreField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelDireccionAct)
+                    .addComponent(actDireccionField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(21, 21, 21)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(labelCedulaAct))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addComponent(actCedulaField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(labelCorreoAct))
+                    .addComponent(actCorreoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(labelTelefonoAct))
+                    .addComponent(actTelefonoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAplicarCambios)))
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -919,6 +972,11 @@ public class VentanaHeladero extends JFrame {
 
     
     private void btnModificarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarClienteActionPerformed
+        //No tiene sentido modificar al consumidor final
+        if(cliente.getCedula().equals("9999999999")){
+            JOptionPane.showMessageDialog(null, "No se puede modificar a CONSUMIDOR FINAL", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         // Mostrar los campos para la actualización
         activar_DesactivarCamposActualizacion(true);
         btnAplicarCambios.setVisible(true);
@@ -933,12 +991,6 @@ public class VentanaHeladero extends JFrame {
 
     private void btnAplicarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAplicarCambiosActionPerformed
         String cedula = actCedulaField.getText().trim();
-        
-        if(cedula.equals("9999999999")){
-        JOptionPane.showMessageDialog(null, "NO puede modificarse a CONSUMIDOR FINAL", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-        }
-        
         String nombre = actNombreField.getText().trim();
         String correo = actCorreoField.getText().trim();
         String telefono = actTelefonoField.getText().trim();
@@ -949,6 +1001,11 @@ public class VentanaHeladero extends JFrame {
     }//GEN-LAST:event_btnAplicarCambiosActionPerformed
 
     private void btnEliminarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarClienteActionPerformed
+        //No tiene sentido eliminar al consumidor final
+        if(cliente.getCedula().equals("9999999999")){
+            JOptionPane.showMessageDialog(null, "No se puede eliminar a CONSUMIDOR FINAL", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         gestorCliente.eliminarCliente(cliente.getCedula());
         this.cliente = null;
         activar_DesactivarLabelsActualizacion(false);
