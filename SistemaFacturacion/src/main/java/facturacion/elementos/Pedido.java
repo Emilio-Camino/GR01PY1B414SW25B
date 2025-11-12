@@ -12,13 +12,9 @@ public class Pedido {
     private String estado;
     private ArrayList<Helado> helados;
 
-    public Pedido(ArrayList<Helado> helados) {
-        this.pedidoID = ++contadorPedido;
-        this.estado = "RECIBIDO";
-        this.helados = new ArrayList<>(helados);
-    }
+    //El constructor vacio permite que el gestor cree un pedido temporal (el recibir un llamado de la interfaz) sin que se afecte el contador de pedido
     public Pedido() {
-        this.pedidoID = ++contadorPedido;
+        this.pedidoID = 0;
         this.estado = "RECIBIDO";
         this.helados = new ArrayList<>();
     }
@@ -27,8 +23,9 @@ public class Pedido {
         return pedidoID;
     }
 
-    public void setPedidoID(int pedidoID) {
-        this.pedidoID = pedidoID;
+    public void asignarIDFinal() {
+        this.pedidoID = ++contadorPedido;
+        this.estado = "RECIBIDO";
     }
 
     public String getEstado() {

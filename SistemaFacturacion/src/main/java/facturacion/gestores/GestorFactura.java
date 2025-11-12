@@ -1,50 +1,38 @@
 package facturacion.gestores;
 
-import facturacion.elementos.Factura;
-import facturacion.elementos.ReporteVenta;
-import facturacion.elementos.Pedido;
-import facturacion.elementos.Cliente;
-import facturacion.elementos.Helado;
+import facturacion.elementos.*;
 import facturacion.elementos.enumeraciones.SaborHelado;
 import facturacion.elementos.enumeraciones.TipoRecipiente;
-
 import facturacion.gestores.interfaces.IGestorFacturaHeladero;
 import facturacion.gestores.interfaces.IGestorFacturaCajero;
 
+// Importar TODAS las clases de persistencia necesarias
+import facturacion.persistencia.ClientePersist;
+import facturacion.persistencia.FacturaPersist;
+import facturacion.persistencia.PedidoPersist;
+import facturacion.persistencia.PromocionPersist;
+import facturacion.persistencia.ReporteVentaPersist;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.List;
 
 public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCajero {
 
-    private ArrayList<Factura> listaFacturas;
-    private ArrayList<ReporteVenta> listaReporte;
+    public GestorFactura() {
 
-
-    // --- 3. Constructor ---
-    public GestorFactura(GestorCliente gestorCliente, GestorPedido gestorPedido) {
-        // Constructor
-        this.listaFacturas = new ArrayList<>();
-        this.listaReporte = new ArrayList<>();
-        quemarDatosFacturas(gestorCliente, gestorPedido);
     }
 
-    // --- 4. Métodos de IGestorFacturaCajero ---
-
+    // --- Métodos de IGestorFacturaCajero ---
     @Override
-    public Factura generarFactura(int pedidoID, String clienteCedula,
-                                  GestorPedido gestorPedido, GestorCliente gestorCliente,
-                                  GestorPromocion gestorPromocion) {
+    public Factura generarFactura(int pedidoID, String clienteCedula, boolean aplicaPromocion) {
 
-        // 1. Consulta
-        Pedido pedidoAFacturar = gestorPedido.buscarPedido(pedidoID); // Usa el parámetro
+        //Consultar datos de persistencia
+        Pedido pedidoAFacturar = PedidoPersist.buscarPedido(pedidoID);
+        Cliente clienteFactura = ClientePersist.buscarCliente(clienteCedula);
 
-        // 2. Busqueda
-        Cliente clienteFactura = gestorCliente.buscarCliente(clienteCedula); // Usa el parámetro
-
-        // 3. Verificacion
+        //Verificación
         if (pedidoAFacturar == null) {
             System.err.println("Error: No se encontró el pedido con ID " + pedidoID);
             return null;
@@ -53,74 +41,72 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
             System.err.println("Error: No se encontró el cliente con cédula " + clienteCedula);
             return null;
         }
+        if (pedidoAFacturar.getEstado().equals("FACTURADO")) {
+            System.err.println("Error: El pedido " + pedidoID + " ya fue facturado.");
+            // En una aplicación real, esto mostraría un JOptionPane
+            return null;
+        }
 
-        // 4. Calculo
-        double totalCalculado = this.calcularPrecio(pedidoAFacturar, gestorPromocion);
+        //Cálculo de precios
+        double subtotal = calcularSubtotal(pedidoAFacturar);
+        double descuento = 0.0;
+        if (aplicaPromocion) {
+            descuento = calcularDescuento(pedidoAFacturar);
+        }
 
-        double iva = totalCalculado * 0.12;
+        double baseImponible = subtotal - descuento;
+        double iva = baseImponible * 0.15; // 15% como en la GUI
+        double totalCalculado = baseImponible + iva;
 
-        // 5. Crear la Factura
-        Factura nuevaFactura = new Factura();
-        nuevaFactura.setFechaEmision(new Date());
-        nuevaFactura.setPedidos(pedidoAFacturar);
-        nuevaFactura.setCliente(clienteFactura);
-        nuevaFactura.setTotal(totalCalculado);
-        nuevaFactura.setImpuestoIVA(iva);
-        nuevaFactura.setTipoPago("PENDIENTE");
-        nuevaFactura.setPago(0.0);
-        nuevaFactura.setCambio(0.0);
+        //Crear la Factura (usando el constructor)
+        Factura nuevaFactura = new Factura(
+                pedidoAFacturar,
+                clienteFactura,
+                totalCalculado,
+                iva,
+                0.0,
+                0.0,
+                "PENDIENTE"
+        );
 
-        // 6. Almacenar y devolver
-        this.listaFacturas.add(nuevaFactura);
+        // 5. Lógica de persistencia: Asignar ID y Guardar
+        nuevaFactura.asignarIDFinal();
+        FacturaPersist.agregarFactura(nuevaFactura);
 
-        // Actualizar Estado ddel Pedido
-        gestorPedido.actualizarPedido(pedidoID, "FACTURADO");
+        // 6. Lógica de negocio: Actualizar Estado del Pedido
+        pedidoAFacturar.setEstado("FACTURADO");
 
-        System.out.println("Factura generada para el pedido " + pedidoID);
+        System.out.println("Factura " + nuevaFactura.getIdFactura() + " generada para el pedido " + pedidoID);
         return nuevaFactura;
     }
 
+    // --- Métodos de IGestorFacturaHeladero ---
 
+    /**
+     * Genera un reporte de ventas procesando todas las facturas
+     * activas de la capa de persistencia.
+     */
     @Override
-    public double calcularPrecio(Pedido pedido, GestorPromocion gestorPromocion) {
-
-        double subtotal = 0.0;
-        if (pedido.getHelados().size() > 0) {
-            subtotal = pedido.getHelados().size() * 3.50; //TODO calcularSubtotal
-        }
-
-        double descuento = 0.0;
-
-        return subtotal - descuento;
-    }
-
-
-    // --- 5. Métodos de IGestorFacturaHeladero ---
-
-    @Override
-        public ReporteVenta generarReporteVenta() {
+    public ReporteVenta generarReporteVenta() {
         double totalVentas = 0.0;
         int facturasProcesadas = 0;
-
-        // Mapas para llevar el conteo
         Map<SaborHelado, Integer> conteoSabor = new HashMap<>();
         Map<TipoRecipiente, Integer> conteoRecipiente = new HashMap<>();
 
-        for (Factura f : this.listaFacturas) {
+        // 1. Obtener datos de persistencia
+        List<Factura> todasLasFacturas = FacturaPersist.getListaFacturas();
+
+        // 2. Lógica de negocio: filtrar y procesar
+        for (Factura f : todasLasFacturas) {
             if (!f.getTipoPago().equals("ANULADA")) {
                 totalVentas += f.getTotal();
                 facturasProcesadas++;
-
                 Pedido pedido = f.getPedido();
 
                 if (pedido != null) {
-                    // Iterar los helados de ese pedido
                     for (Helado helado : pedido.getHelados()) {
-
                         TipoRecipiente tr = helado.getRecipiente().getTipo();
                         conteoRecipiente.put(tr, conteoRecipiente.getOrDefault(tr, 0) + 1);
-
-                        // Contar los sabores
                         for (SaborHelado sabor : helado.getSaborHelado()) {
                             conteoSabor.put(sabor, conteoSabor.getOrDefault(sabor, 0) + 1);
                         }
@@ -129,7 +115,7 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
             }
         }
 
-        // Encontrar el más vendido
+        // 3. Lógica de negocio: encontrar más vendidos
         SaborHelado saborMasVendido = conteoSabor.entrySet().stream()
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
@@ -140,7 +126,7 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
                 .map(Map.Entry::getKey)
                 .orElse(null);
 
-        // Crear el reporte con TODOS los datos (incluyendo los mapas)
+        // 4. Lógica de negocio: Crear el reporte
         ReporteVenta reporte = new ReporteVenta(
                 totalVentas,
                 facturasProcesadas,
@@ -150,24 +136,35 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
                 conteoRecipiente
         );
 
-        this.listaReporte.add(reporte);
+        // 5. Lógica de persistencia: Asignar ID y guardar
+        reporte.asignarIDFinal();
+        ReporteVentaPersist.agregarReporte(reporte);
+
         return reporte;
     }
 
+    /**
+     * Busca una factura en la capa de persistencia.
+     */
     @Override
     public Factura buscarFactura(int idFactura) {
-        for (Factura f : this.listaFacturas) {
-            if (f.getIdFactura() == idFactura) {
-                return f;
-            }
+        Factura f = FacturaPersist.buscarFactura(idFactura);
+        if (f == null) {
+            System.err.println("Factura " + idFactura + " no encontrada.");
         }
-        System.err.println("Factura " + idFactura + " no encontrada.");
-        return null;
+        return f;
     }
 
+    /**
+     * Anula una factura. Busca la factura en persistencia y modifica
+     * su estado en memoria. (La persistencia la mantiene modificada).
+     */
     @Override
     public boolean anularFactura(int idFactura) {
-        Factura factura = buscarFactura(idFactura);
+        // 1. Lógica de negocio: Buscar el objeto
+        Factura factura = FacturaPersist.buscarFactura(idFactura);
+
+        // 2. Lógica de negocio: Modificar el objeto
         if (factura != null) {
             factura.setTipoPago("ANULADA");
             factura.setPago(0.0);
@@ -178,66 +175,57 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
         return false;
     }
 
-    private void quemarDatosFacturas(GestorCliente gestorCliente, GestorPedido gestorPedido) {
-
-        // --- Factura 1 (Cliente Ana Gomez, Pedido 1) ---
-        Cliente c1 = gestorCliente.buscarCliente("1712345675");
-        Pedido p1 = gestorPedido.buscarPedido(1);
-        p1.setEstado("FACTURADO");
-
-        // Usamos el constructor completo
-        // (El ID '0' es ignorado y se autoincrementa)
-        Factura f1 = new Factura(
-                p1, c1,
-                5.00, // total
-                0.60, // iva
-                10.00, // pago
-                4.40, // cambio
-                "EFECTIVO"
-        );
-        f1.setFechaEmision(new Date());
-        this.listaFacturas.add(f1);
-
-
-        // --- Factura 2 (Cliente Luis Parra, Pedido 2) ---
-        Cliente c2 = gestorCliente.buscarCliente("0920012341");
-        Pedido p2 = gestorPedido.buscarPedido(2);
-        p2.setEstado("FACTURADO");
-
-        Factura f2 = new Factura(
-                p2, c2,
-                1.50, // total
-                0.18, // iva
-                1.50, // pago
-                0.00, // cambio
-                "EFECTIVO"
-        );
-        f2.setFechaEmision(new Date());
-        this.listaFacturas.add(f2);
-
-
-        // --- Factura 3 (Consumidor Final, Pedido 3) ---
-        Cliente c3 = gestorCliente.buscarCliente("9999999999");
-        Pedido p3 = gestorPedido.buscarPedido(3);
-        p3.setEstado("FACTURADO");
-
-        Factura f3 = new Factura(
-                p3, c3,
-                2.00, // total (precio del helado de fresa con promo)
-                0.24, // iva
-                2.00, // pago
-                0.00, // cambio
-                "EFECTIVO"
-        );
-        f3.setFechaEmision(new Date());
-        this.listaFacturas.add(f3);
-    }
-
+    /**
+     * Obtiene la lista completa de facturas desde la persistencia.
+     */
+    @Override
     public ArrayList<Factura> getListaFacturas() {
-        return listaFacturas;
+        return FacturaPersist.getListaFacturas();
     }
 
-    public ArrayList<ReporteVenta> getListaReporte() {
-        return listaReporte;
+
+    // --- Métodos Privados de Lógica de Negocio ---
+
+    /**
+     * Calcula el subtotal (suma de precios de helados) de un pedido.
+     */
+    private double calcularSubtotal(Pedido pedido) {
+        double subtotal = 0.0;
+        if (pedido == null || pedido.getHelados() == null) {
+            return 0.0;
+        }
+        for (Helado helado : pedido.getHelados()) {
+            subtotal += helado.getPrecio();
+        }
+        return subtotal;
+    }
+
+    /**
+     * Calcula el descuento para un pedido basándose en la promoción
+     * activa (obtenida de persistencia).
+     */
+    private double calcularDescuento(Pedido pedido) {
+        double descuento = 0.0;
+        if (pedido == null || pedido.getHelados() == null) {
+            return 0.0;
+        }
+
+        // Asume que la promoción se busca de persistencia.
+        // Tu GUI parece hardcodear la promo 1
+        Promocion promo = PromocionPersist.buscarPromocion(1);
+
+        if (promo != null) {
+            SaborHelado saborEnPromo = promo.getSaborPromocion();
+            double porcentajeDesc = promo.getPorcentajeDescuento(); // Ej. 0.15
+
+            for (Helado helado : pedido.getHelados()) {
+                for (BolaHelado bola : helado.getBolasHelado()) {
+                    if (bola.getSabor() == saborEnPromo) {
+                        descuento += bola.getPrecio() * porcentajeDesc;
+                    }
+                }
+            }
+        }
+        return descuento;
     }
 }
