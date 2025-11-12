@@ -6,6 +6,8 @@ import facturacion.gestores.GestorCliente;
 import facturacion.gestores.GestorPedido;
 import facturacion.gestores.GestorPromocion;
 
+import java.util.Map;
+
 public interface IGestorFacturaCajero {
 
     /**
@@ -16,7 +18,25 @@ public interface IGestorFacturaCajero {
     Factura generarFactura(int pedidoID, String clienteCedula, boolean aplicaPromocion);
 
     /**
-     * Calcula el precio total de un pedido (aplicando promociones).
-     * @param pedido El pedido del cual calcular el total.
+     * Valida si el pago realizado es valido.
+     * @param pago es el valor que paga el cliente.
+     * @param total es el total de la factura.
      */
+    public boolean validarPago(String pago, double total);
+    /**
+     * Calcula el cambio
+     * * @param total es el total de la factura.
+     * @param pago es el valor que paga el cliente.
+     */
+    public double calcularCambio(double total, double pago);
+
+    /**
+     * Calcula todos los totales para un pedido (subtotal, descuento, iva, total)
+     * SIN generar una factura. Se usa para la previsualización en la GUI.
+     * @param pedidoID El ID del pedido a calcular.
+     * @param aplicaPromocion Si el cajero marcó la promoción.
+     * @return Un Map<String, Double> con las claves "subtotal", "descuento", "iva", y "total".
+     */
+    public Map<String, Double> calcularTotalesPedido(int pedidoID, boolean aplicaPromocion);
+
 }

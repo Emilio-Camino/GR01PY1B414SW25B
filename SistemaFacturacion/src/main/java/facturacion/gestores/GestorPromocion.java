@@ -23,6 +23,13 @@ public class GestorPromocion implements IGestorPromocionCajero, IGestorPromocion
 
     @Override
     public boolean agregarPromocion(SaborHelado sabor, double porcentaje) {
+        
+        if(PromocionPersist.buscarPromocionPorSabor(sabor) != null){
+            modificarPromocion(sabor, porcentaje);
+            return false;
+        }
+        
+        
         // 1. Crear el objeto
         Promocion promocion = new Promocion(porcentaje, sabor);
 
@@ -31,6 +38,11 @@ public class GestorPromocion implements IGestorPromocionCajero, IGestorPromocion
 
         // 3.  Guardar el objeto
         PromocionPersist.agregarPromocion(promocion);
+        return true;
+    }
+
+    public boolean modificarPromocion(SaborHelado sabor, double porcentaje) {
+        PromocionPersist.buscarPromocionPorSabor(sabor).setPorcentajeDescuento(porcentaje);
         return true;
     }
 

@@ -1465,20 +1465,18 @@ int index = jListFacturas.getSelectedIndex();
             return;
         }
 
-        boolean actualizacionExitosa = false;
+        boolean creacionExitosa = false;
 
         try {
             SaborHelado sabor = SaborHelado.valueOf(itemSeleccionadoStr);
-             actualizacionExitosa = gestorPromocion.agregarPromocion(sabor, nuevoPorcentaje);
-
-            actualizacionExitosa = true;
-
+             creacionExitosa = gestorPromocion.agregarPromocion(sabor, nuevoPorcentaje);
+             
         } catch (IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(this, "Error: Sabor no reconocido.", "Error Interno", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        if (actualizacionExitosa) {
+        if (creacionExitosa) {
             JOptionPane.showMessageDialog(
                     this,
                     "Promoción " + itemSeleccionadoStr + " aplicado promoción de " + nuevoPorcentaje + "%.",
@@ -1488,12 +1486,9 @@ int index = jListFacturas.getSelectedIndex();
             cargarPromociones();
             newStockPromocion.setText("");
         } else {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "La actualización falló. Verifique la lógica del gestor.",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-            );
+            JOptionPane.showMessageDialog(null, "La promoción para dicho sabor ya existe, se modificó el descuento en su lugar", "Información", JOptionPane.INFORMATION_MESSAGE);
+            cargarPromociones();
+            newStockPromocion.setText("");
         }
     }
 
