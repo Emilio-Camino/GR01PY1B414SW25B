@@ -1,103 +1,159 @@
 package facturacion.gestores;
 
-// Importaciones de Java
-import java.util.ArrayList;
-import facturacion.elementos.enumeraciones.*;
-
-// Importaciones de elementos
+import facturacion.elementos.Helado;
 import facturacion.elementos.Pedido;
+import facturacion.elementos.enumeraciones.SaborHelado;
+import facturacion.elementos.enumeraciones.TipoRecipiente;
 import facturacion.gestores.interfaces.IGestorPedido;
+import facturacion.gestores.interfaces.IGestorStockCajero; // Importar
+import facturacion.persistencia.PedidoPersist;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class GestorPedido implements IGestorPedido {
 
-    // --- 1. Atributos ---
-    private ArrayList<Pedido> listaPedidos;
-
-    // --- 2. Constructor ---
-    public GestorPedido() {
-        // Inicializamos la lista
-        this.listaPedidos = new ArrayList<>();
-        quemarDatosPedidos();
-    }
-
-
-    private void quemarDatosPedidos() {
-
-        // --- Pedido 1 (para Factura 1) ---
-        Pedido p1 = new Pedido();
-
-        // Helado 1.1: Cono con Chocolate y Vainilla
-        SaborHelado[] saboresH1 = {SaborHelado.CHOCOLATE, SaborHelado.VAINILLA};
-        p1.agregarHelado(TipoRecipiente.CONO, 2, saboresH1);
-
-        // Helado 1.2: Tulipán con Fresa, CookiesNCreate y RonPasas
-        SaborHelado[] saboresH2 = {SaborHelado.FRESA, SaborHelado.COOKIESNCREAM, SaborHelado.RONPASAS};
-        p1.agregarHelado(TipoRecipiente.TULIPAN, 3, saboresH2);
-
-        this.listaPedidos.add(p1);
-
-        // --- Pedido 2 (para Factura 2) ---
-        Pedido p2 = new Pedido();
-        // Helado 2.1: Vaso con Chicle
-        SaborHelado[] saboresH3 = {SaborHelado.CHICLE};
-        p2.agregarHelado(TipoRecipiente.VASO, 1, saboresH3);
-
-        this.listaPedidos.add(p2);
-
-        // --- Pedido 3 (para Factura 3) ---
-        Pedido p3 = new Pedido();
-        // Helado 3.1: Cono con Fresa (para probar la promoción)
-        SaborHelado[] saboresH4 = {SaborHelado.FRESA};
-        p3.agregarHelado(TipoRecipiente.CONO, 1, saboresH4);
-
-        this.listaPedidos.add(p3);
-    }
-
-    // --- 3. Métodos del Diagrama (con lógica) ---
+    private Pedido pedidoEnConstruccion; // El "carrito" ahora vive aquí
+    private IGestorStockCajero gestorStock;
 
     /**
-     * Inicia un nuevo pedido vacío y lo añade a la lista.
-     * Usa el constructor de Pedido.java.
-     * @return El Pedido recién creado.
+     * Constructor que recibe la dependencia del GestorStock.
+     * @param gestorStock Una instancia de IGestorStockCajero.
      */
-    @Override
-    public void iniciarNuevoPedido(Pedido pedidoNuevo) {
-        // Añadimos el pedido a nuestra lista
-        this.listaPedidos.add(pedidoNuevo);
-        JOptionPane.showMessageDialog(null, "Se añadió el pedido.");
+    public GestorPedido(IGestorStockCajero gestorStock) {
+        this.gestorStock = gestorStock;
+        // La persistencia se maneja estáticamente
     }
 
-    /**
-     * Busca un pedido en la lista usando su ID.
-     * @param pedidoID El ID del pedido a buscar.
-     * @return El Pedido si se encuentra, o null si no.
-     */
+    // --- MÉTODOS DEL "CARRITO" ---
+
     @Override
-    public Pedido buscarPedido(int pedidoID) {
-        for (Pedido pedido : this.listaPedidos) {
-            // Usamos el getter de tu clase Pedido
-            if (pedido.getPedidoID() == pedidoID) {
-                return pedido; // Encontrado
+    public void iniciarNuevoPedido() {
+        this.pedidoEnConstruccion = new Pedido(); // Crea un carrito vacío
+    }
+
+    @Override
+    public boolean agregarHelado(TipoRecipiente tipo, ArrayList<SaborHelado> sabores) {
+
+        // 1. Lógica de validación de stock (MOVIDA DESDE VENTANACAJERO)
+        Map<SaborHelado, Integer> conteoRequerido = new HashMap<>();
+        for (SaborHelado sabor : sabores) {
+            conteoRequerido.put(sabor, conteoRequerido.getOrDefault(sabor, 0) + 1);
+        }
+
+        // 2. Verificar Stock de Sabores
+        for (Map.Entry<SaborHelado, Integer> entry : conteoRequerido.entrySet()) {
+            if (!verificarStockSabor(entry.getKey(), entry.getValue())) {
+                return false; // El método interno ya mostró el error
             }
         }
-        return null; // No encontrado
+
+        // 3. Verificar Stock de Recipiente
+        if (!verificarStockRecipiente(tipo, 1)) {
+            return false; // El método interno ya mostró el error
+        }
+
+        // 4. Si hay stock, DECREMENTAR stock y CREAR el helado
+        Helado nuevoHelado = new Helado(tipo);
+        gestorStock.decrementarStockRecipiente(tipo, 1);
+
+        for (SaborHelado sabor : sabores) {
+            nuevoHelado.agregarBola(sabor);
+            gestorStock.decrementarStockSabor(sabor, 1);
+        }
+
+        // 5. Agregar al pedido en construcción
+        this.pedidoEnConstruccion.getHelados().add(nuevoHelado);
+        return true;
+    }
+
+    @Override
+    public boolean eliminarHelado(int pedidoID) {
+        if (pedidoID < 0 || pedidoID >= this.pedidoEnConstruccion.getHelados().size()) {
+            return false; // Índice no válido
+        }
+
+        // 1. Obtener el helado que se va a eliminar
+        Helado heladoElim = this.pedidoEnConstruccion.getHelados().get(pedidoID);
+
+        // 2. Lógica de RESTOCK (MOVIDA DESDE VENTANACAJERO)
+        for (SaborHelado sabor : heladoElim.getSaborHelado()) {
+            gestorStock.aumentarStockSabor(sabor, 1);
+        }
+        gestorStock.aumentarStockRecipiente(heladoElim.getRecipiente().getTipo(), 1);
+
+        // 3. Eliminar helado del carrito
+        this.pedidoEnConstruccion.getHelados().remove(pedidoID);
+        return true;
+    }
+
+    @Override
+    public ArrayList<Helado> getHeladosDelPedidoActual() {
+        return this.pedidoEnConstruccion.getHelados();
+    }
+
+    @Override
+    public Pedido registrarPedidoActual() {
+        if (this.pedidoEnConstruccion.getHelados().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No hay helados en el pedido.", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        //1. Asignar el ID final al pedido
+        this.pedidoEnConstruccion.asignarIDFinal();
+
+        // 1. Guardar el pedido en persistencia
+        PedidoPersist.agregarPedido(this.pedidoEnConstruccion);
+
+        // Lógica de feedback (MOVIDA DESDE VENTANACAJERO)
+        JOptionPane.showMessageDialog(null, "Se añadió el pedido #" + this.pedidoEnConstruccion.getPedidoID() + ".");
+
+        Pedido guardado = this.pedidoEnConstruccion;
+
+        // 2. Resetear el carrito para el siguiente cliente
+        iniciarNuevoPedido();
+
+        return guardado;
     }
 
     /**
-     * Actualiza el estado de un pedido existente.
-     * @param pedidoID El ID del pedido a actualizar.
-     * @param nuevoEstado El nuevo estado (ej: "COMPLETADO", "FACTURADO").
+     * Devuelve todos los ítems del carrito al stock y resetea el carrito.
+     * Esto se llama cuando el usuario "abandona" el carrito (ej. cierra la ventana).
      */
-    public void actualizarPedido(int pedidoID, String nuevoEstado) {
-        // 1. Usamos nuestro método de búsqueda
-        Pedido pedidoAActualizar = buscarPedido(pedidoID);
+    @Override
+    public void cancelarPedidoActual() {
+        if (this.pedidoEnConstruccion != null && !this.pedidoEnConstruccion.getHelados().isEmpty()) {
 
-        // 2. Verificamos si se encontró
+            // Itera sobre cada helado en el carrito
+            for (Helado helado : this.pedidoEnConstruccion.getHelados()) {
+
+                // Devuelve los sabores de ese helado al stock
+                for (SaborHelado sabor : helado.getSaborHelado()) {
+                    gestorStock.aumentarStockSabor(sabor, 1);
+                }
+
+                // Devuelve el recipiente de ese helado al stock
+                gestorStock.aumentarStockRecipiente(helado.getRecipiente().getTipo(), 1);
+            }
+        }
+
+        // Finalmente, crea un nuevo carrito vacio
+        iniciarNuevoPedido();
+    }
+
+    // --- MÉTODOS DE PEDIDOS GUARDADOS ---
+
+    @Override
+    public Pedido buscarPedido(int pedidoID) {
+        return PedidoPersist.buscarPedido(pedidoID);
+    }
+
+    @Override
+    public void actualizarPedido(int pedidoID, String nuevoEstado) {
+        Pedido pedidoAActualizar = PedidoPersist.buscarPedido(pedidoID);
         if (pedidoAActualizar != null) {
-            // 3. Usamos el setter de tu clase Pedido
             pedidoAActualizar.setEstado(nuevoEstado);
             System.out.println("Pedido " + pedidoID + " actualizado a estado: " + nuevoEstado);
         } else {
@@ -105,21 +161,43 @@ public class GestorPedido implements IGestorPedido {
         }
     }
 
-    /**
-     * Elimina un pedido de la lista usando su ID.
-     * @param pedidoID El ID del pedido a eliminar.
-     */
+    @Override
     public void eliminarPedido(int pedidoID) {
-        
-        // Usamos removeIf con la cédula
-        boolean eliminado = this.listaPedidos.removeIf(
-            pedido -> pedido.getPedidoID() == pedidoID
-        );
-
+        boolean eliminado = PedidoPersist.eliminarPedido(pedidoID);
         if (eliminado) {
-            System.out.println("Pedido " + pedidoID + " eliminado.");
+            JOptionPane.showMessageDialog(null, "Pedido " + pedidoID + " eliminado.");
         } else {
-            System.out.println("No se pudo eliminar: Pedido " + pedidoID + " no encontrado.");
+            JOptionPane.showMessageDialog(null, "No se pudo eliminar: Pedido " + pedidoID + " no encontrado.");
         }
+    }
+
+    // --- MÉTODOS PRIVADOS DE AYUDA
+
+    private boolean verificarStockSabor(SaborHelado sabor, int cantidadRequerida) {
+        int stockDisponible = gestorStock.buscarBolasHelado(sabor);
+        if (cantidadRequerida > stockDisponible) {
+            JOptionPane.showMessageDialog(null,
+                    "¡Stock insuficiente para " + sabor + "!\n" +
+                            "Requerido: " + cantidadRequerida + "\n" +
+                            "Disponible: " + stockDisponible,
+                    "Error de Stock",
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean verificarStockRecipiente(TipoRecipiente tipo, int cantidadRequerida) {
+        int stockDisponible = gestorStock.buscarRecipiente(tipo);
+        if (cantidadRequerida > stockDisponible) {
+            JOptionPane.showMessageDialog(null,
+                    "¡Stock insuficiente para " + tipo + "!\n" +
+                            "Requerido: " + cantidadRequerida + "\n" +
+                            "Disponible: " + stockDisponible,
+                    "Error de Stock",
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
     }
 }

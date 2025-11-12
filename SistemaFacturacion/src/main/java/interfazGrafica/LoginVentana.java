@@ -255,7 +255,12 @@ public class LoginVentana extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
-
+    public void deshabilitarBotonCajero() {
+        // Se evita que el cajero ingrese si ya se cerró la caja
+        botonLoginC.setEnabled(false);
+        botonLoginC.setText("CAJA CERRADA");
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelLogin;
     private javax.swing.JPanel backPanel;

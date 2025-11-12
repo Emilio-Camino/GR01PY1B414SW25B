@@ -18,12 +18,11 @@ import java.util.ArrayList;
 import java.util.Locale;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
-import javax.swing.table.DefaultTableModel;
-import java.util.Locale;
+
 import facturacion.elementos.Promocion;
 import facturacion.elementos.BolaHelado;
-import facturacion.elementos.enumeraciones.SaborHelado;
 import facturacion.elementos.Factura;
+import facturacion.elementos.ReporteCierreCaja;
 import java.awt.Component;
 import java.awt.Font;
 import javax.swing.BorderFactory;
@@ -48,9 +47,10 @@ public class VentanaCajero extends javax.swing.JFrame {
     private IGestorPromocionCajero gestorPromocion;
     private IGestorClienteCajero gestorCliente;
     private IGestorFacturaCajero gestorFactura;
-    private ArrayList<Helado> heladosDelPedidoActual;
     private int numBolas = 0;
     private Pedido pedidoActualParaFacturar;
+    private int intentosCierreCaja = 3;
+    private double totalCajaCalculado = -1.0;
     
     /**
      * Creates new form VentanaCajero
@@ -64,8 +64,9 @@ public class VentanaCajero extends javax.swing.JFrame {
         this.gestorPromocion = gPromocion;
         this.gestorCliente = gCliente;
         this.gestorFactura = gFactura;
-        this.heladosDelPedidoActual = new ArrayList<>();
         
+        //Iniciando al persist de pedidos para mostrar el contador de pedidos adecuadamente
+        facturacion.persistencia.PedidoPersist.buscarPedido(-1);
         
        // Estilo de la Ventnana Tabbed
         Color tabBgColor = UIManager.getColor("TabbedPane.background");
@@ -78,11 +79,15 @@ public class VentanaCajero extends javax.swing.JFrame {
         initComponents();
         agregarListenersDePlaceholder(); 
         radConsumidorFinalActionPerformed(null);
+        this.gestorPedido.iniciarNuevoPedido();
+
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         //Listener que volvera al login cuando se cierre esta ventana
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                //Si hay un pedido en curso, cancelarlo y devolver stock
+                gestorPedido.cancelarPedidoActual();
                 //Volver a mostrar Login
                 loginDeOrigen.setVisible(true);
                 //Cerrar Cajero
@@ -103,7 +108,7 @@ public class VentanaCajero extends javax.swing.JFrame {
 
         grupoNumBolas = new javax.swing.ButtonGroup();
         buttonSelecCliente = new javax.swing.ButtonGroup();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tabCajero = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         botonRegistrarPedido = new javax.swing.JButton();
         botonRegistrarPedido.setBackground(softGreen);
@@ -228,7 +233,7 @@ public class VentanaCajero extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        jTabbedPane1.setBackground(new java.awt.Color(255, 255, 255));
+        tabCajero.setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(5580, 365));
@@ -454,7 +459,7 @@ public class VentanaCajero extends javax.swing.JFrame {
                 .addContainerGap(66, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Crear un Pedido", jPanel1);
+        tabCajero.addTab("Crear un Pedido", jPanel1);
 
         PanelFactura.setBackground(new java.awt.Color(255, 255, 255));
         PanelFactura.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
@@ -855,7 +860,7 @@ public class VentanaCajero extends javax.swing.JFrame {
 
         titleFact.getAccessibleContext().setAccessibleName("");
 
-        jTabbedPane1.addTab("Generar Factura", PanelFactura);
+        tabCajero.addTab("Generar Factura", PanelFactura);
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -946,19 +951,19 @@ public class VentanaCajero extends javax.swing.JFrame {
                 .addGap(39, 39, 39))
         );
 
-        jTabbedPane1.addTab("Cerrar Caja", jPanel4);
+        tabCajero.addTab("Cerrar Caja", jPanel4);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE)
+                .addComponent(tabCajero, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addComponent(tabCajero)
         );
 
         pack();
@@ -966,31 +971,76 @@ public class VentanaCajero extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonCerrarCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrarCajaActionPerformed
-        try{
+        
+        tabCajero.setEnabled(false);
+        // 1. Calcular el total del sistema
+    if (totalCajaCalculado == -1.0) {
+        totalCajaCalculado = gestorCaja.calcularTotalEfectivo();
+        labelTotalFactura.setText(String.format(Locale.US, "$ %.2f", totalCajaCalculado));
+    }
 
-            double totalIngresado = Double.parseDouble(campoTotalEfectivo.getText());
-            double totalCaja = gestorCaja.calcularTotalEfectivo((GestorFactura) gestorFactura);
+    // 2. Obtener el valor ingresado por el usuario
+    double totalIngresado;
+    try {
+        totalIngresado = Double.parseDouble(campoTotalEfectivo.getText());
+        if (totalIngresado < 0) throw new NumberFormatException();
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "El valor ingresado no es un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-            if(totalIngresado < 0 || totalIngresado > 100_000){
-                throw new IllegalArgumentException();
-            }
+    // 3. Llamar al gestor para verificar y GUARDAR el reporte
+    ReporteCierreCaja reporte = gestorCaja.verificarEstadoCaja(totalIngresado, totalCajaCalculado);
+    
+    // 4. Analizar el resultado del reporte
+    if (reporte.getEstado().equals("Balance")) {
+        
+        // --- CASO 1: ÉXITO ---
+        JOptionPane.showMessageDialog(this,
+                "¡Caja Cerrada!\n" +
+                "Estado: Balanceado\n" +
+                "ID de Reporte: " + reporte.getIdReporte(),
+                "Balance Correcto",
+                JOptionPane.INFORMATION_MESSAGE);
+        
+        loginDeOrigen.setVisible(true);
+        loginDeOrigen.deshabilitarBotonCajero();
+        //Cerrar Cajero
+        dispose();
+        
+    } else {
+        
+        // --- CASO 2: DESCUADRE ---
+        intentosCierreCaja--; // Quitar un intento
 
-            boolean estadoBalance = gestorCaja.verificarEstadoCaja(totalIngresado, totalCaja);
-            labelTotalFactura.setText( String.format(Locale.US, "$ %.2f", totalCaja) );
-
-            if(estadoBalance){
-                JOptionPane.showMessageDialog(null, "La Caja y el valor de efectivo ingresado están en Balance", "Balance Correcto",JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "El valor de efectivo ingresado no concuerda con el de Caja, intente de nuevo","Descuadre de Caja", JOptionPane.WARNING_MESSAGE);
-            }
-
-        }catch (NumberFormatException e){
-            JOptionPane.showMessageDialog(this, "El valor ingresado no es un número, utlice el punto (.) para decimales", "ERROR" ,JOptionPane.ERROR_MESSAGE);
-        }catch (NullPointerException e){
-            JOptionPane.showMessageDialog(this, "Por favor, llene los campos requeridos");
-        }catch (IllegalArgumentException e){
-            JOptionPane.showMessageDialog(this, "No puede ingresar valores negativos, tampoco tiene sentido valor exorbitantes", "ERROR" ,JOptionPane.ERROR_MESSAGE);
+        if (intentosCierreCaja > 0) {
+            
+            // --- Aún quedan intentos ---
+            JOptionPane.showMessageDialog(this,
+                    "¡Descuadre Detectado!\n" +
+                    "Estado: " + reporte.getEstado() + "\n" +
+                    "Descuadre: " + String.format(Locale.US, "$ %.2f", reporte.getDescuadre()) + "\n\n" +
+                    "Por favor, verifique e intente de nuevo.\n" +
+                    "Intentos restantes: " + intentosCierreCaja,
+                    "Descuadre de Caja",
+                    JOptionPane.WARNING_MESSAGE);
+        } else {
+            
+            // --- Se acabaron los intentos ---
+            JOptionPane.showMessageDialog(this,
+                    "Límite de intentos alcanzado.\n" +
+                    "El reporte final se ha guardado como: " + reporte.getEstado() + "\n" +
+                    "ID de Reporte: " + reporte.getIdReporte(),
+                    "Cierre de Caja Forzado",
+                    JOptionPane.ERROR_MESSAGE);
+            
+            // Resetear para un futuro cierre
+            loginDeOrigen.setVisible(true);
+            loginDeOrigen.deshabilitarBotonCajero();
+            //Cerrar Cajero
+            dispose();
         }
+    }
 
     }//GEN-LAST:event_botonCerrarCajaActionPerformed
     
@@ -1028,34 +1078,18 @@ public class VentanaCajero extends javax.swing.JFrame {
 
     private void botonAgregarHeladoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAgregarHeladoActionPerformed
         try {
-
-            // VALIDACIÓN DE CAMPOS OBLIGATORIOS ---
+            // --- 1. Validar seleccion de GUI ---
             if (grupoNumBolas.getSelection() == null) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Por favor, seleccione el número de bolas.");
-                return; // Detiene la ejecución del método
-            }
-            // Validar Recipiente
-            if (comboRecipiente.getSelectedItem() == null) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Por favor, seleccione un recipiente.");
                 return;
             }
 
-            // Validar Sabor 1 (Siempre va)
-            if (sabor1Op.getSelectedItem() == null) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Por favor, seleccione al menos el Sabor 1.");
-                return;
-            }
-
-            // --- 2. Obtener el Recipiente ---
+            // --- 2. Obtener Recipiente ---
             TipoRecipiente tipoRecipiente = (TipoRecipiente) comboRecipiente.getSelectedItem();
 
-            // --- 3. Obtener los Sabores ---
-            // Lista de Sabores
+            // --- 3. Obtener Sabores ---
             ArrayList<SaborHelado> saboresSeleccionados = new ArrayList<>();
-            
-            //Se toma los sabores elegidos
             saboresSeleccionados.add((SaborHelado) sabor1Op.getSelectedItem());
-
             if (numBolas >= 2) {
                 saboresSeleccionados.add((SaborHelado) sabor2Op.getSelectedItem());
             }
@@ -1063,94 +1097,29 @@ public class VentanaCajero extends javax.swing.JFrame {
                 saboresSeleccionados.add((SaborHelado) sabor3Op.getSelectedItem());
             }
 
-            // --- 3. Contar Frecuencia de Sabores ---
-            java.util.Map<SaborHelado, Integer> conteoRequerido = new java.util.HashMap<>();
-            for (SaborHelado sabor : saboresSeleccionados) {
-                conteoRequerido.put(sabor, conteoRequerido.getOrDefault(sabor, 0) + 1);
-            }
+            // --- 4. Llamar al GESTOR ---
+            boolean exito = gestorPedido.agregarHelado(tipoRecipiente, saboresSeleccionados);
 
-            // --- 4. VERIFICAR STOCK 
-            boolean stockSuficiente = true;
-            for (java.util.Map.Entry<SaborHelado, Integer> entry : conteoRequerido.entrySet()) {
-                SaborHelado sabor = entry.getKey();
-                int cantidadRequerida = entry.getValue();
-
-                // Se llama al gestor
-                int stockDisponibleSabor = gestorStock.buscarBolasHelado(sabor);
-
-                if (cantidadRequerida > stockDisponibleSabor) {
-                    // Si no hay stock, se muestra error
-                    javax.swing.JOptionPane.showMessageDialog(this,
-                        "¡Stock insuficiente para " + sabor + "!\n" +
-                        "Requerido: " + cantidadRequerida + "\n" +
-                        "Disponible: " + stockDisponibleSabor,
-                        "Error de Stock",
-                        javax.swing.JOptionPane.ERROR_MESSAGE);
-
-                    stockSuficiente = false;
-                    break; // Salir del bucle de verificación
-                }
-                
-                int cantidadRequeridaRecipiente = 1; // 1 helado siempre tiene solo 1 recipiente
-                int stockDisponible = gestorStock.buscarRecipiente(tipoRecipiente);
-
-                if (cantidadRequeridaRecipiente > stockDisponible) {
-                    // Si no hay stock, se muestra error
-                    javax.swing.JOptionPane.showMessageDialog(this,
-                            "¡Stock insuficiente para " + tipoRecipiente + "!\n" +
-                            "Requerido: " + cantidadRequeridaRecipiente + "\n" +
-                            "Disponible: " + stockDisponible,
-                            "Error de Stock",
-                            javax.swing.JOptionPane.ERROR_MESSAGE);
-
-                    stockSuficiente = false;
-                    break; // Salir del bucle
-                }
-                
-                
-            }
-
-            // --- 5. Si hay stock, proceder a crear el helado ---
-            if (stockSuficiente) {
-
-                Helado nuevoHelado = new Helado(tipoRecipiente);
-
-                // Decrementar Stock
-                for (SaborHelado sabor : saboresSeleccionados) {
-
-                    nuevoHelado.agregarBola(sabor);
-                    gestorStock.decrementarStockSabor(sabor, 1);
-                }
-                gestorStock.decrementarStockRecipiente(tipoRecipiente, 1);
-                //Permite ingresar un nuevo helado
+            // --- 5. Actualizar GUI
+            if (exito) {
                 limpiarCamposHelado();
-
-                heladosDelPedidoActual.add(nuevoHelado);
                 actualizarComboHelados();
-
             }
 
-        } catch (NullPointerException e) {
-            // Esto pasa si el usuario no seleccionó algo
-            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos del helado.");
         } catch (Exception e) {
-            // Otro error
             javax.swing.JOptionPane.showMessageDialog(this, "Error al agregar helado: " + e.getMessage());
         }
-
     }//GEN-LAST:event_botonAgregarHeladoActionPerformed
 
     private void botonRegistrarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistrarPedidoActionPerformed
-        // 1. Validar que el pedido no esté vacío
-        if (heladosDelPedidoActual.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "No hay helados en el pedido.");
+        // 2. Crear el objeto Pedido
+        Pedido nuevo = gestorPedido.registrarPedidoActual();
+
+        // Si el gestor devuelve null se sale del proceso.
+        if (nuevo == null) {
+            JOptionPane.showMessageDialog(null, "Error al registrar el pedido.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-        // 2. Crear el objeto Pedido
-        Pedido nuevo = new Pedido(heladosDelPedidoActual);
-        gestorPedido.iniciarNuevoPedido(nuevo);
-        
         // 1. Crear el panel principal
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -1204,8 +1173,7 @@ public class VentanaCajero extends javax.swing.JFrame {
                 "Pedido N° " + nuevo.getPedidoID(), // Título de la ventana
                 JOptionPane.INFORMATION_MESSAGE
         );
-        
-        heladosDelPedidoActual.clear();
+
         labelNumPedido.setText(String.format("# %d", Pedido.getSiguienteNumPedido()));
         actualizarComboHelados();
 
@@ -1216,35 +1184,23 @@ public class VentanaCajero extends javax.swing.JFrame {
     }//GEN-LAST:event_comboHeladosActionPerformed
 
     private void botonEliminarHeladoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEliminarHeladoActionPerformed
-       
-        // 1. Obtener el índice de lo que el usuario seleccionó en el ComboBox
-    int indiceSeleccionado = comboHelados.getSelectedIndex();
-    
-    // 2. MÉTODO DE CONTROL
-    // Si el índice es -1, lista está vacía o no hay nada seleccionado.
-    if (indiceSeleccionado == -1) {
-        JOptionPane.showMessageDialog(this, 
-                                    "No hay ningún helado seleccionado para eliminar.", 
-                                    "Error", 
-                                    JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-        
-        Helado heladoElim = heladosDelPedidoActual.get(indiceSeleccionado);
-        
-        // Ahora usamos tu método 'agregarBola' y DECREMENTAMOS el stock
-                for (SaborHelado sabor :heladoElim.getSaborHelado()) {
-                    gestorStock.aumentarStockSabor(sabor, 1);
-                }
-                gestorStock.aumentarStockRecipiente(heladoElim.getRecipiente().getTipo(), 1);
-                //Permite ingresar un nuevo helado
-                limpiarCamposHelado();
 
-    // 3. ELIMINACIÓN DEL HELADO
-    this.heladosDelPedidoActual.remove(indiceSeleccionado);
+        int indiceSeleccionado = comboHelados.getSelectedIndex();
 
-    // 4. ACTUALIZAR LA VISTA
-    actualizarComboHelados();
+        if (indiceSeleccionado == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "No hay ningún helado seleccionado para eliminar.",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // --- 1. Llamar al GESTOR ---
+        gestorPedido.eliminarHelado(indiceSeleccionado);
+
+        // --- 2. Actualizar lista visible en la GUI ---
+        actualizarComboHelados();
+        limpiarCamposHelado();
     
     }//GEN-LAST:event_botonEliminarHeladoActionPerformed
 
@@ -1279,12 +1235,14 @@ public class VentanaCajero extends javax.swing.JFrame {
 
             // --- 4. ¡GUARDAR EL PEDIDO PARA USARLO DESPUÉS! ---
             this.pedidoActualParaFacturar = pedidoACargar;
-
+            
+            JOptionPane.showMessageDialog(null,pedidoACargar.toString());
+            
             // 5. Obtener el "modelo" de la tabla
             javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tablaPedido.getModel();
             model.setRowCount(0); // Limpiar
 
-            // 6. Llenar la tabla (Esta lógica es la misma que ya tenías)
+            // 6. Llenar la tabla
             for (Helado helado : this.pedidoActualParaFacturar.getHelados()) {
                 int cantidad = 1;
                 String descripcion = helado.toString();
@@ -1406,79 +1364,40 @@ public class VentanaCajero extends javax.swing.JFrame {
     private void botAniadirCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botAniadirCliActionPerformed
         try {
             // --- 1. OBTENER Y LIMPIAR LOS DATOS ---
-            // Obtenemos el texto y, si ES el placeholder, lo convertimos en "" (vacío)
-
             String cedula = idCampo.getText().trim();
-            if (cedula.equals("Ej. 1315267891")) {
-                cedula = "";
-            }
+            if (cedula.equals("Ej. 1315267891")) cedula = "";
 
             String nombre = nomCamp.getText().trim();
-            if (nombre.equals("Ej. Maria Lopez")) {
-                nombre = "";
-            }
+            if (nombre.equals("Ej. Maria Lopez")) nombre = "";
 
             String direccion = dirCamp.getText().trim();
-            if (direccion.equals("Ej. Av. Amazonas OE1")) {
-                direccion = "";
+            if (direccion.equals("Ej. Av. Amazonas OE1") || direccion.isEmpty()) {
+                direccion = "N/A"; // Valor por defecto si está vacío
             }
 
             String email = emailCamp.getText().trim();
-            if (email.equals("Ej. marialope1@gmail.com")) {
-                email = "";
-            }
+            if (email.equals("Ej. marialope1@gmail.com")) email = "";
 
             String telefono = telefonoCamp.getText().trim();
-            if (telefono.equals("Ej. 0965742142")) {
-                telefono = "";
+            if (telefono.equals("Ej. 0965742142") || telefono.isEmpty()) {
+                telefono = "N/A"; // Valor por defecto si está vacío
             }
 
-            // --- 2. VALIDACIÓN (Ahora sí, solo revisamos si está vacío) ---
-            if (cedula.isEmpty() || nombre.isEmpty() || email.isEmpty()) {
-                throw new IllegalArgumentException("Los campos Cédula, Nombres y Email son obligatorios.");
+            // --- 2. LLAMAR AL GESTOR ---
+            boolean exito = this.gestorCliente.registrarCliente(nombre, cedula, email, direccion, telefono);
+
+            // --- 3. ÉXITO ---
+            if (exito) {
+                // Deshabilitar cambios de la UI
+                nomCamp.setEnabled(false);
+                dirCamp.setEnabled(false);
+                emailCamp.setEnabled(false);
+                telefonoCamp.setEnabled(false);
+                botAniadirCli.setEnabled(false);
             }
-
-            // --- 3. CREAR EL OBJETO CLIENTE ---
-            Cliente nuevoCliente = new Cliente();
-
-            // Campos Obligatorios (con validación de Cliente.java)
-            nuevoCliente.setCedula(cedula);
-            nuevoCliente.setNombre(nombre);
-            nuevoCliente.setCorreoElectronico(email);
-
-            // Campos Opcionales (con validación SÓLO SI no están vacíos)
-            if (!direccion.isEmpty()) {
-                nuevoCliente.setDireccion(direccion);
-            } else {
-                nuevoCliente.setDireccion("N/A"); // Valor por defecto
-            }
-
-            if (!telefono.isEmpty()) {
-                nuevoCliente.setTelefono(telefono);
-            } else {
-                nuevoCliente.setTelefono("N/A"); // Valor por defecto
-            }
-
-            // --- 4. LLAMAR AL GESTOR ---
-            this.gestorCliente.registrarCliente(nuevoCliente);
-
-            // --- 5. ÉXITO ---
-            JOptionPane.showMessageDialog(this, "Cliente '" + nombre + "' registrado con éxito.", "Cliente Guardado", JOptionPane.INFORMATION_MESSAGE);
-
-            // --- 6. DESHABILITAR CAMPOS ---
-            nomCamp.setEnabled(false);
-            dirCamp.setEnabled(false);
-            emailCamp.setEnabled(false);
-            telefonoCamp.setEnabled(false);
-            botAniadirCli.setEnabled(false);
-
-        } catch (IllegalArgumentException e) {
-            // Captura TODOS los errores (de campos vacíos o de Cliente.java)
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error de Validación", JOptionPane.ERROR_MESSAGE);
-
         } catch (Exception e) {
-            // Captura cualquier otro error
-            JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado al guardar el cliente.", "Error", JOptionPane.ERROR_MESSAGE);
+            // Error inesperado
+            JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }//GEN-LAST:event_botAniadirCliActionPerformed
@@ -1586,7 +1505,7 @@ public class VentanaCajero extends javax.swing.JFrame {
                         for (BolaHelado bola : helado.getBolasHelado()) {
                             if (bola.getSabor() == saborEnPromo) {
                                 // Suma el descuento (precio de la bola * porcentaje)
-                                descuento += bola.getPrecio() * porcentajeDesc;
+                                descuento += bola.getPrecio() * porcentajeDesc/100;
                             }
                         }
                     }
@@ -1634,27 +1553,26 @@ public class VentanaCajero extends javax.swing.JFrame {
             }
 
             // --- 2. LLAMAR AL GESTOR PARA CREAR LA FACTURA ---
-            Factura facturaGenerada = this.gestorFactura.generarFactura(
-                    this.pedidoActualParaFacturar.getPedidoID(),
-                    clienteCedula,
-                    (facturacion.gestores.GestorPedido) this.gestorPedido,
-                    (facturacion.gestores.GestorCliente) this.gestorCliente,
-                    (facturacion.gestores.GestorPromocion) this.gestorPromocion
-            );
+            // 1. Obtener la aprobacion de aplicar la promocion
+            boolean aplicarPromocion = apliProm.isSelected();
 
-            if (facturaGenerada == null) {
-                throw new NullPointerException("El gestor de facturas devolvió un objeto nulo (factura no creada).");
-            }
+            // 2. Se llama al gestor
+                        Factura facturaGenerada = this.gestorFactura.generarFactura(
+                                this.pedidoActualParaFacturar.getPedidoID(),
+                                clienteCedula,
+                                aplicarPromocion
+                        );
 
-            // --- 3. ASIGNAR VALORES DE LA UI A LA FACTURA ---
-            Cliente clienteDeFactura = this.gestorCliente.buscarCliente(clienteCedula);
-            facturaGenerada.setCliente(clienteDeFactura);
-            facturaGenerada.setPedidos(this.pedidoActualParaFacturar);
-            double ivaUI = Double.parseDouble(valIVA.getText().replace("$", ""));
+            // 3. Verifica si la factura se creó
+                        if (facturaGenerada == null) {
+                            return;
+                        }
+
+            // 4. Asignar valores
             double totalUI = Double.parseDouble(valTotal.getText().replace("$", ""));
-
-            facturaGenerada.setImpuestoIVA(ivaUI);
-            facturaGenerada.setTotal(totalUI);
+            facturaGenerada.setTipoPago("EFECTIVO");
+            facturaGenerada.setPago(totalUI);
+            facturaGenerada.setCambio(0.0); // O calcular el cambio
 
             // --- 4. MOSTRAR LA VENTANA DE FACTURA ---
             VentanaFactura factura = new VentanaFactura(this, true, facturaGenerada);
@@ -1718,11 +1636,12 @@ public class VentanaCajero extends javax.swing.JFrame {
     comboHelados.removeAllItems();
 
     // 2. Recorrer la lista de helados del pedido actual
-    for (Helado helado : this.heladosDelPedidoActual) {
+    for (Helado helado : this.gestorPedido.getHeladosDelPedidoActual()) {
         comboHelados.addItem(helado);
     }
 }
-    
+
+
     /**
      * @param args the command line arguments
      */
@@ -1767,7 +1686,6 @@ public class VentanaCajero extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel laSubtotal;
     private javax.swing.JLabel labelNumPedido;
     private javax.swing.JLabel labelTotalFactura;
@@ -1787,6 +1705,7 @@ public class VentanaCajero extends javax.swing.JFrame {
     private javax.swing.JComboBox<SaborHelado> sabor1Op;
     private javax.swing.JComboBox<SaborHelado> sabor2Op;
     private javax.swing.JComboBox<SaborHelado> sabor3Op;
+    private javax.swing.JTabbedPane tabCajero;
     private javax.swing.JTable tablaPedido;
     private javax.swing.JTextField telefonoCamp;
     private javax.swing.JLabel telfClient;

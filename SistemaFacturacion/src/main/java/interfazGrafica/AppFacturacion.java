@@ -13,14 +13,13 @@ import facturacion.gestores.*;
 public class AppFacturacion {
    
     public static void main(String args[]) {
-
         GestorStock gestorStock = new GestorStock();
-        GestorPedido gestorPedido = new GestorPedido();
+        GestorPedido gestorPedido = new GestorPedido(gestorStock);
         GestorCaja gestorCaja = new GestorCaja();
         GestorPromocion gestorPromocion = new GestorPromocion();
         GestorCliente gestorCliente = new GestorCliente();
 
-        GestorFactura gestorFactura = new GestorFactura(gestorCliente, gestorPedido);
+        GestorFactura gestorFactura = new GestorFactura();
         
 
         java.awt.EventQueue.invokeLater(new Runnable() {

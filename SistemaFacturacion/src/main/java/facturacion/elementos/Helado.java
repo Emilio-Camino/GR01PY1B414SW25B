@@ -17,12 +17,7 @@ public class Helado {
     }
 
     public void agregarBola(SaborHelado saborHelado) {
-
-        if (this.bolasHelado.size() < 3) {
             this.bolasHelado.add(new BolaHelado(saborHelado));
-        } else {
-            System.out.println("No se pueden agregar más de 3 bolas de helado.");
-        }
     }
 
     public Recipiente getRecipiente() {
@@ -64,15 +59,13 @@ public class Helado {
     
     @Override
     public String toString() {
-        // 1. Obtiene el nombre del recipiente (confiando en Recipiente.toString())
+        // 1. Obtiene el nombre del recipiente
         String nombreRecipiente = this.recipiente.toString();
         
         // 2. Obtiene el número de bolas
         int numBolas = this.bolasHelado.size();
         
-        // 3. Obtiene la lista de sabores (confiando en BolaHelado.toString() 
-        //    y en ArrayList.toString())
-        // El .toString() de un ArrayList genera: [item1, item2, item3]
+        // 3. Se especifica el tipo de recipiente + un arreglo de sabores, tal que [sabor1, sabor2, sabor3]
         String listaSabores = this.bolasHelado.toString();
 
         // 4. Combina todo en un string descriptivo
