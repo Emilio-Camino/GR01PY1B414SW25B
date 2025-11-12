@@ -580,9 +580,9 @@
                                       </Group>
                                       <Component id="emailCamp" alignment="0" min="-2" pref="295" max="-2" attributes="0"/>
                                       <Component id="nombresCliente" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="direccionCliente" alignment="0" min="-2" pref="61" max="-2" attributes="0"/>
                                       <Component id="emailCliente" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="idCliente" alignment="0" min="-2" pref="53" max="-2" attributes="0"/>
+                                      <Component id="direccionCliente" alignment="0" min="-2" pref="108" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>

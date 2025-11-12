@@ -6,7 +6,6 @@ import facturacion.elementos.enumeraciones.TipoRecipiente;
 import facturacion.gestores.interfaces.IGestorFacturaHeladero;
 import facturacion.gestores.interfaces.IGestorFacturaCajero;
 
-// Importar TODAS las clases de persistencia necesarias
 import facturacion.persistencia.ClientePersist;
 import facturacion.persistencia.FacturaPersist;
 import facturacion.persistencia.PedidoPersist;

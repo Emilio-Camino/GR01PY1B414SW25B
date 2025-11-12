@@ -67,7 +67,7 @@ public class VentanaHeladero extends JFrame {
         this.gestorPromocion = gPromocion;
         this.gestorCliente = gCliente;
         this.gestorFactura = gFactura;
-
+        actCedulaField.setEnabled(false);
         
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
@@ -856,8 +856,6 @@ public class VentanaHeladero extends JFrame {
         labelDireccionAct.setEnabled(flag);
         labelCorreoAct.setEnabled(flag);
         
-
-        actCedulaField.setEnabled(flag);
         actNombreField.setEnabled(flag);
         actTelefonoField.setEnabled(flag);
         actCorreoField.setEnabled(flag);
@@ -868,7 +866,6 @@ public class VentanaHeladero extends JFrame {
         
     }
      private void activar_DesactivarCamposActualizacion (boolean flag){
-        actCedulaField.setEnabled(flag);
         actNombreField.setEnabled(flag);
         actTelefonoField.setEnabled(flag);
         actCorreoField.setEnabled(flag);
@@ -900,6 +897,13 @@ public class VentanaHeladero extends JFrame {
                 JOptionPane.showMessageDialog(null, "Se encontró al cliente", "Cliente Encontrado", JOptionPane.INFORMATION_MESSAGE);
                 activar_DesactivarLabelsActualizacion(true);
                 activar_DesactivarCamposActualizacion(false);
+                
+                actCedulaField.setText(cliente.getCedula());
+                actNombreField.setText(cliente.getNombre());
+                actCorreoField.setText(cliente.getCorreoElectronico());
+                actTelefonoField.setText(cliente.getTelefono());
+                actDireccionField.setText(cliente.getDireccion());
+
             }
         }
         else {
@@ -918,7 +922,7 @@ public class VentanaHeladero extends JFrame {
         // Mostrar los campos para la actualización
         activar_DesactivarCamposActualizacion(true);
         btnAplicarCambios.setVisible(true);
-        // Muestro la informacion almacenada
+        // Mostrar la informacion almacenada
         actCedulaField.setText(cliente.getCedula());
         actNombreField.setText(cliente.getNombre());
         actCorreoField.setText(cliente.getCorreoElectronico());
@@ -929,6 +933,12 @@ public class VentanaHeladero extends JFrame {
 
     private void btnAplicarCambiosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAplicarCambiosActionPerformed
         String cedula = actCedulaField.getText().trim();
+        
+        if(cedula.equals("9999999999")){
+        JOptionPane.showMessageDialog(null, "NO puede modificarse a CONSUMIDOR FINAL", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+        }
+        
         String nombre = actNombreField.getText().trim();
         String correo = actCorreoField.getText().trim();
         String telefono = actTelefonoField.getText().trim();
@@ -1178,7 +1188,7 @@ int index = jListFacturas.getSelectedIndex();
         lblClienteNombre.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(lblClienteNombre);
         
-        JLabel lblClienteCedula = new JLabel("Cédula/RUC: " + factura.getCliente().getCedula());
+        JLabel lblClienteCedula = new JLabel("Cédula: " + factura.getCliente().getCedula());
         lblClienteCedula.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         lblClienteCedula.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(lblClienteCedula);

@@ -41,7 +41,7 @@ public class FacturaPersist {
         Pedido p1 = PedidoPersist.buscarPedido(1);
         if (p1 != null) p1.setEstado("FACTURADO");
 
-        Factura f1 = new Factura(p1, c1, 5.00, 0.60, 10.00, 4.40, "EFECTIVO");
+        Factura f1 = new Factura(p1, c1, 5.00, 0.60, 10.00, 5.00, "EFECTIVO");
         f1.setFechaEmision(new Date());
         f1.asignarIDFinal(); // Asigna ID 1
         listaFacturas.add(f1);

@@ -35,14 +35,14 @@ public class Factura {
         this.idFactura = ++contadorFactura;
     }
 
-    // --- Getters y Setters (sin cambios) ---
+    // --- Getters y Setters ---
 
     public int getIdFactura() { return idFactura; }
     public void setIdFactura(int idFactura) { this.idFactura = idFactura; }
     public Pedido getPedido() { return pedidos; }
     public void setPedidos(Pedido pedido) { this.pedidos = pedido; }
     public Cliente getCliente() { return cliente; }
-    public void setCliente(Cliente cliente) { this.cliente = cliente; }
+    public void setCliente(Cliente cliente) { this.cliente = cliente; } 
     public double getTotal() { return total; }
     public void setTotal(double total) { this.total = total; }
     public Date getFechaEmision() { return fechaEmision; }
