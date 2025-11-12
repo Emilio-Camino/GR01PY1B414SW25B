@@ -302,7 +302,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel1">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Numero de Bolas de Helado"/>
+                    <Property name="text" type="java.lang.String" value="N&#xfa;mero de Bolas de Helado"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="sabor1Op">
