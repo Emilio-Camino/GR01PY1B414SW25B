@@ -66,8 +66,9 @@ public class VentanaCajero extends javax.swing.JFrame {
         this.gestorCliente = gCliente;
         this.gestorFactura = gFactura;
         
-        //Iniciando al persist de pedidos y factura para mostrar el contador de pedidos y los pedidos ya facturados adecuadamente
+        //Iniciando al persist de pedidos, factura y caja para mostrar el contador de pedidos y los pedidos ya facturados adecuadamente
         facturacion.persistencia.PedidoPersist.buscarPedido(-1);
+        facturacion.persistencia.FacturaPersist.buscarFactura(-1);
         facturacion.persistencia.FacturaPersist.buscarFactura(-1);
         
        // Estilo de la Ventnana Tabbed
@@ -79,6 +80,14 @@ public class VentanaCajero extends javax.swing.JFrame {
         UIManager.put("TabbedPane.drawFocusIndicator", false);
         
         initComponents();
+        //Listener para actualizar el total de la caja
+        tabCajero.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                // Llamara al metodo cada vez que se cambie de pestania
+                tabCajeroStateChanged(evt);
+            }
+        });
+        
         agregarListenersDePlaceholder(); 
         radConsumidorFinalActionPerformed(null);
         this.gestorPedido.iniciarNuevoPedido();
@@ -987,14 +996,8 @@ public class VentanaCajero extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonCerrarCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrarCajaActionPerformed
-        
+    // 1. Se deshabilita el resto de pestanias
         tabCajero.setEnabled(false);
-        // 1. Calcular el total del sistema
-    if (totalCajaCalculado == -1.0) {
-        totalCajaCalculado = gestorCaja.calcularTotalEfectivo();
-        labelTotalFactura.setText(String.format(Locale.US, "$ %.2f", totalCajaCalculado));
-    }
-
     // 2. Obtener el valor ingresado por el usuario
     double totalIngresado;
     try {
@@ -1063,7 +1066,8 @@ public class VentanaCajero extends javax.swing.JFrame {
    
     
     private void campoTotalEfectivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoTotalEfectivoActionPerformed
-
+            totalCajaCalculado = gestorCaja.calcularTotalEfectivo();
+            labelTotalFactura.setText(String.format(Locale.US, "$ %.2f", totalCajaCalculado));
     }//GEN-LAST:event_campoTotalEfectivoActionPerformed
 
     private void sabor2OpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sabor2OpActionPerformed
@@ -1626,9 +1630,22 @@ public class VentanaCajero extends javax.swing.JFrame {
     for (Helado helado : this.gestorPedido.getHeladosDelPedidoActual()) {
         comboHelados.addItem(helado);
     }
-}
+}   
+    ///Metodo para recalcular total de la facturas al entrar a "Cerrar Caja"
+    private void tabCajeroStateChanged(javax.swing.event.ChangeEvent evt) {
+        // Obtener el panel que está seleccionado
+        Component panelSeleccionado = tabCajero.getSelectedComponent();
 
+        // Comprobar si el panel seleccionado es el jPanel4 (Cerrar Caja)
+        if (panelSeleccionado == jPanel4) {
 
+            // Se recalcula el total cada que se entra a esta pestaniaa.
+            totalCajaCalculado = gestorCaja.calcularTotalEfectivo();
+            labelTotalFactura.setText(String.format(Locale.US, "$ %.2f", totalCajaCalculado));
+        }
+    }
+    
+    
     /**
      * @param args the command line arguments
      */
