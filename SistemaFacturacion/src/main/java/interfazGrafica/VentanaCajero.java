@@ -25,6 +25,7 @@ import facturacion.elementos.Factura;
 import facturacion.elementos.ReporteCierreCaja;
 import java.awt.Component;
 import java.awt.Font;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -65,8 +66,9 @@ public class VentanaCajero extends javax.swing.JFrame {
         this.gestorCliente = gCliente;
         this.gestorFactura = gFactura;
         
-        //Iniciando al persist de pedidos para mostrar el contador de pedidos adecuadamente
+        //Iniciando al persist de pedidos y factura para mostrar el contador de pedidos y los pedidos ya facturados adecuadamente
         facturacion.persistencia.PedidoPersist.buscarPedido(-1);
+        facturacion.persistencia.FacturaPersist.buscarFactura(-1);
         
        // Estilo de la Ventnana Tabbed
         Color tabBgColor = UIManager.getColor("TabbedPane.background");
@@ -217,6 +219,8 @@ public class VentanaCajero extends javax.swing.JFrame {
         valTotal = new javax.swing.JLabel();
         botCalTotal = new javax.swing.JButton();
         botGenFact = new javax.swing.JButton();
+        fieldPago = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         labelTotalFactura = new javax.swing.JLabel();
@@ -456,7 +460,7 @@ public class VentanaCajero extends javax.swing.JFrame {
                         .addComponent(botonRegistrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(15, 15, 15))
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addContainerGap(86, Short.MAX_VALUE))
         );
 
         tabCajero.addTab("Crear un Pedido", jPanel1);
@@ -636,7 +640,7 @@ public class VentanaCajero extends javax.swing.JFrame {
                 .addComponent(telefonoCamp, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(botAniadirCli)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(231, 253, 234));
@@ -697,7 +701,7 @@ public class VentanaCajero extends javax.swing.JFrame {
                     .addComponent(textID)
                     .addComponent(idCamp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelTab, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(panelTab, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -752,6 +756,8 @@ public class VentanaCajero extends javax.swing.JFrame {
             }
         });
 
+        jLabel10.setText("Pago");
+
         javax.swing.GroupLayout panelResumFactLayout = new javax.swing.GroupLayout(panelResumFact);
         panelResumFact.setLayout(panelResumFactLayout);
         panelResumFactLayout.setHorizontalGroup(
@@ -760,27 +766,33 @@ public class VentanaCajero extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelResumFactLayout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelResumFactLayout.createSequentialGroup()
+                                .addComponent(botGenFact)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel10)
+                                .addGap(116, 116, 116))
+                            .addGroup(panelResumFactLayout.createSequentialGroup()
+                                .addComponent(jLabel12)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lbIVA)
+                                    .addComponent(lbTotal)
+                                    .addComponent(laSubtotal)
+                                    .addComponent(lbDescuento))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 216, Short.MAX_VALUE)
+                                .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(valTotal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(valIVA, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(valSubtotal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(valDescuento, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResumFactLayout.createSequentialGroup()
                         .addComponent(apliProm)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(botCalTotal))
-                    .addGroup(panelResumFactLayout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbIVA)
-                            .addGroup(panelResumFactLayout.createSequentialGroup()
-                                .addComponent(lbTotal)
-                                .addGap(63, 63, 63)
-                                .addComponent(botGenFact))
-                            .addComponent(laSubtotal)
-                            .addComponent(lbDescuento))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(valTotal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(valIVA, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(valSubtotal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(valDescuento, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(fieldPago)
+                            .addComponent(botCalTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(32, 32, 32))
         );
         panelResumFactLayout.setVerticalGroup(
@@ -792,37 +804,41 @@ public class VentanaCajero extends javax.swing.JFrame {
                     .addComponent(botCalTotal))
                 .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelResumFactLayout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addComponent(jLabel12))
+                    .addGroup(panelResumFactLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelResumFactLayout.createSequentialGroup()
-                                .addGap(50, 50, 50)
-                                .addComponent(jLabel12))
-                            .addGroup(panelResumFactLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(panelResumFactLayout.createSequentialGroup()
-                                        .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(panelResumFactLayout.createSequentialGroup()
-                                                .addComponent(laSubtotal)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(lbDescuento))
-                                            .addGroup(panelResumFactLayout.createSequentialGroup()
-                                                .addGap(44, 44, 44)
-                                                .addComponent(lbIVA)))
+                                        .addComponent(laSubtotal)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lbTotal))
+                                        .addComponent(lbDescuento))
                                     .addGroup(panelResumFactLayout.createSequentialGroup()
-                                        .addComponent(valSubtotal)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(valDescuento)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(valIVA)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(valTotal)))))
-                        .addContainerGap(32, Short.MAX_VALUE))
+                                        .addGap(44, 44, 44)
+                                        .addComponent(lbIVA)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbTotal))
+                            .addGroup(panelResumFactLayout.createSequentialGroup()
+                                .addComponent(valSubtotal)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(valDescuento)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(valIVA)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(valTotal)))))
+                .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelResumFactLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelResumFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(fieldPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResumFactLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(botGenFact)
-                        .addGap(18, 18, 18))))
+                        .addGap(16, 16, 16))))
         );
 
         javax.swing.GroupLayout PanelFacturaLayout = new javax.swing.GroupLayout(PanelFactura);
@@ -853,9 +869,9 @@ public class VentanaCajero extends javax.swing.JFrame {
                     .addGroup(PanelFacturaLayout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelResumFact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(panelResumFact, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(panelDatosCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(14, 14, 14))
+                .addContainerGap())
         );
 
         titleFact.getAccessibleContext().setAccessibleName("");
@@ -942,7 +958,7 @@ public class VentanaCajero extends javax.swing.JFrame {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(92, Short.MAX_VALUE)
+                .addContainerGap(112, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
@@ -1481,52 +1497,18 @@ public class VentanaCajero extends javax.swing.JFrame {
             return;
         }
 
-        double subtotal = 0.0;
-        double descuento = 0.0;
+        // 2. Obtener datos de la GUI
+        int pedidoID = this.pedidoActualParaFacturar.getPedidoID();
+        boolean aplicaPromocion = apliProm.isSelected();
 
-        // 2. Calcular el Subtotal
-        for (Helado helado : this.pedidoActualParaFacturar.getHelados()) {
-            subtotal += helado.getPrecio();
-        }
+        // 3. Llamar al GESTOR para que haga TODOS los cálculos
+        Map<String, Double> totales = gestorFactura.calcularTotalesPedido(pedidoID, aplicaPromocion);
 
-        // 3. Revisar si se aplica la promoción
-        if (apliProm.isSelected()) {
-            try {
-                // --- LÓGICA DE PROMOCIÓN ---
-                //Busqueda de promocion
-                Promocion promo = this.gestorPromocion.buscarPromocion(1);
-
-                if (promo != null) {
-                    SaborHelado saborEnPromo = promo.getSaborPromocion();
-                    double porcentajeDesc = promo.getPorcentajeDescuento(); // Ej. 0.5 para 50%
-
-                    // Recorrer cada bola de cada helado para aplicar el descuento
-                    for (Helado helado : this.pedidoActualParaFacturar.getHelados()) {
-                        for (BolaHelado bola : helado.getBolasHelado()) {
-                            if (bola.getSabor() == saborEnPromo) {
-                                // Suma el descuento (precio de la bola * porcentaje)
-                                descuento += bola.getPrecio() * porcentajeDesc/100;
-                            }
-                        }
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(this, "Promoción (ID 1) no encontrada.", "Aviso", JOptionPane.WARNING_MESSAGE);
-                }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Error al buscar la promoción: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-
-        // 4. Calcular el IVA y el Total Final
-        double baseImponible = subtotal - descuento;
-        double iva = baseImponible * 0.15; // 15% como dice tu UI
-        double totalFinal = baseImponible + iva;
-
-        // 5. Actualizar los JLabels
-        valSubtotal.setText(String.format(Locale.US, "$%.2f", subtotal));
-        valDescuento.setText(String.format(Locale.US, "-$%.2f", descuento));
-        valIVA.setText(String.format(Locale.US, "$%.2f", iva));
-        valTotal.setText(String.format(Locale.US, "$%.2f", totalFinal));
+        // 4. Actualizar los JLabels con los resultados del Map
+        valSubtotal.setText(String.format(Locale.US, "$%.2f", totales.get("subtotal")));
+        valDescuento.setText(String.format(Locale.US, "-$%.2f", totales.get("descuento")));
+        valIVA.setText(String.format(Locale.US, "$%.2f", totales.get("iva")));
+        valTotal.setText(String.format(Locale.US, "$%.2f", totales.get("total")));
     }//GEN-LAST:event_botCalTotalActionPerformed
 
     private void botGenFactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botGenFactActionPerformed
@@ -1551,6 +1533,12 @@ public class VentanaCajero extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "No se ha definido un cliente.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            double totalUI = Double.parseDouble(valTotal.getText().replace("$", ""));
+
+            if(!gestorFactura.validarPago(fieldPago.getText(), totalUI)){
+                return;
+            }
+            double pago = Double.parseDouble(fieldPago.getText());
 
             // --- 2. LLAMAR AL GESTOR PARA CREAR LA FACTURA ---
             // 1. Obtener la aprobacion de aplicar la promocion
@@ -1569,10 +1557,9 @@ public class VentanaCajero extends javax.swing.JFrame {
                         }
 
             // 4. Asignar valores
-            double totalUI = Double.parseDouble(valTotal.getText().replace("$", ""));
             facturaGenerada.setTipoPago("EFECTIVO");
-            facturaGenerada.setPago(totalUI);
-            facturaGenerada.setCambio(0.0); // O calcular el cambio
+            facturaGenerada.setPago(pago);
+            facturaGenerada.setCambio(gestorFactura.calcularCambio(totalUI, pago)); // O calcular el cambio
 
             // --- 4. MOSTRAR LA VENTANA DE FACTURA ---
             VentanaFactura factura = new VentanaFactura(this, true, facturaGenerada);
@@ -1584,7 +1571,7 @@ public class VentanaCajero extends javax.swing.JFrame {
         } catch (ClassCastException cce) {
             JOptionPane.showMessageDialog(this, "Error de Programación: Incompatibilidad de Gestores. " + cce.getMessage(), "Error Crítico", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Ocurrió un error final al generar la factura: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ocurrió un error final al generar la factura: ", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botGenFactActionPerformed
 
@@ -1667,11 +1654,13 @@ public class VentanaCajero extends javax.swing.JFrame {
     private javax.swing.JLabel direccionCliente;
     private javax.swing.JTextField emailCamp;
     private javax.swing.JLabel emailCliente;
+    private javax.swing.JTextField fieldPago;
     private javax.swing.ButtonGroup grupoNumBolas;
     private javax.swing.JTextField idCamp;
     private javax.swing.JTextField idCampo;
     private javax.swing.JLabel idCliente;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

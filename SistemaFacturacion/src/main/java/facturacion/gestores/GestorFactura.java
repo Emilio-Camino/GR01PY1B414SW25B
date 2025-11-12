@@ -13,6 +13,7 @@ import facturacion.persistencia.PedidoPersist;
 import facturacion.persistencia.PromocionPersist;
 import facturacion.persistencia.ReporteVentaPersist;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -204,28 +205,92 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
      * Calcula el descuento para un pedido basándose en la promoción
      * activa (obtenida de persistencia).
      */
+    @Override
+    public Map<String, Double> calcularTotalesPedido(int pedidoID, boolean aplicaPromocion) {
+        Map<String, Double> totales = new HashMap<>();
+
+        // 1. Obtener el pedido
+        Pedido pedido = PedidoPersist.buscarPedido(pedidoID);
+        if (pedido == null) {
+            // Si el pedido no existe, devolver ceros
+            totales.put("subtotal", 0.0);
+            totales.put("descuento", 0.0);
+            totales.put("iva", 0.0);
+            totales.put("total", 0.0);
+            return totales;
+        }
+
+        // 2. Usar los métodos privados para calcular
+        double subtotal = calcularSubtotal(pedido);
+        double descuento = 0.0;
+        if (aplicaPromocion) {
+            descuento = calcularDescuento(pedido);
+        }
+
+        double baseImponible = subtotal - descuento;
+        double iva = baseImponible * 0.15;
+        double total = baseImponible + iva;
+
+        // 3. Ponerlos en el Map
+        totales.put("subtotal", subtotal);
+        totales.put("descuento", descuento);
+        totales.put("iva", iva);
+        totales.put("total", total);
+
+        return totales;
+    }
+
+    /**
+     * Calcula el descuento total de un pedido.
+     * Itera sobre CADA bola de helado y busca si existe
+     * una promoción para ese sabor especifico.
+     */
     private double calcularDescuento(Pedido pedido) {
         double descuento = 0.0;
         if (pedido == null || pedido.getHelados() == null) {
             return 0.0;
         }
 
-        // Asume que la promoción se busca de persistencia.
-        // Tu GUI parece hardcodear la promo 1
-        Promocion promo = PromocionPersist.buscarPromocion(1);
+        // 1. Itera sobre cada helado en el pedido
+        for (Helado helado : pedido.getHelados()) {
 
-        if (promo != null) {
-            SaborHelado saborEnPromo = promo.getSaborPromocion();
-            double porcentajeDesc = promo.getPorcentajeDescuento(); // Ej. 0.15
+            // 2. Itera sobre cada bola en ese helado
+            for (BolaHelado bola : helado.getBolasHelado()) {
 
-            for (Helado helado : pedido.getHelados()) {
-                for (BolaHelado bola : helado.getBolasHelado()) {
-                    if (bola.getSabor() == saborEnPromo) {
-                        descuento += bola.getPrecio() * porcentajeDesc;
-                    }
+                // 3. Obtiene el sabor de esta bola específica
+                SaborHelado saborActual = bola.getSabor();
+
+                // 4. Llama al nuevo método de persistencia
+                Promocion promo = PromocionPersist.buscarPromocionPorSabor(saborActual);
+
+                // 5. Si se encontro una promoción PARA ESE SABOR...
+                if (promo != null) {
+                    double porcentajeDesc = promo.getPorcentajeDescuento(); // Ej. 15.0
+
+                    // 6. Calcula y suma el descuento SOLO para esa bola
+                    descuento += bola.getPrecio() * (porcentajeDesc / 100.0);
                 }
+                // Si la promo es null, no se añade descuento para esta bola.
             }
         }
-        return descuento;
+        return descuento; // Devuelve la suma de todos los descuentos de todas las bolas
+    }
+
+    public boolean validarPago(String pago, double total){
+        try {
+            double pagoD =  Double.parseDouble(pago);
+            if (pagoD < total || pagoD > 500) {
+                JOptionPane.showMessageDialog(null, "El valor ingresado debe ser:\n- Mayor al total de la factura\n- No exceder los 500$", "Error",  JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "El valor ingresado no es un numero", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch(NullPointerException e){
+            JOptionPane.showMessageDialog(null, "El valor ingresado no se ha ingresado un pago", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return true;
+    }
+    public double calcularCambio(double total, double pago){
+        return pago - total;
     }
 }

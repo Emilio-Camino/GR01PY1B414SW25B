@@ -30,6 +30,16 @@ public class PromocionPersist {
         return null;
     }
 
+    public static Promocion buscarPromocionPorSabor(SaborHelado sabor) {
+        for (Promocion promo : listaPromociones) {
+            // Compara el sabor de la promoción con el sabor de la bola
+            if (promo.getSaborPromocion() == sabor) {
+                return promo; // Promoción encontrada
+            }
+        }
+        return null; // No hay promoción para este sabor
+    }
+
     /**
      * Agrega una promoción completamente creada a la lista.
      * @param promocion La promoción a guardar.

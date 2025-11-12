@@ -190,11 +190,13 @@ public class VentanaFactura extends javax.swing.JDialog {
         double iva = factura.getImpuestoIVA();
         double total = factura.getTotal();
         double subtotal = total - iva;
+        double cambio = factura.getCambio();
 
         sb.append(String.format(Locale.US, "Subtotal:      $%.2f\n", subtotal));
         sb.append(String.format(Locale.US, "IVA (15%%):     $%.2f\n", iva));
         sb.append("----------------------------------------\n");
         sb.append(String.format(Locale.US, "TOTAL A PAGAR: $%.2f\n\n", total));
+        sb.append(String.format(Locale.US, "CAMBIO: $%.2f\n\n", cambio));
 
         sb.append("       ¡Gracias por su compra!\n");
 
