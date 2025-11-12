@@ -162,8 +162,12 @@ public class VentanaFactura extends javax.swing.JDialog {
 
         // --- DETALLE DEL PEDIDO ---
         sb.append("--- DETALLE DEL PEDIDO ---\n");
-        sb.append(String.format("%-8s %-20s %s\n", "Cant.", "Descripción", "Total"));
-        sb.append("----------------------------------------\n");
+        sb.append(String.format(Locale.US, "%-8s %-40s %-12s %s\n",
+                "Cant.",
+                "Sabor",
+                "Recipiente",
+                "Total"));
+        sb.append("----------------------------------------------------------\n");
 
         // ******** AQUÍ ESTÁ LA CORRECCIÓN ********
         // Obtenemos el pedido
@@ -176,8 +180,9 @@ public class VentanaFactura extends javax.swing.JDialog {
             // Si no son nulos, los mostramos
             for (Helado h : p.getHelados()) {
                 double precioHelado = h.getPrecio();
-                sb.append(String.format(Locale.US, "%-8s %-20s $%.2f\n",
+                sb.append(String.format(Locale.US, "%-8s %-40s %-12s $%.2f\n",
                         "1",
+                        h.getSaborHelado().toString(), // <-- Aquí añades el sabor
                         h.getRecipiente().getTipo().toString(),
                         precioHelado));
             }
