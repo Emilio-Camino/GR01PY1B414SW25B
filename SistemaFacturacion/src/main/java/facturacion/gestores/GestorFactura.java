@@ -75,8 +75,6 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
 
         // 6. Lógica de negocio: Actualizar Estado del Pedido
         pedidoAFacturar.setEstado("FACTURADO");
-
-        System.out.println("Factura " + nuevaFactura.getIdFactura() + " generada para el pedido " + pedidoID);
         return nuevaFactura;
     }
 
@@ -169,7 +167,6 @@ public class GestorFactura implements IGestorFacturaHeladero, IGestorFacturaCaje
             factura.setTipoPago("ANULADA");
             factura.setPago(0.0);
             factura.setCambio(0.0);
-            System.out.println("Factura " + idFactura + " anulada.");
             return true;
         }
         return false;

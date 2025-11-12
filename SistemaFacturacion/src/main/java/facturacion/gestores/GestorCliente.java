@@ -28,7 +28,6 @@ public class GestorCliente implements IGestorClienteCajero, IGestorClienteHelade
         // Validacion y muestra de errores
 
         if (cliente == null){
-            System.out.println("Error, el cliente es nulo. revisar lógica");
             return;
         }
 

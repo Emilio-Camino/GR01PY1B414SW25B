@@ -135,7 +135,6 @@ public class GestorStock implements IGestorStockCajero, IGestorStockHeladero {
             Integer stock = stockSabor.getValue();
             stockH.append(String.format("-> %s : %d\n", sabor.toString(), stock));
         }
-        System.out.println(stockH);
         return stockH.toString();
     }
 
@@ -151,7 +150,6 @@ public class GestorStock implements IGestorStockCajero, IGestorStockHeladero {
             Integer stock = entry.getValue();
             stockR.append(String.format("-> %s : %d\n", sabor.toString(), stock));
         }
-        System.out.println(stockR);
         return stockR.toString();
     }
 

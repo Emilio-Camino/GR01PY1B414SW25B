@@ -155,9 +155,6 @@ public class GestorPedido implements IGestorPedido {
         Pedido pedidoAActualizar = PedidoPersist.buscarPedido(pedidoID);
         if (pedidoAActualizar != null) {
             pedidoAActualizar.setEstado(nuevoEstado);
-            System.out.println("Pedido " + pedidoID + " actualizado a estado: " + nuevoEstado);
-        } else {
-            System.out.println("No se pudo actualizar: Pedido " + pedidoID + " no encontrado.");
         }
     }
 
