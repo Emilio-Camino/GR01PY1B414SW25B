@@ -66,12 +66,10 @@ public class VentanaCajero extends javax.swing.JFrame {
         this.gestorCliente = gCliente;
         this.gestorFactura = gFactura;
         
-        //Iniciando al persist de pedidos, factura y caja para mostrar el contador de pedidos y los pedidos ya facturados adecuadamente
         facturacion.persistencia.PedidoPersist.buscarPedido(-1);
         facturacion.persistencia.FacturaPersist.buscarFactura(-1);
         facturacion.persistencia.FacturaPersist.buscarFactura(-1);
         
-       // Estilo de la Ventnana Tabbed
         Color tabBgColor = UIManager.getColor("TabbedPane.background");
         UIManager.put("TabbedPane.selected", tabBgColor);
         UIManager.put("TabbedPane.selectHighlight", tabBgColor);
@@ -80,10 +78,8 @@ public class VentanaCajero extends javax.swing.JFrame {
         UIManager.put("TabbedPane.drawFocusIndicator", false);
         
         initComponents();
-        //Listener para actualizar el total de la caja
         tabCajero.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                // Llamara al metodo cada vez que se cambie de pestania
                 tabCajeroStateChanged(evt);
             }
         });
@@ -93,11 +89,9 @@ public class VentanaCajero extends javax.swing.JFrame {
         this.gestorPedido.iniciarNuevoPedido();
 
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        //Listener que volvera al login cuando se cierre esta ventana
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                //Si hay un pedido en curso, cancelarlo y devolver stock
                 gestorPedido.cancelarPedidoActual();
                 //Volver a mostrar Login
                 loginDeOrigen.setVisible(true);
@@ -996,9 +990,7 @@ public class VentanaCajero extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonCerrarCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrarCajaActionPerformed
-    // 1. Se deshabilita el resto de pestanias
         tabCajero.setEnabled(false);
-    // 2. Obtener el valor ingresado por el usuario
     double totalIngresado;
     try {
         totalIngresado = Double.parseDouble(campoTotalEfectivo.getText());
@@ -1007,11 +999,8 @@ public class VentanaCajero extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "El valor ingresado no es un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
-
-    // 3. Llamar al gestor para verificar y GUARDAR el reporte
     ReporteCierreCaja reporte = gestorCaja.verificarEstadoCaja(totalIngresado, totalCajaCalculado);
     
-    // 4. Analizar el resultado del reporte
     if (reporte.getEstado().equals("Balance")) {
         
         // --- CASO 1: ÉXITO ---
@@ -1053,10 +1042,8 @@ public class VentanaCajero extends javax.swing.JFrame {
                     "Cierre de Caja Forzado",
                     JOptionPane.ERROR_MESSAGE);
             
-            // Resetear para un futuro cierre
             loginDeOrigen.setVisible(true);
             loginDeOrigen.deshabilitarBotonCajero();
-            //Cerrar Cajero
             dispose();
         }
     }
@@ -1132,10 +1119,8 @@ public class VentanaCajero extends javax.swing.JFrame {
     }//GEN-LAST:event_botonAgregarHeladoActionPerformed
 
     private void botonRegistrarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistrarPedidoActionPerformed
-        // 2. Crear el objeto Pedido
         Pedido nuevo = gestorPedido.registrarPedidoActual();
 
-        // Si el gestor devuelve null se sale del proceso.
         if (nuevo == null) {
             JOptionPane.showMessageDialog(null, "Error al registrar el pedido.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -1172,7 +1157,7 @@ public class VentanaCajero extends javax.swing.JFrame {
 
         if (nuevo.getHelados().isEmpty()) {
              JLabel lblItem = new JLabel("(Este pedido no tiene helados)");
-             lblItem.setFont(new Font("Segoe UI", Font.ITALIC, 15)); // Itálica para "vacío"
+             lblItem.setFont(new Font("Segoe UI", Font.ITALIC, 15));
              lblItem.setAlignmentX(Component.LEFT_ALIGNMENT);
              panel.add(lblItem);
         } else {
@@ -1190,7 +1175,7 @@ public class VentanaCajero extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(
                 null,
                 scroll,
-                "Pedido N° " + nuevo.getPedidoID(), // Título de la ventana
+                "Pedido N° " + nuevo.getPedidoID(),
                 JOptionPane.INFORMATION_MESSAGE
         );
 
@@ -1230,13 +1215,11 @@ public class VentanaCajero extends javax.swing.JFrame {
             String idTexto = idCamp.getText().trim();
             int pedidoID;
 
-            // Validamos que no esté vacío
             if (idTexto.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Por favor, ingrese un Número de Pedido.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // Validamos que sea un número
             try {
                 pedidoID = Integer.parseInt(idTexto);
             } catch (NumberFormatException e) {
@@ -1260,7 +1243,7 @@ public class VentanaCajero extends javax.swing.JFrame {
             
             // 5. Obtener el "modelo" de la tabla
             javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tablaPedido.getModel();
-            model.setRowCount(0); // Limpiar
+            model.setRowCount(0);
 
             // 6. Llenar la tabla
             for (Helado helado : this.pedidoActualParaFacturar.getHelados()) {
@@ -1356,7 +1339,6 @@ public class VentanaCajero extends javax.swing.JFrame {
 
             telefonoCamp.setText(cf.getTelefono());
 
-            // Asegurarse de que el texto no sea gris
             idCampo.setForeground(Color.BLACK);
             nomCamp.setForeground(Color.BLACK);
             dirCamp.setForeground(Color.BLACK);
@@ -1392,7 +1374,7 @@ public class VentanaCajero extends javax.swing.JFrame {
 
             String direccion = dirCamp.getText().trim();
             if (direccion.equals("Ej. Av. Amazonas OE1") || direccion.isEmpty()) {
-                direccion = "N/A"; // Valor por defecto si está vacío
+                direccion = "N/A";
             }
 
             String email = emailCamp.getText().trim();
@@ -1400,7 +1382,7 @@ public class VentanaCajero extends javax.swing.JFrame {
 
             String telefono = telefonoCamp.getText().trim();
             if (telefono.equals("Ej. 0965742142") || telefono.isEmpty()) {
-                telefono = "N/A"; // Valor por defecto si está vacío
+                telefono = "N/A";
             }
 
             // --- 2. LLAMAR AL GESTOR ---
@@ -1408,7 +1390,6 @@ public class VentanaCajero extends javax.swing.JFrame {
 
             // --- 3. ÉXITO ---
             if (exito) {
-                // Deshabilitar cambios de la UI
                 nomCamp.setEnabled(false);
                 dirCamp.setEnabled(false);
                 emailCamp.setEnabled(false);
@@ -1416,7 +1397,6 @@ public class VentanaCajero extends javax.swing.JFrame {
                 botAniadirCli.setEnabled(false);
             }
         } catch (Exception e) {
-            // Error inesperado
             JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
@@ -1462,12 +1442,9 @@ public class VentanaCajero extends javax.swing.JFrame {
      * @param textoPlaceholder El texto gris de ejemplo
      */
     private void crearPlaceholder(javax.swing.JTextField campo, String textoPlaceholder) {
-        // Color gris para el placeholder
         Color placeholderColor = new Color(204, 204, 204);
-        // Color negro para el texto normal
         Color textColor = Color.BLACK;
 
-        // Estado inicial
         if (campo.getText().isEmpty()) {
             campo.setText(textoPlaceholder);
             campo.setForeground(placeholderColor);
@@ -1476,7 +1453,6 @@ public class VentanaCajero extends javax.swing.JFrame {
         campo.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent e) {
-                // Si el texto es el placeholder, borrarlo y poner color negro
                 if (campo.getText().equals(textoPlaceholder)) {
                     campo.setText("");
                     campo.setForeground(textColor);
@@ -1485,7 +1461,6 @@ public class VentanaCajero extends javax.swing.JFrame {
 
             @Override
             public void focusLost(java.awt.event.FocusEvent e) {
-                // Si el campo está vacío, volver a poner el placeholder
                 if (campo.getText().isEmpty()) {
                     campo.setText(textoPlaceholder);
                     campo.setForeground(placeholderColor);
@@ -1584,40 +1559,32 @@ public class VentanaCajero extends javax.swing.JFrame {
     }//GEN-LAST:event_idCampActionPerformed
 
     private void limpiarPestanaFactura() {
-        // 1. Resetea el cliente a "Consumidor Final"
         radConsumidorFinal.setSelected(true);
         radConsumidorFinalActionPerformed(null);
 
-        // 2. Limpia el campo de ID de Pedido
         idCamp.setText("");
 
-        // 3. Limpia la tabla
         ((javax.swing.table.DefaultTableModel) tablaPedido.getModel()).setRowCount(0);
 
-        // 4. Resetea el pedido guardado
         this.pedidoActualParaFacturar = null;
 
-        // 5. Resetea el checkbox de promoción
         apliProm.setSelected(false);
 
-        // 6. Resetea los totales
         valSubtotal.setText("$0.00");
         valDescuento.setText("-$0.00");
         valIVA.setText("$0.00");
         valTotal.setText("$0.00");
 
-        // 7. Vuelve a poner el texto de ejemplo (placeholder)
         agregarListenersDePlaceholder();
     }
     
     private void limpiarCamposHelado() {
-    grupoNumBolas.clearSelection(); // Des-selecciona los radio buttons
+    grupoNumBolas.clearSelection();
     comboRecipiente.setSelectedIndex(0);
     sabor1Op.setSelectedIndex(0);
     sabor2Op.setSelectedIndex(0);
     sabor3Op.setSelectedIndex(0);
     
-    // Vuelve a deshabilitar los combos 2 y 3
     sabor2Op.setEnabled(false);
     sabor3Op.setEnabled(false);
     }
@@ -1633,13 +1600,10 @@ public class VentanaCajero extends javax.swing.JFrame {
 }   
     ///Metodo para recalcular total de la facturas al entrar a "Cerrar Caja"
     private void tabCajeroStateChanged(javax.swing.event.ChangeEvent evt) {
-        // Obtener el panel que está seleccionado
         Component panelSeleccionado = tabCajero.getSelectedComponent();
 
-        // Comprobar si el panel seleccionado es el jPanel4 (Cerrar Caja)
         if (panelSeleccionado == jPanel4) {
 
-            // Se recalcula el total cada que se entra a esta pestaniaa.
             totalCajaCalculado = gestorCaja.calcularTotalEfectivo();
             labelTotalFactura.setText(String.format(Locale.US, "$ %.2f", totalCajaCalculado));
         }
