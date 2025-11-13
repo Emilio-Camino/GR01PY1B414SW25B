@@ -40,10 +40,11 @@ public class GestorCaja implements IGestorCaja {
     public ReporteCierreCaja verificarEstadoCaja (double totalIngresado, double totalEfectivo) {
 
         double descuadre = totalIngresado - totalEfectivo;
+        double tolerancia = 0.005;
         String estado;
 
-        // Lógica de estado solicitada
-        if (descuadre == 0) {
+        // Lógica de estado
+        if ( (Math.abs(descuadre) < tolerancia)) {
             estado = "Balance";
         } else if (descuadre > 0) {
             estado = "Descuadre Sobrante";
